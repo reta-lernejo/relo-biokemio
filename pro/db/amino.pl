@@ -39,15 +39,15 @@ c_id(arginino,'IUPAC','2-amino-5-(diaminomethylideneamino)pentanoic acid').
 
 c_id(asparagino,angle,'DL-asparagine').
 c_id(asparagino,'EC','221-521-1').
-c_id(asparagino,'IUPAC','2,4-diamino-4-oxobutanoic acid')
+c_id(asparagino,'IUPAC','2,4-diamino-4-oxobutanoic acid').
 
-c_id(asparaginacido,angle,'L-aspartic acid')
-c_id(asparaginacido,'EC','200-291-6')
+c_id(asparaginacido,angle,'L-aspartic acid').
+c_id(asparaginacido,'EC','200-291-6').
 c_id(asparaginacido,'IUPAC','(2S)-2-aminobutanedioic acid').
 
 c_id(cisteino,angle,'L-cysteine').
 c_id(cisteino,'EC','200-158-2').
-c_id(cisteino,'IUPAC','(2R)-2-amino-3-sulfanylpropanoic acid')
+c_id(cisteino,'IUPAC','(2R)-2-amino-3-sulfanylpropanoic acid').
 
 c_id(glutamino,angle,'L-glutamine').
 c_id(glutamino,'EC','200-292-1').
