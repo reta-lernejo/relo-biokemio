@@ -1,0 +1,454 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<sbgn xmlns="http://sbgn.org/libsbgn/0.2">
+  <map language="process description">
+    <extension>
+      <renderInformation 
+        xmlns="http://www.sbml.org/sbml/level3/version1/render/version1" id="renderInformation" program-name="sbgnviz" program-version="6.0.4" background-color="#00000000">
+        <listOfColorDefinitions>
+          <colorDefinition id="color_1" value="#ffffffff"/>
+          <colorDefinition id="color_2" value="#555555"/>
+          <colorDefinition id="color_3" value="#ffffff7f"/>
+        </listOfColorDefinitions>
+        <listOfBackgroundImages/>
+        <listOfStyles>
+          <style id="nodeffffff15555551.2511normalnormalHelvetica0001" idList="nwtN_f51c0fc1-d5e1-4390-8512-bc85ea8af388 nwtN_118eb6dd-7a16-48c1-a703-cda68a5675e4 nwtN_ee464461-7b8d-4035-bb2a-74ae4d082de1 nwtN_c11353ee-c961-433f-a155-e5c7055d2efd nwtN_d3ae3ffa-38a7-4f11-8376-eedfcd8aae18 nwtN_a4ea525d-63f8-49d8-b681-e73997e025e9 nwtN_f30829bf-fb4e-480d-a020-e43ccd9ecc5a nwtN_39519218-7321-4241-bffc-c3d4a6f71555 nwtN_b95ecd71-0d61-4e6f-8dfd-1358f513d80d nwtN_05f84998-6a2f-451c-91c9-0c46825ab0d2 nwtN_906f1e75-b534-4030-b111-a944071b54c2 nwtN_fcaf3c49-49d1-4d1b-8fa1-28ec608b2c91 nwtN_e12afa85-1760-4ead-aab7-8cf85961cce0 nwtN_3b994696-ddcb-446a-a262-77f6e68dd0e1 nwtN_8ef8887b-0311-4943-b980-c7d326049445 nwtN_d93dd608-0759-40eb-b3db-d16fde0c9a6d nwtN_86d5361a-2116-48c3-adc1-cd4e299639d8 nwtN_085616e6-0587-4e9b-ae8d-84b239d740e3 nwtN_87b5bb44-01ab-44cc-bb1b-3e78f104ca13 nwtN_89aef944-8a3d-4562-adcb-8884d74a2eb3 nwtN_b64bd867-e8e8-49ce-986d-af24619b807a nwtN_78510366-d204-4a8a-a6ff-f8bc68906070 nwtN_c55d8446-b85d-48cf-87f5-3b3ec14016fa nwtN_f65cd181-b0a4-492c-af73-2fa2e3f13f31 nwtN_1a3598f9-1ce0-4b67-a32c-b6b16a6bbb8f nwtN_21a550a3-fcaf-4a29-9416-c071f4ca0f9a nwtN_5144d1d6-daa3-4d6f-b455-6f180eb372ce nwtN_80252b45-c9a7-4592-a38d-2f42f1c929eb nwtN_49db695c-e96e-4e9f-8783-5e70a3bcea0a nwtN_2746000c-da1c-4ec6-93fe-ed86925056c7 nwtN_a8f0702e-a42a-4d1f-b676-5e28314e9adf nwtN_d2d00ca7-b30e-4584-a049-b25800268d21 nwtN_82c33abc-6680-4377-aae6-4574f7d7fa8d nwtN_32fb672a-0f94-4c37-b7a9-1aac4c01ba12 nwtN_038a48df-3f4d-4b4c-90a3-100f3316566b nwtN_fc8b4c91-e892-411e-b8e9-3bae0006d5ed nwtN_4624f528-2572-4189-bcd2-3c8bf010ca11">
+            <g font-size="11" font-family="Helvetica" font-weight="normal" font-style="normal" font-color="#000" stroke="color_2" stroke-width="1.25" fill="color_1" background-image-opacity="1" background-opacity="1"/>
+          </style>
+          <style id="nodeffffff15555551.251" idList="nwtN_d3ad99dc-106c-42cb-86ff-dbd3cdf5df1e nwtN_621fe080-2cef-4312-844d-ce96755dd293 nwtN_ae61c9a8-dc1f-4f7b-87b7-96ff4b462ca9 nwtN_1a8feac0-64a1-4062-bfcd-87a3dd6acb0b nwtN_f9a21b08-d6ce-43d8-b4cd-f11ea6090e07 nwtN_4da4ab98-720f-4d23-9527-bcbe28be1630 nwtN_e28918f0-1376-41ff-80b4-e2e5f37113c0 nwtN_c425d131-6e0a-4599-be67-cce586c1f229">
+            <g stroke="color_2" stroke-width="1.25" fill="color_1" background-image-opacity="1" background-opacity="1"/>
+          </style>
+          <style id="nodeffffff0.55555551.2511normalnormalHelvetica0001" idList="nwtN_d70adebc-293e-4064-9cd1-c2ad62989a8e">
+            <g font-size="11" font-family="Helvetica" font-weight="normal" font-style="normal" font-color="#000" stroke="color_2" stroke-width="1.25" fill="color_3" background-image-opacity="1" background-opacity="0.5"/>
+          </style>
+          <style id="nodeffffff0.55555553.2514normalnormalHelvetica0001" idList="nwtN_24529d2f-a864-4e89-9dd5-0efdd1743926">
+            <g font-size="14" font-family="Helvetica" font-weight="normal" font-style="normal" font-color="#000" stroke="color_2" stroke-width="3.25" fill="color_3" background-image-opacity="1" background-opacity="0.5"/>
+          </style>
+          <style id="edge5555551.25" idList="nwtE_28356501-6fef-421a-b4ab-b87986f3974e nwtE_ea3aa7c4-f821-4435-bbf5-2cc00868628b nwtE_74e65014-5d9c-468a-8a65-a481d20c41aa nwtE_f21bd3c1-4aea-4893-a5c3-0331f4cafcca nwtE_ed172b2a-f4db-4d14-9a34-3e94b6c0d911 nwtE_a9043ab5-e43d-47f2-b806-1436608b5428 nwtE_79f6e5eb-da4b-408a-9e75-0adf23cae471 nwtE_16dbad6d-7e82-4c4f-b284-167e4834ba6b nwtE_ab9f5fad-d6c1-4435-a0c4-41b83ba3d7c9 nwtE_c50309af-8957-47dc-819e-7a321a6c09d0 nwtE_5b75f511-dfb1-47c6-a8e2-3f0f7edc3057 nwtE_85b05955-c6ef-49d5-be85-3a58fa327bc1 nwtE_0ebee27b-b7f3-4b43-b241-e9d87d3e71ce nwtE_28042c11-41a8-4678-8044-9f80fb467af7 nwtE_6ceff191-6ef9-4ff8-b0e7-d8b2dc78c4dc nwtE_4314f604-bb9f-4e43-8456-ac2da9b3db43 nwtE_06d52497-d124-4818-b02c-5042ef977617 nwtE_8883240d-6941-4603-ac77-ecf67b6df1d2 nwtE_5063a8d8-6d1e-423d-bd20-b7fe4282aad6 nwtE_97960504-e83b-481f-a658-ab9c7fcba96f nwtE_696dcdcd-302d-49ec-a3b9-3f9184b37c3f nwtE_0e22a051-1ce1-444f-80d7-36a59d348876 nwtE_92e3b6ab-47a5-41a4-b40a-0b2a08a314cf nwtE_8865e0e2-4c88-42fe-b1f4-713fbd0c4b6b nwtE_7eed5999-88ec-46eb-bdfc-caca750ffb4d nwtE_60656c2e-11de-4996-9aaf-dc18ddb13506 nwtE_fab8688e-c7c9-4ab0-8586-b7e8c4246e71 nwtE_f7c20d05-eb4d-49ff-8427-f9481664941b nwtE_a31a6266-e147-49c3-84dc-6e075f562e19 nwtE_26a0304a-8a1a-4572-af35-956d45ec80ef nwtE_21b0e96e-4af4-4900-9f8e-cce835606027 nwtE_9136f57e-26a5-449f-a8d7-400538288295 nwtE_9c3baab8-daee-49a5-ac16-e472de11debc nwtE_6e0a5826-9c06-427e-8d6b-f36cdd34a7df nwtE_11795c3c-4d3f-4f82-bbe7-d616eab2b39e nwtE_a2c795df-d521-49cc-b519-b035188e722b nwtE_54ff87a5-5d04-417e-9f9b-f8232e504290 nwtE_016a5958-fe81-4d6f-9375-88a756d8fe0a nwtE_ab30f346-670d-4d24-b39f-45640b254d0b nwtE_8d0fd18d-9bef-43f8-9674-75647aacbf10 nwtE_dc9610b7-0cfb-4256-8a2c-8639dddf3e9a nwtE_5f1644e9-4c52-45b2-b732-da2697af4c20 nwtE_1ad94481-267e-4a5a-85ae-c8f092efd75b">
+            <g stroke="color_2" stroke-width="1.25"/>
+          </style>
+        </listOfStyles>
+      </renderInformation>
+      <mapProperties>
+        <compoundPadding>0</compoundPadding>
+        <extraCompartmentPadding>14</extraCompartmentPadding>
+        <extraComplexPadding>10</extraComplexPadding>
+        <arrowScale>1.25</arrowScale>
+        <showComplexName>true</showComplexName>
+        <dynamicLabelSize>regular</dynamicLabelSize>
+        <inferNestingOnLoad>false</inferNestingOnLoad>
+        <fitLabelsToNodes>false</fitLabelsToNodes>
+        <fitLabelsToInfoboxes>false</fitLabelsToInfoboxes>
+        <recalculateLayoutOnComplexityManagement>true</recalculateLayoutOnComplexityManagement>
+        <rearrangeOnComplexityManagement>true</rearrangeOnComplexityManagement>
+        <animateOnDrawingChanges>true</animateOnDrawingChanges>
+        <adjustNodeLabelFontSizeAutomatically>false</adjustNodeLabelFontSizeAutomatically>
+        <enablePorts>true</enablePorts>
+        <enableSIFTopologyGrouping>false</enableSIFTopologyGrouping>
+        <allowCompoundNodeResize>true</allowCompoundNodeResize>
+        <mapColorScheme>black_white</mapColorScheme>
+        <mapColorSchemeStyle>solid</mapColorSchemeStyle>
+        <mapName>Pathway #0</mapName>
+        <mapDescription/>
+        <highlightColor>#0B9BCD</highlightColor>
+        <extraHighlightThickness>2</extraHighlightThickness>
+      </mapProperties>
+    </extension>
+    <glyph id="nwtN_f51c0fc1-d5e1-4390-8512-bc85ea8af388" class="macromolecule">
+      <label text="citratsintazo"/>
+      <bbox x="1055.4610906354933" y="7.35800804131771" w="87.99700721500315" h="38.185741149814326"/>
+    </glyph>
+    <glyph id="nwtN_118eb6dd-7a16-48c1-a703-cda68a5675e4" class="simple chemical">
+      <label text="citrato"/>
+      <bbox x="1216.30569497655" y="119.5249843918906" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_ee464461-7b8d-4035-bb2a-74ae4d082de1" class="simple chemical">
+      <label text="okzalacetato"/>
+      <bbox x="954.9838069490745" y="119.72074266961485" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_c11353ee-c961-433f-a155-e5c7055d2efd" class="simple chemical">
+      <label text="acetil-CoA"/>
+      <bbox x="926.8530537050372" y="14.571483091324396" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_d3ae3ffa-38a7-4f11-8376-eedfcd8aae18" class="simple chemical">
+      <label text="H2O"/>
+      <bbox x="931.5078648557235" y="194.61002625050486" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_d3ad99dc-106c-42cb-86ff-dbd3cdf5df1e" class="process">
+      <bbox x="1086.7229739931252" y="103.61952153759815" w="14.285714285714286" h="14.285714285714286"/>
+      <port id="nwtN_d3ad99dc-106c-42cb-86ff-dbd3cdf5df1e.1" x="1083.8658311359823" y="110.76237868045529"/>
+      <port id="nwtN_d3ad99dc-106c-42cb-86ff-dbd3cdf5df1e.2" x="1103.8658311359823" y="110.76237868045529"/>
+    </glyph>
+    <glyph id="nwtN_a4ea525d-63f8-49d8-b681-e73997e025e9" class="simple chemical">
+      <label text="CoA-SH"/>
+      <bbox x="1142.019611128132" y="188.54175923902412" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_621fe080-2cef-4312-844d-ce96755dd293" class="process">
+      <bbox x="1317.7963114840484" y="160.3761805377251" w="14.285714285714286" h="14.285714285714286"/>
+      <port id="nwtN_621fe080-2cef-4312-844d-ce96755dd293.1" x="1314.9391686269055" y="167.51903768058224"/>
+      <port id="nwtN_621fe080-2cef-4312-844d-ce96755dd293.2" x="1334.9391686269055" y="167.51903768058224"/>
+    </glyph>
+    <glyph id="nwtN_f30829bf-fb4e-480d-a020-e43ccd9ecc5a" class="simple chemical">
+      <label text="izocitrato"/>
+      <bbox x="1399.617774367104" y="222.95863481289837" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_39519218-7321-4241-bffc-c3d4a6f71555" class="macromolecule">
+      <label text="akonitazo"/>
+      <bbox x="1329.8440900319952" y="51.09757914901245" w="76.03774678696222" h="41.10305546789693"/>
+    </glyph>
+    <glyph id="nwtN_b95ecd71-0d61-4e6f-8dfd-1358f513d80d" class="simple chemical">
+      <label text="alfo-&#xA;ketoglutarato"/>
+      <bbox x="1475.7360179827235" y="418.3632969165487" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_05f84998-6a2f-451c-91c9-0c46825ab0d2" class="simple chemical">
+      <label text="CO2"/>
+      <clone/>
+      <bbox x="1499.6061789387788" y="363.2201607439771" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_906f1e75-b534-4030-b111-a944071b54c2" class="simple chemical">
+      <label text="NADH"/>
+      <clone/>
+      <bbox x="1365.1941674726313" y="363.47640524356007" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_ae61c9a8-dc1f-4f7b-87b7-96ff4b462ca9" class="process">
+      <bbox x="1456.4540384162929" y="302.86220629417426" w="14.285714285714286" h="14.285714285714286"/>
+      <port id="nwtN_ae61c9a8-dc1f-4f7b-87b7-96ff4b462ca9.1" x="1463.59689555915" y="300.0050634370314"/>
+      <port id="nwtN_ae61c9a8-dc1f-4f7b-87b7-96ff4b462ca9.2" x="1463.59689555915" y="320.0050634370314"/>
+    </glyph>
+    <glyph id="nwtN_fcaf3c49-49d1-4d1b-8fa1-28ec608b2c91" class="macromolecule">
+      <label text="izocitrat-&#xA;dehidrogenazo"/>
+      <bbox x="1504.6615346893363" y="213.4566930128712" w="97.01018489298976" h="41.10305546789692"/>
+    </glyph>
+    <glyph id="nwtN_e12afa85-1760-4ead-aab7-8cf85961cce0" class="simple chemical">
+      <label text="NAD+"/>
+      <bbox x="1287.7593779306535" y="259.4850520806087" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_1a8feac0-64a1-4062-bfcd-87a3dd6acb0b" class="process">
+      <bbox x="1476.0566391129503" y="550.9110822918697" w="14.285714285714286" h="14.285714285714286"/>
+      <port id="nwtN_1a8feac0-64a1-4062-bfcd-87a3dd6acb0b.1" x="1483.1994962558074" y="548.0539394347268"/>
+      <port id="nwtN_1a8feac0-64a1-4062-bfcd-87a3dd6acb0b.2" x="1483.1994962558074" y="568.0539394347268"/>
+    </glyph>
+    <glyph id="nwtN_3b994696-ddcb-446a-a262-77f6e68dd0e1" class="simple chemical">
+      <label text="sukcinil-&#xA;CoA"/>
+      <bbox x="1373.447320512242" y="688.3093788467946" w="34.425863394554895" h="32.29898151070102"/>
+    </glyph>
+    <glyph id="nwtN_d70adebc-293e-4064-9cd1-c2ad62989a8e" class="complex">
+      <extension>
+        <extraInfo>
+          <w>129.12104589068082</w>
+          <h>140.469844551413</h>
+          <minW>129.12104589068082</minW>
+          <minH>140.469844551413</minH>
+          <WLBias>0</WLBias>
+          <WRBias>1</WRBias>
+          <HTBias>0</HTBias>
+          <HBBias>1</HBBias>
+        </extraInfo>
+      </extension>
+      <bbox x="1579.8025455288364" y="470.7666489510066" w="139.12104589068082" h="150.469844551413"/>
+      <glyph id="nwtN_d93dd608-0759-40eb-b3db-d16fde0c9a6d" class="macromolecule">
+        <label text="α-ketoglutarat-&#xA;dehidrogenazo"/>
+        <bbox x="1587.4703166295321" y="477.39164895100663" w="124.00968300242515" h="37.40203697859795"/>
+      </glyph>
+      <glyph id="nwtN_86d5361a-2116-48c3-adc1-cd4e299639d8" class="macromolecule">
+        <label text="dihidrolipoamid-&#xA;sukciniltransferazo"/>
+        <bbox x="1586.4275455288364" y="520.3900372549563" w="122.18906852852089" h="44.8040739571959"/>
+      </glyph>
+      <glyph id="nwtN_8ef8887b-0311-4943-b980-c7d326049445" class="macromolecule">
+        <label text="dihidrolipoamid-&#xA;dehidrogenazo"/>
+        <bbox x="1587.598510889346" y="569.1367616004904" w="120.89560615726414" h="42.33672829766326"/>
+      </glyph>
+    </glyph>
+    <glyph id="nwtN_085616e6-0587-4e9b-ae8d-84b239d740e3" class="simple chemical">
+      <label text="NAD+"/>
+      <clone/>
+      <bbox x="1396.6830418501372" y="452.22595836796825" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_87b5bb44-01ab-44cc-bb1b-3e78f104ca13" class="simple chemical">
+      <label text="CoA-SH"/>
+      <clone/>
+      <bbox x="1356.5753321154473" y="500.98124605235216" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_89aef944-8a3d-4562-adcb-8884d74a2eb3" class="simple chemical">
+      <label text="NADH"/>
+      <clone/>
+      <bbox x="1332.2933459753556" y="614.4020376232521" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_b64bd867-e8e8-49ce-986d-af24619b807a" class="simple chemical">
+      <label text="CO2"/>
+      <clone/>
+      <bbox x="1477.8081978732318" y="618.842154813114" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_f9a21b08-d6ce-43d8-b4cd-f11ea6090e07" class="process">
+      <bbox x="1247.8364039124672" y="768.5803532438003" w="14.285714285714286" h="14.285714285714286"/>
+      <port id="nwtN_f9a21b08-d6ce-43d8-b4cd-f11ea6090e07.1" x="1264.9792610553243" y="775.7232103866575"/>
+      <port id="nwtN_f9a21b08-d6ce-43d8-b4cd-f11ea6090e07.2" x="1244.9792610553243" y="775.7232103866575"/>
+    </glyph>
+    <glyph id="nwtN_78510366-d204-4a8a-a6ff-f8bc68906070" class="simple chemical">
+      <label text="CoA-SH"/>
+      <bbox x="1102.1023682209511" y="702.7672199325477" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_c55d8446-b85d-48cf-87f5-3b3ec14016fa" class="simple chemical">
+      <label text="sukcinato"/>
+      <bbox x="1065.458953832945" y="781.606081191591" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_f65cd181-b0a4-492c-af73-2fa2e3f13f31" class="simple chemical">
+      <label text="GTP"/>
+      <bbox x="1129.862530636107" y="736.079414830735" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_1a3598f9-1ce0-4b67-a32c-b6b16a6bbb8f" class="simple chemical">
+      <label text="GDP"/>
+      <bbox x="1220.915863357819" y="655.0197405784793" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_21a550a3-fcaf-4a29-9416-c071f4ca0f9a" class="simple chemical">
+      <label text="fosfato"/>
+      <bbox x="1260.8904972356438" y="679.4486835038165" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_5144d1d6-daa3-4d6f-b455-6f180eb372ce" class="macromolecule">
+      <label text="sukcinil-CoA-&#xA;sintetazo"/>
+      <bbox x="1323.6189519980808" y="774.9403228595146" w="88.87841465389045" h="42.21779081510749"/>
+    </glyph>
+    <glyph id="nwtN_4da4ab98-720f-4d23-9527-bcbe28be1630" class="process">
+      <bbox x="895.6510572330886" y="706.1827368032656" w="14.285714285714286" h="14.285714285714286"/>
+      <port id="nwtN_4da4ab98-720f-4d23-9527-bcbe28be1630.1" x="912.7939143759457" y="713.3255939461227"/>
+      <port id="nwtN_4da4ab98-720f-4d23-9527-bcbe28be1630.2" x="892.7939143759457" y="713.3255939461227"/>
+    </glyph>
+    <glyph id="nwtN_80252b45-c9a7-4592-a38d-2f42f1c929eb" class="simple chemical">
+      <label text="fumarato"/>
+      <bbox x="807.8446466202963" y="583.9537247956797" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_49db695c-e96e-4e9f-8783-5e70a3bcea0a" class="macromolecule">
+      <label text="sukcinat-&#xA;dehidrogenazo"/>
+      <bbox x="763.9740777085342" y="746.0688486698148" w="91.09983116572819" h="45.549915582864095"/>
+    </glyph>
+    <glyph id="nwtN_2746000c-da1c-4ec6-93fe-ed86925056c7" class="simple chemical">
+      <label text="FADH2"/>
+      <bbox x="887.7939143759459" y="583.9537247956795" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_a8f0702e-a42a-4d1f-b676-5e28314e9adf" class="simple chemical">
+      <label text="FAD"/>
+      <bbox x="992.1721250569329" y="668.3446185377542" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_d2d00ca7-b30e-4584-a049-b25800268d21" class="simple chemical">
+      <label text="l-malato"/>
+      <bbox x="785.7035072555731" y="316.4272341279823" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_e28918f0-1376-41ff-80b4-e2e5f37113c0" class="process">
+      <bbox x="787.9416270622833" y="444.12680360419205" w="14.285714285714286" h="14.285714285714286"/>
+      <port id="nwtN_e28918f0-1376-41ff-80b4-e2e5f37113c0.1" x="795.0844842051404" y="461.2696607470492"/>
+      <port id="nwtN_e28918f0-1376-41ff-80b4-e2e5f37113c0.2" x="795.0844842051404" y="441.2696607470492"/>
+    </glyph>
+    <glyph id="nwtN_82c33abc-6680-4377-aae6-4574f7d7fa8d" class="macromolecule">
+      <label text="fumarazo"/>
+      <bbox x="638.4981435920286" y="460.6986036723865" w="60" h="30"/>
+    </glyph>
+    <glyph id="nwtN_32fb672a-0f94-4c37-b7a9-1aac4c01ba12" class="simple chemical">
+      <label text="H2O"/>
+      <bbox x="699.0248099528845" y="387.4117748963745" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_c425d131-6e0a-4599-be67-cce586c1f229" class="process">
+      <bbox x="840.2007405633042" y="228.7755373486076" w="14.285714285714286" h="14.285714285714286"/>
+      <port id="nwtN_c425d131-6e0a-4599-be67-cce586c1f229.1" x="847.3435977061613" y="245.91839449146474"/>
+      <port id="nwtN_c425d131-6e0a-4599-be67-cce586c1f229.2" x="847.3435977061613" y="225.91839449146474"/>
+    </glyph>
+    <glyph id="nwtN_038a48df-3f4d-4b4c-90a3-100f3316566b" class="macromolecule">
+      <label text="malat-&#xA;dehidrogenazo"/>
+      <bbox x="662.9150161448612" y="176.43423878187554" w="104.42833023675452" h="31.110708255918865"/>
+    </glyph>
+    <glyph id="nwtN_fc8b4c91-e892-411e-b8e9-3bae0006d5ed" class="simple chemical">
+      <label text="NAD+"/>
+      <bbox x="861.1441584573962" y="309.6833201339374" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_4624f528-2572-4189-bcd2-3c8bf010ca11" class="simple chemical">
+      <label text="NADH"/>
+      <bbox x="891.1251338657645" y="223.07161339865036" w="30" h="30"/>
+    </glyph>
+    <glyph id="nwtN_24529d2f-a864-4e89-9dd5-0efdd1743926" class="compartment">
+      <extension>
+        <extraInfo>
+          <w>1154.69424234661</w>
+          <h>960.9149308040053</h>
+          <minW>0</minW>
+          <minH>0</minH>
+          <WLBias>0</WLBias>
+          <WRBias>0</WRBias>
+          <HTBias>0</HTBias>
+          <HBBias>0</HBBias>
+        </extraInfo>
+      </extension>
+      <label text="mitoĥondrio"/>
+      <bbox x="582.1079429574867" y="-18.94408673181556" w="1154.69424234661" h="960.9149308040053"/>
+    </glyph>
+    <arc id="nwtE_28356501-6fef-421a-b4ab-b87986f3974e" class="production" source="nwtN_d3ad99dc-106c-42cb-86ff-dbd3cdf5df1e.2" target="nwtN_118eb6dd-7a16-48c1-a703-cda68a5675e4">
+      <start x="1104.4908311359823" y="110.76237868045529"/>
+      <end x="1212.8298071113843" y="131.33060376431723"/>
+    </arc>
+    <arc id="nwtE_ea3aa7c4-f821-4435-bbf5-2cc00868628b" class="consumption" source="nwtN_ee464461-7b8d-4035-bb2a-74ae4d082de1" target="nwtN_d3ad99dc-106c-42cb-86ff-dbd3cdf5df1e.1">
+      <start x="985.3245513201318" y="131.75389465499157"/>
+      <end x="1083.2408311359823" y="110.76237868045529"/>
+    </arc>
+    <arc id="nwtE_74e65014-5d9c-468a-8a65-a481d20c41aa" class="catalysis" source="nwtN_f51c0fc1-d5e1-4390-8512-bc85ea8af388" target="nwtN_d3ad99dc-106c-42cb-86ff-dbd3cdf5df1e">
+      <start x="1098.1513848422994" y="46.16874919113204"/>
+      <end x="1094.5762304222667" y="100.05494822168056"/>
+    </arc>
+    <arc id="nwtE_f21bd3c1-4aea-4893-a5c3-0331f4cafcca" class="consumption" source="nwtN_d3ae3ffa-38a7-4f11-8376-eedfcd8aae18" target="nwtN_d3ad99dc-106c-42cb-86ff-dbd3cdf5df1e.1">
+      <start x="959.4838466097684" y="200.90574440082344"/>
+      <end x="1083.2408311359823" y="110.76237868045529"/>
+    </arc>
+    <arc id="nwtE_ed172b2a-f4db-4d14-9a34-3e94b6c0d911" class="consumption" source="nwtN_c11353ee-c961-433f-a155-e5c7055d2efd" target="nwtN_d3ad99dc-106c-42cb-86ff-dbd3cdf5df1e.1">
+      <start x="955.635395665023" y="36.932710916763185"/>
+      <end x="1083.2408311359823" y="110.76237868045529"/>
+    </arc>
+    <arc id="nwtE_a9043ab5-e43d-47f2-b806-1436608b5428" class="production" source="nwtN_d3ad99dc-106c-42cb-86ff-dbd3cdf5df1e.2" target="nwtN_a4ea525d-63f8-49d8-b681-e73997e025e9">
+      <start x="1104.4908311359823" y="110.76237868045529"/>
+      <end x="1146.469010851137" y="188.04184524587345"/>
+    </arc>
+    <arc id="nwtE_79f6e5eb-da4b-408a-9e75-0adf23cae471" class="production" source="nwtN_621fe080-2cef-4312-844d-ce96755dd293.2" target="nwtN_f30829bf-fb4e-480d-a020-e43ccd9ecc5a">
+      <start x="1335.5641686269055" y="167.51903768058224"/>
+      <end x="1399.8725352400047" y="226.37673414484465"/>
+    </arc>
+    <arc id="nwtE_16dbad6d-7e82-4c4f-b284-167e4834ba6b" class="catalysis" source="nwtN_39519218-7321-4241-bffc-c3d4a6f71555" target="nwtN_621fe080-2cef-4312-844d-ce96755dd293">
+      <start x="1358.3816075567934" y="92.82563461690937"/>
+      <end x="1329.6141175786715" y="157.07757893744395"/>
+    </arc>
+    <arc id="nwtE_ab9f5fad-d6c1-4435-a0c4-41b83ba3d7c9" class="consumption" source="nwtN_118eb6dd-7a16-48c1-a703-cda68a5675e4" target="nwtN_621fe080-2cef-4312-844d-ce96755dd293.1">
+      <start x="1246.0425377654674" y="139.71787276106798"/>
+      <end x="1314.3141686269055" y="167.51903768058224"/>
+    </arc>
+    <arc id="nwtE_c50309af-8957-47dc-819e-7a321a6c09d0" class="catalysis" source="nwtN_fcaf3c49-49d1-4d1b-8fa1-28ec608b2c91" target="nwtN_ae61c9a8-dc1f-4f7b-87b7-96ff4b462ca9">
+      <start x="1528.2080125709106" y="255.18474848076812"/>
+      <end x="1473.5690448612559" y="301.54403705618716"/>
+    </arc>
+    <arc id="nwtE_5b75f511-dfb1-47c6-a8e2-3f0f7edc3057" class="consumption" source="nwtN_f30829bf-fb4e-480d-a020-e43ccd9ecc5a" target="nwtN_ae61c9a8-dc1f-4f7b-87b7-96ff4b462ca9.1">
+      <start x="1423.4023414499693" y="250.88039963689346"/>
+      <end x="1463.59689555915" y="299.3800634370314"/>
+    </arc>
+    <arc id="nwtE_85b05955-c6ef-49d5-be85-3a58fa327bc1" class="consumption" source="nwtN_e12afa85-1760-4ead-aab7-8cf85961cce0" target="nwtN_ae61c9a8-dc1f-4f7b-87b7-96ff4b462ca9.1">
+      <start x="1318.0167403671824" y="277.85455003733756"/>
+      <end x="1463.59689555915" y="299.3800634370314"/>
+    </arc>
+    <arc id="nwtE_0ebee27b-b7f3-4b43-b241-e9d87d3e71ce" class="production" source="nwtN_ae61c9a8-dc1f-4f7b-87b7-96ff4b462ca9.2" target="nwtN_b95ecd71-0d61-4e6f-8dfd-1358f513d80d">
+      <start x="1463.59689555915" y="320.6300634370314"/>
+      <end x="1486.7073155138694" y="415.05122285549686"/>
+    </arc>
+    <arc id="nwtE_28042c11-41a8-4678-8044-9f80fb467af7" class="production" source="nwtN_ae61c9a8-dc1f-4f7b-87b7-96ff4b462ca9.2" target="nwtN_906f1e75-b534-4030-b111-a944071b54c2">
+      <start x="1463.59689555915" y="320.6300634370314"/>
+      <end x="1394.6860263198707" y="366.5789884167154"/>
+    </arc>
+    <arc id="nwtE_6ceff191-6ef9-4ff8-b0e7-d8b2dc78c4dc" class="production" source="nwtN_ae61c9a8-dc1f-4f7b-87b7-96ff4b462ca9.2" target="nwtN_05f84998-6a2f-451c-91c9-0c46825ab0d2">
+      <start x="1463.59689555915" y="320.6300634370314"/>
+      <end x="1503.3776100346274" y="363.2041113179556"/>
+    </arc>
+    <arc id="nwtE_4314f604-bb9f-4e43-8456-ac2da9b3db43" class="consumption" source="nwtN_b95ecd71-0d61-4e6f-8dfd-1358f513d80d" target="nwtN_1a8feac0-64a1-4062-bfcd-87a3dd6acb0b.1">
+      <start x="1489.7933358394446" y="448.9598342045733"/>
+      <end x="1483.1994962558074" y="547.4289394347268"/>
+    </arc>
+    <arc id="nwtE_06d52497-d124-4818-b02c-5042ef977617" class="production" source="nwtN_1a8feac0-64a1-4062-bfcd-87a3dd6acb0b.2" target="nwtN_3b994696-ddcb-446a-a262-77f6e68dd0e1">
+      <start x="1483.1994962558074" y="568.6789394347268"/>
+      <end x="1401.4441872910136" y="687.3977699702269"/>
+    </arc>
+    <arc id="nwtE_8883240d-6941-4603-ac77-ecf67b6df1d2" class="catalysis" source="nwtN_d70adebc-293e-4064-9cd1-c2ad62989a8e" target="nwtN_1a8feac0-64a1-4062-bfcd-87a3dd6acb0b">
+      <start x="1579.1775455288364" y="551.092348670385"/>
+      <end x="1493.9055938604429" y="557.2773923932824"/>
+    </arc>
+    <arc id="nwtE_5063a8d8-6d1e-423d-bd20-b7fe4282aad6" class="production" source="nwtN_1a8feac0-64a1-4062-bfcd-87a3dd6acb0b.2" target="nwtN_b64bd867-e8e8-49ce-986d-af24619b807a">
+      <start x="1483.1994962558074" y="568.6789394347268"/>
+      <end x="1490.4498839613664" y="615.241056579593"/>
+    </arc>
+    <arc id="nwtE_97960504-e83b-481f-a658-ab9c7fcba96f" class="production" source="nwtN_1a8feac0-64a1-4062-bfcd-87a3dd6acb0b.2" target="nwtN_89aef944-8a3d-4562-adcb-8884d74a2eb3">
+      <start x="1483.1994962558074" y="568.6789394347268"/>
+      <end x="1363.8946889069769" y="620.6866539330921"/>
+    </arc>
+    <arc id="nwtE_696dcdcd-302d-49ec-a3b9-3f9184b37c3f" class="consumption" source="nwtN_87b5bb44-01ab-44cc-bb1b-3e78f104ca13" target="nwtN_1a8feac0-64a1-4062-bfcd-87a3dd6acb0b.1">
+      <start x="1386.1962553047465" y="521.4920744921255"/>
+      <end x="1483.1994962558074" y="547.4289394347268"/>
+    </arc>
+    <arc id="nwtE_0e22a051-1ce1-444f-80d7-36a59d348876" class="consumption" source="nwtN_085616e6-0587-4e9b-ae8d-84b239d740e3" target="nwtN_1a8feac0-64a1-4062-bfcd-87a3dd6acb0b.1">
+      <start x="1421.3491684857518" y="479.50222086370627"/>
+      <end x="1483.1994962558074" y="547.4289394347268"/>
+    </arc>
+    <arc id="nwtE_92e3b6ab-47a5-41a4-b40a-0b2a08a314cf" class="consumption" source="nwtN_3b994696-ddcb-446a-a262-77f6e68dd0e1" target="nwtN_f9a21b08-d6ce-43d8-b4cd-f11ea6090e07.1">
+      <start x="1375.08681605873" y="712.6385759235297"/>
+      <end x="1265.6042610553243" y="775.7232103866575"/>
+    </arc>
+    <arc id="nwtE_8865e0e2-4c88-42fe-b1f4-713fbd0c4b6b" class="consumption" source="nwtN_21a550a3-fcaf-4a29-9416-c071f4ca0f9a" target="nwtN_f9a21b08-d6ce-43d8-b4cd-f11ea6090e07.1">
+      <start x="1271.9971227715814" y="709.5808433061245"/>
+      <end x="1265.6042610553243" y="775.7232103866575"/>
+    </arc>
+    <arc id="nwtE_7eed5999-88ec-46eb-bdfc-caca750ffb4d" class="consumption" source="nwtN_1a3598f9-1ce0-4b67-a32c-b6b16a6bbb8f" target="nwtN_f9a21b08-d6ce-43d8-b4cd-f11ea6090e07.1">
+      <start x="1238.6890603893341" y="685.3966714564015"/>
+      <end x="1265.6042610553243" y="775.7232103866575"/>
+    </arc>
+    <arc id="nwtE_60656c2e-11de-4996-9aaf-dc18ddb13506" class="production" source="nwtN_f9a21b08-d6ce-43d8-b4cd-f11ea6090e07.2" target="nwtN_c55d8446-b85d-48cf-87f5-3b3ec14016fa">
+      <start x="1244.3542610553243" y="775.7232103866575"/>
+      <end x="1099.0761451912435" y="794.3783725193235"/>
+    </arc>
+    <arc id="nwtE_fab8688e-c7c9-4ab0-8586-b7e8c4246e71" class="production" source="nwtN_f9a21b08-d6ce-43d8-b4cd-f11ea6090e07.2" target="nwtN_f65cd181-b0a4-492c-af73-2fa2e3f13f31">
+      <start x="1244.3542610553243" y="775.7232103866575"/>
+      <end x="1163.1599155054737" y="755.1743149445691"/>
+    </arc>
+    <arc id="nwtE_f7c20d05-eb4d-49ff-8427-f9481664941b" class="production" source="nwtN_f9a21b08-d6ce-43d8-b4cd-f11ea6090e07.2" target="nwtN_78510366-d204-4a8a-a6ff-f8bc68906070">
+      <start x="1244.3542610553243" y="775.7232103866575"/>
+      <end x="1134.3873971893624" y="725.0329114730124"/>
+    </arc>
+    <arc id="nwtE_a31a6266-e147-49c3-84dc-6e075f562e19" class="catalysis" source="nwtN_5144d1d6-daa3-4d6f-b455-6f180eb372ce" target="nwtN_f9a21b08-d6ce-43d8-b4cd-f11ea6090e07">
+      <start x="1322.9939519980808" y="787.9488967458302"/>
+      <end x="1265.644253270459" y="777.6402498973566"/>
+    </arc>
+    <arc id="nwtE_26a0304a-8a1a-4572-af35-956d45ec80ef" class="production" source="nwtN_4da4ab98-720f-4d23-9527-bcbe28be1630.2" target="nwtN_80252b45-c9a7-4592-a38d-2f42f1c929eb">
+      <start x="892.1689143759457" y="713.3255939461227"/>
+      <end x="833.5870498665843" y="614.3213294396749"/>
+    </arc>
+    <arc id="nwtE_21b0e96e-4af4-4900-9f8e-cce835606027" class="consumption" source="nwtN_c55d8446-b85d-48cf-87f5-3b3ec14016fa" target="nwtN_4da4ab98-720f-4d23-9527-bcbe28be1630.1">
+      <start x="1066.3111579585877" y="789.974301875486"/>
+      <end x="913.4189143759457" y="713.3255939461227"/>
+    </arc>
+    <arc id="nwtE_9136f57e-26a5-449f-a8d7-400538288295" class="catalysis" source="nwtN_49db695c-e96e-4e9f-8783-5e70a3bcea0a" target="nwtN_4da4ab98-720f-4d23-9527-bcbe28be1630">
+      <start x="848.605386007064" y="745.5809041134628"/>
+      <end x="892.5193434891077" y="719.4414542724128"/>
+    </arc>
+    <arc id="nwtE_9c3baab8-daee-49a5-ac16-e472de11debc" class="production" source="nwtN_4da4ab98-720f-4d23-9527-bcbe28be1630.2" target="nwtN_2746000c-da1c-4ec6-93fe-ed86925056c7">
+      <start x="892.1689143759457" y="713.3255939461227"/>
+      <end x="902.7939143759459" y="617.7037247956795"/>
+    </arc>
+    <arc id="nwtE_6e0a5826-9c06-427e-8d6b-f36cdd34a7df" class="consumption" source="nwtN_a8f0702e-a42a-4d1f-b676-5e28314e9adf" target="nwtN_4da4ab98-720f-4d23-9527-bcbe28be1630.1">
+      <start x="992.1543570039828" y="687.6582327657292"/>
+      <end x="913.4189143759457" y="713.3255939461227"/>
+    </arc>
+    <arc id="nwtE_11795c3c-4d3f-4f82-bbe7-d616eab2b39e" class="production" source="nwtN_e28918f0-1376-41ff-80b4-e2e5f37113c0.2" target="nwtN_d2d00ca7-b30e-4584-a049-b25800268d21">
+      <start x="795.0844842051404" y="440.6446607470492"/>
+      <end x="799.8253452443145" y="350.15665834449203"/>
+    </arc>
+    <arc id="nwtE_a2c795df-d521-49cc-b519-b035188e722b" class="consumption" source="nwtN_80252b45-c9a7-4592-a38d-2f42f1c929eb" target="nwtN_e28918f0-1376-41ff-80b4-e2e5f37113c0.1">
+      <start x="819.958167437261" y="583.5976555419318"/>
+      <end x="795.0844842051404" y="461.8946607470492"/>
+    </arc>
+    <arc id="nwtE_54ff87a5-5d04-417e-9f9b-f8232e504290" class="catalysis" source="nwtN_82c33abc-6680-4377-aae6-4574f7d7fa8d" target="nwtN_e28918f0-1376-41ff-80b4-e2e5f37113c0">
+      <start x="699.1231435920286" y="469.7885159530883"/>
+      <end x="784.4268129545012" y="453.326404321734"/>
+    </arc>
+    <arc id="nwtE_016a5958-fe81-4d6f-9375-88a756d8fe0a" class="production" source="nwtN_e28918f0-1376-41ff-80b4-e2e5f37113c0.2" target="nwtN_32fb672a-0f94-4c37-b7a9-1aac4c01ba12">
+      <start x="795.0844842051404" y="440.6446607470492"/>
+      <end x="730.0833597528908" y="412.0909008032276"/>
+    </arc>
+    <arc id="nwtE_ab30f346-670d-4d24-b39f-45640b254d0b" class="production" source="nwtN_c425d131-6e0a-4599-be67-cce586c1f229.2" target="nwtN_ee464461-7b8d-4035-bb2a-74ae4d082de1">
+      <start x="847.3435977061613" y="225.29339449146474"/>
+      <end x="955.5216856363984" y="146.65428980101882"/>
+    </arc>
+    <arc id="nwtE_8d0fd18d-9bef-43f8-9674-75647aacbf10" class="consumption" source="nwtN_d2d00ca7-b30e-4584-a049-b25800268d21" target="nwtN_c425d131-6e0a-4599-be67-cce586c1f229.1">
+      <start x="807.5598623211663" y="317.38689865426534"/>
+      <end x="847.3435977061613" y="246.54339449146474"/>
+    </arc>
+    <arc id="nwtE_dc9610b7-0cfb-4256-8a2c-8639dddf3e9a" class="catalysis" source="nwtN_038a48df-3f4d-4b4c-90a3-100f3316566b" target="nwtN_c425d131-6e0a-4599-be67-cce586c1f229">
+      <start x="762.373812842552" y="207.68682247285173"/>
+      <end x="836.7887180462725" y="232.41149088161973"/>
+    </arc>
+    <arc id="nwtE_5f1644e9-4c52-45b2-b732-da2697af4c20" class="production" source="nwtN_c425d131-6e0a-4599-be67-cce586c1f229.2" target="nwtN_4624f528-2572-4189-bcd2-3c8bf010ca11">
+      <start x="847.3435977061613" y="225.29339449146474"/>
+      <end x="887.3877007898712" y="237.3852448923631"/>
+    </arc>
+    <arc id="nwtE_1ad94481-267e-4a5a-85ae-c8f092efd75b" class="consumption" source="nwtN_fc8b4c91-e892-411e-b8e9-3bae0006d5ed" target="nwtN_c425d131-6e0a-4599-be67-cce586c1f229.1">
+      <start x="871.321964267288" y="309.82105017969127"/>
+      <end x="847.3435977061613" y="246.54339449146474"/>
+    </arc>
+  </map>
+</sbgn>
