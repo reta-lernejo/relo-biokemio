@@ -9,24 +9,24 @@ amina(asparagino,'Asn','N').
 amina(asparaginacido,'Asp','D').
 amina(cisteino,'Cys','C').
 amina(glutamino,'Gln','Q').
-amina('glutaminacido','glu','e').
-amina('glycin','gly','g').
-amina('histidin','his','h').
-amina('isoleucin','ile','i').
-amina('leucin','leu','l').
-amina('lysin','lys','k').
-amina('methionin','met','m').
-amina('phenylalanin','phe','f').
-amina('prolin','pro','p').
-amina('serin','ser','s').
-amina('threonin','thr','t').
-amina('tryptophan','trp','w').
-amina('tyrosin','tyr','y').
-amina('valin','val','v').
+amina(glutaminacido,'Glu','E').
+amina(glicino,'Gly','G').
+amina(histidino,'His','H').
+amina(izoleŭcino,'Ile','I').
+amina(leŭcino,'Leu','L').
+amina(lizino,'Lys','K').
+amina(metionino,'Met','M').
+amina(fenilalanino,'Phe','F').
+amina(prolino,'Pro','P').
+amina(serino,'Ser','S').
+amina(treonino,'Thr','T').
+amina(triptofano,'Trp','W').
+amina(tirozino,'Tyr','Y').
+amina(valino,'Val','V').
 
 % noncanonical proteinogen
-amina('pyrrolysin','pyl','o').
-amina('selenocystein','sec','u'). 
+amina(pirolizino,'Pyl','O').
+amina(selenocisteino,'Sec','U'). 
 
 %! c_id(+Eo,+Katalogo,+Kodo)
 c_id(alanino,angle,'L-alanine').

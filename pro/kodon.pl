@@ -1,5 +1,22 @@
 % https://en.wikipedia.org/wiki/DNA_and_RNA_codon_tables
 
+print_arr :-
+    consult(db/amino),
+    kdn(N,X),
+    once((
+        amina(A,M,L),
+        downcase_atom(M,X)
+        ;
+        X=start, L='⏵',
+        A=starto,M=''
+        ;
+        X=stop, L='⏹',
+        A=fino,M=''
+        )),
+    upcase_atom(N,K),
+    format('[''~w'',''~w'',''~w'',''~w'']~n',[K,L,M,A]),
+    fail.
+
 kdn(uag,stop).
 kdn(uga,stop).
 kdn(uaa,stop).
