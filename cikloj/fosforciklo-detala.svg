@@ -6,17 +6,14 @@
       <clipPath clipPathUnits="userSpaceOnUse" id="clipPath1">
         <path d="M0 0 L689 0 L689 451 L0 451 L0 0 Z"/>
       </clipPath>
+      <clipPath clipPathUnits="userSpaceOnUse" id="clipPath2">
+        <path d="M-58 32 L631 32 L631 483 L-58 483 L-58 32 Z"/>
+      </clipPath>
     </defs>
-    <g id="y.node.0">
-      <g fill="rgb(153,51,0)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,58,-32)" stroke="rgb(153,51,0)">
-        <path d="M556 467.4203 L558.5 83.9199 L563.5 83.9199 L566 467.4203 Z" stroke="none" fill-rule="evenodd"/>
-      </g>
-      <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,58,-32)" stroke-linecap="butt">
-        <path fill="none" d="M556 467.4203 L558.5 83.9199 L563.5 83.9199 L566 467.4203 Z" fill-rule="evenodd"/>
-      </g>
-      <g/>
+    <g fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="translate(58,-32)" stroke="white">
+      <rect x="-58" width="689" height="451" y="32" clip-path="url(#clipPath2)" stroke="none"/>
     </g>
-    <g id="y.node.1">
+    <g id="y.node.0">
       <a target="_blank" xlink:type="simple" xlink:href="#mineraloj" xlink:show="new">
         <g fill="rgb(255,204,0)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,58,-32)" stroke="rgb(255,204,0)">
           <rect x="165.6" width="104" height="33.84" y="47" stroke="none"/>
@@ -31,7 +28,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.2">
+    <g id="y.node.1">
       <a target="_blank" xlink:type="simple" xlink:href="#fosfato" xlink:show="new">
         <g fill="rgb(255,204,0)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,58,-32)" stroke="rgb(255,204,0)">
           <rect x="175" width="81.2" height="33.84" y="130" stroke="none"/>
@@ -46,7 +43,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.3">
+    <g id="y.node.2">
       <a target="_blank" xlink:type="simple" xlink:href="#ferofosfato" xlink:show="new">
         <g fill="rgb(255,204,0)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,58,-32)" stroke="rgb(255,204,0)">
           <rect x="221.64" width="88" height="30" y="222.84" stroke="none"/>
@@ -61,7 +58,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.4">
+    <g id="y.node.3">
       <a target="_blank" xlink:type="simple" xlink:href="#plantoj" xlink:show="new">
         <g fill="rgb(255,204,0)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,58,-32)" stroke="rgb(255,204,0)">
           <rect x="82.64" width="104" height="33.84" y="236.96" stroke="none"/>
@@ -76,7 +73,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.5">
+    <g id="y.node.4">
       <a target="_blank" xlink:type="simple" xlink:href="#bestoj" xlink:show="new">
         <g fill="rgb(255,204,0)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,58,-32)" stroke="rgb(255,204,0)">
           <rect x="182.64" width="94" height="30" y="365.96" stroke="none"/>
@@ -91,7 +88,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.6">
+    <g id="y.node.5">
       <a target="_blank" xlink:type="simple" xlink:href="#restoj" xlink:show="new">
         <g fill="rgb(255,204,0)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,58,-32)" stroke="rgb(255,204,0)">
           <rect x="367.64" width="110" height="30" y="328.96" stroke="none"/>
@@ -106,7 +103,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.7">
+    <g id="y.node.6">
       <a target="_blank" xlink:type="simple" xlink:href="#rikolto" xlink:show="new">
         <g fill="rgb(255,204,0)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,58,-32)" stroke="rgb(255,204,0)">
           <rect x="-42.36" width="60" height="30" y="236.96" stroke="none"/>
@@ -121,7 +118,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.8">
+    <g id="y.node.7">
       <a target="_blank" xlink:type="simple" xlink:href="#konsumado" xlink:show="new">
         <g fill="rgb(255,204,0)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,58,-32)" stroke="rgb(255,204,0)">
           <rect x="182.64" width="94" height="30" y="437.42" stroke="none"/>
@@ -136,7 +133,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.9">
+    <g id="y.node.8">
       <a target="_blank" xlink:type="simple" xlink:href="#detruantoj" xlink:show="new">
         <g fill="rgb(255,204,0)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,58,-32)" stroke="rgb(255,204,0)">
           <rect x="326.6" width="76" height="30" y="268.96" stroke="none"/>
@@ -152,7 +149,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.10">
+    <g id="y.node.9">
       <a target="_blank" xlink:type="simple" xlink:href="#sterko" xlink:show="new">
         <g fill="rgb(255,204,0)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,58,-32)" stroke="rgb(255,204,0)">
           <rect x="28.4" width="81.2" height="30" y="130" stroke="none"/>
@@ -166,6 +163,15 @@
           </g>
         </g>
       </a>
+    </g>
+    <g id="y.node.10">
+      <g fill="rgb(153,51,0)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,58,-32)" stroke="rgb(153,51,0)">
+        <path d="M556 467.42 L558.5 83.92 L563.5 83.92 L566 467.42 Z" stroke="none" fill-rule="evenodd"/>
+      </g>
+      <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,58,-32)" stroke-linecap="butt">
+        <path fill="none" d="M556 467.42 L558.5 83.92 L563.5 83.92 L566 467.42 Z" fill-rule="evenodd"/>
+      </g>
+      <g/>
     </g>
     <g id="y.node.11">
       <a target="_blank" xlink:type="simple" xlink:href="#nun" xlink:show="new">
@@ -185,30 +191,45 @@
     <g id="y.node.12">
       <a target="_blank" xlink:type="simple" xlink:href="#dekstren" xlink:show="new">
         <g fill="rgb(204,255,153)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,58,-32)" stroke="rgb(204,255,153)">
-          <path d="M522 139.55 L606.6001 139.55 L616 164.55 L606.6001 189.55 L522 189.55 L531.3999 164.55 Z" stroke="none" fill-rule="evenodd"/>
+          <path d="M522 139.55 L606.6 139.55 L616 164.55 L606.6 189.55 L522 189.55 L531.4 164.55 Z" stroke="none" fill-rule="evenodd"/>
         </g>
         <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,58,-32)" stroke-linecap="butt">
-          <path fill="none" d="M522 139.55 L606.6001 139.55 L616 164.55 L606.6001 189.55 L522 189.55 L531.3999 164.55 Z" fill-rule="evenodd"/>
+          <path fill="none" d="M522 139.55 L606.6 139.55 L616 164.55 L606.6 189.55 L522 189.55 L531.4 164.55 Z" fill-rule="evenodd"/>
         </g>
         <g>
           <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,58,-32)" stroke-linecap="butt">
-            <text x="537.4707" xml:space="preserve" y="161.7199" stroke="none">fosfatjonoj</text>
-            <text x="542.7646" xml:space="preserve" y="175.6887" stroke="none">(rondiro)</text>
+            <text x="537.4707" xml:space="preserve" y="168.7043" stroke="none">fosfatjonoj</text>
           </g>
         </g>
       </a>
     </g>
     <g id="y.node.13">
-      <a target="_blank" xlink:type="simple" xlink:href="maldekstren" xlink:show="new">
+      <a target="_blank" xlink:type="simple" xlink:href="#maldekstren" xlink:show="new">
         <g fill="rgb(204,255,153)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,58,-32)" stroke="rgb(204,255,153)">
-          <path d="M521.4001 194.4633 L606 194.4633 L596.5999 219.4633 L606 244.4633 L521.4001 244.4633 L512 219.4633 Z" stroke="none" fill-rule="evenodd"/>
+          <path d="M521.4 194.4633 L606 194.4633 L596.6 219.4633 L606 244.4633 L521.4 244.4633 L512 219.4633 Z" stroke="none" fill-rule="evenodd"/>
         </g>
         <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,58,-32)" stroke-linecap="butt">
-          <path fill="none" d="M521.4001 194.4633 L606 194.4633 L596.5999 219.4633 L606 244.4633 L521.4001 244.4633 L512 219.4633 Z" fill-rule="evenodd"/>
+          <path fill="none" d="M521.4 194.4633 L606 194.4633 L596.6 219.4633 L606 244.4633 L521.4 244.4633 L512 219.4633 Z" fill-rule="evenodd"/>
         </g>
         <g>
           <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,58,-32)" stroke-linecap="butt">
             <text x="538.5508" xml:space="preserve" y="223.6176" stroke="none">sterkoj</text>
+          </g>
+        </g>
+      </a>
+    </g>
+    <g id="y.node.14">
+      <a target="_blank" xlink:type="simple" xlink:href="#rondvojo" xlink:show="new">
+        <g fill="rgb(153,204,0)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,58,-32)" stroke="rgb(153,204,0)">
+          <path d="M512 274.1683 L522.4 249.3766 L605.5998 249.3766 L615.9998 274.1683 L605.5998 298.96 L522.4 298.96 Z" stroke="none" fill-rule="evenodd"/>
+        </g>
+        <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,58,-32)" stroke-linecap="butt">
+          <path fill="none" d="M512 274.1683 L522.4 249.3766 L605.5998 249.3766 L615.9998 274.1683 L605.5998 298.96 L522.4 298.96 Z" fill-rule="evenodd"/>
+        </g>
+        <g/>
+        <g>
+          <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,58,-32)" stroke-linecap="butt">
+            <text x="537.6914" xml:space="preserve" y="278.3226" stroke="none">rondvojo</text>
           </g>
         </g>
       </a>
