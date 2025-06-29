@@ -30,5 +30,5 @@ Kompreneble krom tiuj bazaj elementoj ankaŭ aliaj plenumas gravajn rolojn en or
 {: .sekcio}
 
 Ĉar la vivesencaj elementoj estas partoprenantoj en multaj biologiaj procezoj de sin nutrantaj organismoj, ili submetiĝas al akcelita cirkulado en la geoĥemia sistemo de la tero. Oni nomas ilin 
-[nutraĵocikloj](/biogeokemio/biogeokemiaj_cikloj#nutraĵociklo). La cirkulado de la vivesencaj elementoj do estas kombino de pli malrapidaj neorganikaj ĥemiaj procezoj kaj la akcelitaj bioĥemiaj. 
+[nutraĵocikloj](/tero/biogeokemiaj_cikloj#nutraĵociklo). La cirkulado de la vivesencaj elementoj do estas kombino de pli malrapidaj neorganikaj ĥemiaj procezoj kaj la akcelitaj bioĥemiaj. 
 

@@ -3,8 +3,8 @@ layout: laborfolio
 title: Genkodilo
 chapter: 4
 js:
-  - folio-0b
-  - svg-0b
+  - folio-0c
+  - svg-0c
   - jmol-0a
   - jsmol/JSmol.min
 ---
@@ -370,6 +370,10 @@ SA -->
             font-size: 18px;
             stroke: none;
         }
+        #amino, k1, k2, k3 {
+          pointer-events: all;
+        }
+
         #amino g:hover rect {
           stroke: darkred;
           stroke-dasharray: 3,2;
