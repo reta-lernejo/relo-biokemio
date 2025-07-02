@@ -31,7 +31,7 @@ function jmol_info(id,modelo,largho,alto,kiam_preta) {
  * en via laborfolio vi devas ŝargi ambaŭ:
  * 
  * js:
- *   - jmol0a
+ *   - jmol0b
  *   - jsmol/JSmol.min
  * 
  * @param id unika identigilo por la variablo de la aplikaĵeto
@@ -42,6 +42,7 @@ function jmol_info(id,modelo,largho,alto,kiam_preta) {
  */
 function jmol_kesto(id,modelo,largho,alto,kiam_preta) {
     JsPath = '../assets/js/jsmol/';
+    delete Jmol._tracker; 
 
     const info = jmol_info(id,modelo,largho,alto,kiam_preta)
     return Jmol.getApplet(id, info);
@@ -53,7 +54,7 @@ function jmol_kesto(id,modelo,largho,alto,kiam_preta) {
  * en via laborfolio. En ĝia kapo vi devas ŝargi ambaŭ:
  * 
  * js:
- *   - jmol0a
+ *   - jmol0b
  *   - jsmol/JSmol.min
  * 
  * @param id unika identigilo por la variablo de la aplikaĵeto
@@ -64,6 +65,7 @@ function jmol_kesto(id,modelo,largho,alto,kiam_preta) {
  */
  function jmol_html(id,modelo,largho,alto,kiam_preta) {
     JsPath = '../assets/js/jsmol/';
+    delete Jmol._tracker; 
 
     const info = jmol_info(id,modelo,largho,alto,kiam_preta)
     return Jmol.getAppletHtml(id, info);
@@ -79,7 +81,7 @@ function jmol_kesto(id,modelo,largho,alto,kiam_preta) {
  * En ĝia kapo vi devas ŝargi ambaŭ:
  * 
  * js:
- *   - jmol0a
+ *   - jmol0b
  *   - jsmol/JSmol.min
  * 
  * @param id unika identigilo por la div-elemento de la aplikaĵeto
