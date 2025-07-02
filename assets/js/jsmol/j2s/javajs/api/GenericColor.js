@@ -1,2 +1,3 @@
-Clazz.declarePackage ("javajs.api");
-Clazz.declareInterface (javajs.api, "GenericColor");
+Clazz.declarePackage("javajs.api");
+Clazz.declareInterface(javajs.api, "GenericColor");
+;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025

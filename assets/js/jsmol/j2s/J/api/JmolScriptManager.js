@@ -1,10 +1,5 @@
-Clazz.declarePackage ("J.api");
-c$ = Clazz.declareInterface (J.api, "JmolScriptManager");
-Clazz.defineStatics (c$,
-"PDB_CARTOONS", 1,
-"NO_SCRIPT", 2,
-"IS_APPEND", 4,
-"NO_AUTOPLAY", 8,
-"FILE_DROPPED", 16,
-"SCRIPT_ONLY", 32,
-"CHECK_DIMS", 64);
+Clazz.declarePackage("J.api");
+(function(){
+var c$ = Clazz.declareInterface(J.api, "JmolScriptManager");
+})();
+;//5.0.1-v7 Sat Jun 07 00:08:51 CEST 2025
