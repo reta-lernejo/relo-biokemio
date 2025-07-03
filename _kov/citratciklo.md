@@ -11,6 +11,8 @@ js:
 <!-- 
 
 citrasintazo: https://www.rcsb.org/structure/5UZQ 
+akonitazo: https://www.rcsb.org/structure/1B0J
+fumarazo: https://www.rcsb.org/structure/3E04
 
 # el PubChem:
 vd. https://pubchem.ncbi.nlm.nih.gov/docs/citation-guidelines#section=Reusing-the-2D-or-3D-structure-image-of-a-compound-or-substance-record
@@ -64,6 +66,19 @@ const molekuloj = {
   "l-malato": "lmalato_CID_222656.sdf"
 }
 
+const proteinoj = {
+  "citrat-sintazo": "citratsintazo_5uzq.cif.gz",
+  "akonitazo": "akonitazo_1b0j.cif.gz",
+  "izocitrat-dehidrogenazo": "",
+  "α-ketoglutarat-dehidrogenazo": "",
+  "dihidrolipoamid-sukciniltransferazo": "",
+  "dihidrolipoamid-dehidrogenazo": "",
+  "sukcinil-CoA-sintetazo": "",
+  "sukcinat-dehidrogenazo": "",
+  "fumarazo": "fumarazo_3e04.cif.gz",
+  "malat-dehidrogenazo": ""
+}
+
 function svg_elekto(event) {
   const g = event.currentTarget;
   const text = g.querySelector("text");
@@ -72,10 +87,11 @@ function svg_elekto(event) {
   console.log("klako: "+g.id+" ("+molekulo+")");
 
   // montru la molekulon - FARENDA: en kiu fako?
-  const dosiero = molekuloj[molekulo];
-  if (dosiero) {
-    Jmol.script(jmol_produkto_ref, `load "inc/${dosiero}";`);
-  }
+  if (molekuloj[molekulo]) {
+    Jmol.script(jmol_produkto_ref, `load "inc/${molekuloj[molekulo]}"; set antialiasDisplay ON`);
+  } else if (proteinoj[molekulo]) {
+    Jmol.script(jmol_proteino_ref, `load "inc/${proteinoj[molekulo]}"; cartoon only; color cartoon structure; set antialiasDisplay ON`);
+  };
 }
 
 

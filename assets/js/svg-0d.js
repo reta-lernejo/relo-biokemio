@@ -4,6 +4,46 @@ const xlink = "http://www.w3.org/1999/xlink";
 
 class SVG {
 
+    /**
+     * legas SVG-dokumenton el dosiero por enŝovi ĝin rekte en DOM
+     * ĉe elemento kun id "el_id"
+     * @param {*} dosiero 
+     * @param {*} el_id 
+     */
+    static async legu_svg_dokumenton(dosiero, el_id) {
+        try {
+            const response = await fetch(dosiero);
+
+            if (!response.ok) {
+                throw new Error(`Respondstato: ${response.status}`);
+            }        
+            
+            const svgText = await response.text();
+    
+            // analizu la SVG-dokumenton
+            const parser = new DOMParser();
+            const svgDoc = parser.parseFromString(svgText, "image/svg+xml");
+            const svgElement = svgDoc.querySelector('svg'); // aŭ svgDoc.getElementById('parto...');
+    
+            if (svgElement) {
+                // enŝovu la svg-grafikon en DOM
+                const targetElement = document.getElementById(el_id);
+                if (targetElement) {
+                    targetElement.appendChild(svgElement);
+                    return svgElement;
+                } else {
+                    console.error(`Elemento "+${el_id}" ne trovita.`);
+                }
+            } else {
+                console.error("Mankas SVG-elemento en la ŝargita dosiero.");
+            }
+    
+        } catch (error) {
+            console.error("Eraro dum ŝargo de SVG:", error.message);
+        }
+    }
+    
+
    /** Kreas SVG-elementon kun atributoj
      * @param nomo elementnomo, ekz-e 'div'
      * @param atributoj objekto kies kampoj estas la atributnomoj kaj ties valoroj
