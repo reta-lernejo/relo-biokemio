@@ -26,6 +26,9 @@ sukcinato: https://pubchem.ncbi.nlm.nih.gov/compound/1110
 fumarato: https://pubchem.ncbi.nlm.nih.gov/compound/444972
 l-malato: https://pubchem.ncbi.nlm.nih.gov/compound/222656
 
+CoA: https://pubchem.ncbi.nlm.nih.gov/compound/6816 / https://www.kegg.jp/entry/C00010 / https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:15346
+NADH: https://pubchem.ncbi.nlm.nih.gov/compound/439153#section=3D-Conformer
+
 -->
 
 <style>
@@ -63,7 +66,10 @@ const molekuloj = {
   "sukcinil-CoA": "sukcinilCoA_15380.sdf", // aŭ sukcinilCoA_CID_92133.sdf
   "sukcinato": "sukcinato_CID_1110.sdf",
   "fumarato": "fumarato_CID_444972.sdf",
-  "l-malato": "lmalato_CID_222656.sdf"
+  "l-malato": "lmalato_CID_222656.sdf",
+  "NADH": "NADH_CID_439153.sdf",
+  "CoA-SH": "CoASH_ChEBI_15346.sdf", //"CoA.mol",
+  "H₂O": "H2O.mol"
 }
 
 const proteinoj = {
