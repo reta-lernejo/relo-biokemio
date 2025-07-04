@@ -10,6 +10,8 @@ class SVG {
      * @param {*} dosiero 
      * @param {*} el_id 
      */
+    /* 
+    uzu {% include_relative ...%}
     static async legu_svg_dokumenton(dosiero, el_id) {
         try {
             const response = await fetch(dosiero);

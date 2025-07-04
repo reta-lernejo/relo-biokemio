@@ -23,6 +23,7 @@ go :-
     forall(graph(G),
     (
         atom_concat(G,'.graphml',File),
+        format('~w...~n',[File]),
         load_xml(File,DOM,[]),
         nodes(DOM,JSON1),
         edges(DOM,JSON2),
@@ -46,6 +47,12 @@ go :-
             <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="t" textColor="#000000" verticalTextPosition="bottom" visible="true" width="76.849609375" x="445.566166868026" xml:space="preserve" y="0.0">mitoĥondrio</y:NodeLabel>
 */
 
+/*
+    <node id="n1::n6">
+      <data key="d6">
+        <y:GenericNode configuration="com.yworks.sbgn.Process">
+*/
+
 nodes(DOM,JSON) :-
     findall(Node,xpath(DOM,//node,Node),Nodes),
     foldl(node,Nodes,_{},JSON),!.
@@ -53,11 +60,21 @@ nodes(DOM,JSON) :-
 node(Node,JIn,JOut) :-
     Node = element(node,Attr,_Cnt),
     member(id=Id,Attr),
+    print(Id),
     %member(yfiles.foldertype=Type,Attr),
     % print(Node),
-    xpath(Node,//'y:NodeLabel'(normalize_space),Label),
-    %print(Label),
-    JOut = JIn.put(Id,Label).
+    once((
+        xpath(Node,//'y:NodeLabel'(normalize_space),Label),
+        Label \= '', print(Label),nl,
+        JOut = JIn.put(Id,Label)
+        ;
+        xpath(Node,//'y:GenericNode'(@configuration),T),
+        atomic_list_concat([com,yworks|T1],'.',T),
+        atomic_list_concat(T1,'.',Type),
+        print(Type),nl,
+        JOut = JIn.put(Id,Type)
+    )).
+
 
 edges(DOM,JSON) :-
     findall(Edge,xpath(DOM,//edge,Edge),Edges),
