@@ -100,8 +100,10 @@ const proteinoj = {
 let svg;
 
 lanĉe(() => {
-  // klak-reago
-  svg = document.querySelector("svg");
+  // povas esti pluraj SVG en la paĝo, sed nur unu havas
+  // "#P_citrato"
+  const eniro = document.querySelector('a[*|href="#P_citrato"]');
+  svg = eniro.closest("svg");
 
   // yEd ne enmetas viewBox, sed ni bezonos tion
   // por skali la grafikon
