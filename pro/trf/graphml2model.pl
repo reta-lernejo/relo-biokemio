@@ -48,9 +48,17 @@ go :-
 */
 
 /*
-    <node id="n1::n6">
-      <data key="d6">
-        <y:GenericNode configuration="com.yworks.sbgn.Process">
+
+  <key attr.name="url" attr.type="string" for="node" id="d5"/>
+
+  <node id="n1::n15">
+    <data key="d4" xml:space="preserve"><![CDATA[P_sCOA]]></data>
+    <data key="d5" xml:space="preserve"><![CDATA[#P_sCOA]]></data>    
+
+  <node id="n1::n6">
+    <data key="d6">
+      <y:GenericNode configuration="com.yworks.sbgn.Process">
+
 */
 
 nodes(DOM,JSON) :-
@@ -63,16 +71,27 @@ node(Node,JIn,JOut) :-
     print(Id),
     %member(yfiles.foldertype=Type,Attr),
     % print(Node),
+
     once((
-        xpath(Node,//'y:NodeLabel'(normalize_space),Label),
-        Label \= '', print(Label),nl,
-        JOut = JIn.put(Id,Label)
-        ;
         xpath(Node,//'y:GenericNode'(@configuration),T),
         atomic_list_concat([com,yworks|T1],'.',T),
         atomic_list_concat(T1,'.',Type),
-        print(Type),nl,
-        JOut = JIn.put(Id,Type)
+        print(Type),nl
+    ;
+        Type = ''
+    )),
+
+    once((
+        xpath(Node,//data(normalize_space),Data),
+        sub_atom(Data,0,1,_,'#'),
+        print(Data),nl,
+        JOut = JIn.put(Id,[Type,Data])
+        ;
+        xpath(Node,//'y:NodeLabel'(normalize_space),Label),
+        Label \= '', print(Label),nl,
+        JOut = JIn.put(Id,[Type,Label])
+        ;
+        JOut = JIn.put(Id,[Type])
     )).
 
 

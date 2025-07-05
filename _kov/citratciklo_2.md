@@ -32,13 +32,25 @@ NADH: https://pubchem.ncbi.nlm.nih.gov/compound/439153#section=3D-Conformer
 -->
 
 <style>
+  svg {
+    width: 800px;
+    height: auto;
+  }
+
   foreignObject {
     border: 2px solid cornflowerblue;
     border-radius: 50%;
   }
 
-  g {
+  g.aktiva, #sekva_pasho {
+    cursor: pointer;
     pointer-events: all;
+  }
+
+  .aktiva rect, .aktiva path {
+    stroke: #800;
+    stroke-width: 2;
+    stroke-dasharray: 3 3;
   }
 </style>
 
@@ -46,16 +58,15 @@ NADH: https://pubchem.ncbi.nlm.nih.gov/compound/439153#section=3D-Conformer
 
 <script>
 
+const modelo = {% include_relative inc/TCA_SGBN_PD.mdl %};
+
 let jmol_proteino_ref;
-const _fo_proteino_gid = "y\\.node\\.2";
 const _jmol_proteino = "jmol_proteino";
 
 let jmol_fonto_ref;
-const _fo_fonto_gid = "y\\.node\\.45";
 const _jmol_fonto = "jmol_fonto";
 
 let jmol_produkto_ref;
-const _fo_produkto_gid = "y\\.node\\.46";
 const _jmol_produkto = "jmol_produkto";
 
 const molekuloj = {
@@ -71,7 +82,7 @@ const molekuloj = {
   "NADH": "NADH_CID_439153.sdf",
   "CoA-SH": "CoASH_ChEBI_15346.sdf", //"CoA.mol",
   "H₂O": "H2O.mol"
-}
+};
 
 const proteinoj = {
   "citrat-sintazo": "citratsintazo_5uzq.cif.gz",
@@ -84,136 +95,140 @@ const proteinoj = {
   "sukcinat-dehidrogenazo": "",
   "fumarazo": "fumarazo_3e04.cif.gz",
   "malat-dehidrogenazo": ""
-}
+};
 
-const "eĝoj" = {
-    "n1::e0": ["n1::n0", "n1::n6" ],
-    "n1::e1": ["n1::n1", "n1::n6" ],
-    "n1::e10": ["n1::n9", "n1::n11" ],
-    "n1::e11": ["n1::n9", "n1::n13" ],
-    "n1::e12": ["n1::n9", "n1::n12" ],
-    "n1::e13": ["n1::n10", "n1::n9" ],
-    "n1::e14": ["n1::n14", "n1::n15" ],
-    "n1::e15": ["n1::n15", "n1::n19" ],
-    "n1::e16": ["n1::n15", "n1::n21" ],
-    "n1::e17": ["n1::n15", "n1::n20" ],
-    "n1::e18": ["n1::n16", "n1::n15" ],
-    "n1::e19": ["n1::n17", "n1::n15" ],
-    "n1::e2": ["n1::n2", "n1::n8" ],
-    "n1::e20": ["n1::n18", "n1::n15" ],
-    "n1::e21": ["n1::n21", "n1::n22" ],
-    "n1::e22": ["n1::n22", "n1::n23" ],
-    "n1::e23": ["n1::n22", "n1::n25" ],
-    "n1::e24": ["n1::n22", "n1::n28" ],
-    "n1::e25": ["n1::n24", "n1::n22" ],
-    "n1::e26": ["n1::n26", "n1::n22" ],
-    "n1::e27": ["n1::n27", "n1::n22" ],
-    "n1::e28": ["n1::n28", "n1::n29" ],
-    "n1::e29": ["n1::n29", "n1::n31" ],
-    "n1::e3": ["n1::n3", "n1::n9" ],
-    "n1::e30": ["n1::n29", "n1::n32" ],
-    "n1::e31": ["n1::n30", "n1::n29" ],
-    "n1::e32": ["n1::n32", "n1::n36" ],
-    "n1::e33": ["n1::n33", "n1::n29" ],
-    "n1::e34": ["n1::n34", "n1::n36" ],
-    "n1::e35": ["n1::n35", "n1::n38" ],
-    "n1::e36": ["n1::n36", "n1::n35" ],
-    "n1::e37": ["n1::n36", "n1::n37" ],
-    "n1::e38": ["n1::n38", "n1::n1" ],
-    "n1::e39": ["n1::n38", "n1::n39" ],
-    "n1::e4": ["n1::n4", "n1::n8" ],
-    "n1::e40": ["n1::n40", "n1::n38" ],
-    "n1::e41": ["n1::n41", "n1::n38" ],
-    "n1::e5": ["n1::n5", "n1::n6" ],
-    "n1::e6": ["n1::n6", "n1::n2" ],
-    "n1::e7": ["n1::n6", "n1::n7" ],
-    "n1::e8": ["n1::n8", "n1::n3" ],
-    "n1::e9": ["n1::n9", "n1::n14" ]
-  },
-  const "nodoj" = {
-    "n0":"citratciklo",
-    "n1":"mitoĥondrio",
-    "n1::n0":"acetil-CoA",
-    "n1::n1":"okzalacetato",
-    "n1::n10":"izocitrat- dehidrogenazo",
-    "n1::n11":"CO₂",
-    "n1::n12":"NAD+",
-    "n1::n13":"NADH",
-    "n1::n14":"alfoketo- glutarato",
-    "n1::n15":"",
-    "n1::n16":"",
-    "n1::n16::n0":"α-ketoglutarat- dehidrogenazo",
-    "n1::n16::n1":"dihidrolipoamid- sukciniltransferazo",
-    "n1::n16::n2":"dihidrolipoamid- dehidrogenazo",
-    "n1::n17":"NAD+",
-    "n1::n18":"CoA-SH",
-    "n1::n19":"NADH",
-    "n1::n2":"citrato",
-    "n1::n20":"CO₂",
-    "n1::n21":"sukcinil- CoA",
-    "n1::n22":"",
-    "n1::n23":"CoA-SH",
-    "n1::n24":"GDP",
-    "n1::n25":"GTP",
-    "n1::n26":"fosfato",
-    "n1::n27":"sukcinil-CoA- sintetazo",
-    "n1::n28":"sukcinato",
-    "n1::n29":"",
-    "n1::n3":"izocitrato",
-    "n1::n30":"FAD",
-    "n1::n31":"FADH₂",
-    "n1::n32":"fumarato",
-    "n1::n33":"sukcinat- dehidrogenazo",
-    "n1::n34":"fumarazo",
-    "n1::n35":"l-malato",
-    "n1::n36":"",
-    "n1::n37":"H₂O",
-    "n1::n38":"",
-    "n1::n39":"NADH",
-    "n1::n4":"akonitazo",
-    "n1::n40":"NAD+",
-    "n1::n41":"malat- dehidrogenazo",
-    "n1::n5":"citrat-sintazo",
-    "n1::n6":"",
-    "n1::n7":"CoA-SH",
-    "n1::n8":"",
-    "n1::n9":"",
-    "n2":"_fo_proteino",
-    "n3":"_fo_fonto",
-    "n4":"_fo_produkto"
-  }
-
+let svg;
 
 lanĉe(() => {
-  jmol_preparo();
-
   // klak-reago
-  const svg = document.querySelector("svg");
+  svg = document.querySelector("svg");
+
+  // yEd ne enmetas viewBox, sed ni bezonos tion
+  // por skali la grafikon
+  const w = svg.getAttribute("width");
+  const h = svg.getAttribute("height");
+  svg.setAttribute("viewBox",`0 0 ${w} ${h}`);
+
+  jmol_preparo(svg);
+
+  paŝo("#P_citrato");
+
   svg.querySelectorAll("g[id]").forEach((g) => {
+    if (g.querySelector('a[*|href="#sekva_pasho"]')) {
+      g.addEventListener("click",() => paŝo());
+    } else {
       g.addEventListener("click",svg_elekto);
+    }
   });
+
 });
 
 function svg_elekto(event) {
   const g = event.currentTarget;
-  const text = g.querySelector("text");
-  const molekulo = g.textContent.replace(/[\s\n]/g,"")
 
-  console.log("klako: "+g.id+" ("+molekulo+")");
+  if (g.classList.contains("aktiva")) {
+    const text = g.querySelector("text");
+    const molekulo = g.textContent.replace(/[\s\n]/g,"")
 
-  // montru la molekulon - FARENDA: en kiu fako?
-  if (molekuloj[molekulo]) {
-    Jmol.script(jmol_produkto_ref, `load "inc/${molekuloj[molekulo]}"; set antialiasDisplay ON`);
-  } else if (proteinoj[molekulo]) {
-    Jmol.script(jmol_proteino_ref, `load "inc/${proteinoj[molekulo]}"; cartoon only; color cartoon structure; set antialiasDisplay ON`);
-  };
+    console.log("klako: "+g.id+" ("+molekulo+")");
+
+    // montru la molekulon - fontoj en maldekstra fenestreto, celoj en dekstra
+    if (molekuloj[molekulo]) {
+      const jmol_ref = g.classList.contains("celo")? jmol_produkto_ref : jmol_fonto_ref;
+      Jmol.script(jmol_ref, `load "inc/${molekuloj[molekulo]}"; set antialiasDisplay ON`);
+    } else if (proteinoj[molekulo]) {
+      Jmol.script(jmol_proteino_ref, `load "inc/${proteinoj[molekulo]}"; cartoon only; color cartoon structure; set antialiasDisplay ON`);
+    };
+  }
+}
+
+/*
+    <g id="y.node.47">
+      <a xlink:href="#fo_proteino">
+*/
+
+function nodo_klaso(ref,...klasoj) {
+  const a = svg.querySelector(`a[*|href="${ref}"`);
+  const g = a.parentElement;
+  if (g) {
+    if (klasoj)
+      g.classList.add(...klasoj);
+    else
+      g.className = "";
+  }
+}
+
+function paŝo(proceso) {
+
+  // por eviti akrobataĵojn per la modelaj eĝoj
+  // ni uzas ordigitan liston de la procezoj por
+  // ekscii la sekvan
+  const procezoj = [
+    "#P_citrato",
+    "#P_izocitrato",
+    "#P_glutarato",
+    "#P_sCOA",
+    "#P_sukcinato",
+    "#P_fumarato",
+    "#P_malato",
+    "#P_okzalacetato"
+  ]
+
+  // kio estas la aktiva procezo?
+  const akt_a = svg.querySelector(".proceso.aktiva a");
+  const akt_proc = akt_a? akt_a.getAttributeNS("http://www.w3.org/1999/xlink","href") : undefined;
+
+  if (! proceso) {
+    // eltrovu la sekvan paŝon
+    proceso = procezoj[(procezoj.indexOf(akt_proc) + 1) % procezoj.length];
+  }
+
+  // antaŭ ŝanĝo malaktivigu ĉiujn aliajn
+  if (proceso != akt_proc) {
+    svg.querySelectorAll("g.aktiva").forEach((g) => {
+      g.classList.remove("aktiva");
+      g.classList.remove("celo");
+      g.classList.remove("fonto");
+    });
+    // kaj forigu la molekulojn el JsMol-rigardoj
+    Jmol.script(jmol_proteino_ref, "zap;");
+    Jmol.script(jmol_fonto_ref, "zap;");
+    Jmol.script(jmol_produkto_ref, "zap;");
+  }
+
+  // aktivigu la koncernan proceson
+  nodo_klaso(proceso,"proceso","aktiva");
+
+  // kiu nodo tiu proceso estas en la modelo?
+  for (const [n,nv] of Object.entries(modelo.nodoj)) {
+    if (nv[1] == proceso) {
+      // sekvu ĉiujn eĝojn de tie kaj aktivigu ilin kaj la
+      // aliflankajn nodojn
+      for (const [e,ev] of Object.entries(modelo.eĝoj)) {
+        if (ev[0] == n) {
+          const n2 = modelo.nodoj[ev[1]];
+          nodo_klaso(n2[1],"celo","aktiva");
+        } else if (ev[1] == n) {
+          const n2 = modelo.nodoj[ev[0]];
+          // PLIBONIGU:
+          // se estas sgbn.Macromolecule ni povus
+          // uzi klason "proteino","aktiva" a.s.
+          nodo_klaso(n2[1],"fonto","aktiva");
+        }
+      }
+
+      return;
+    }
+  }
 }
 
 
 // anstataŭigas la enhavon de la sVG-grupo gid
 // per foreignObject por uzi ĝin kun JsMol
 function foreignObject(gid,fid) {
-  const g = ĝi("#"+gid);
+
+  const a = svg.querySelector(`a[*|href="${gid}"`);
+  const g = a.parentElement;
 
   // ni devas eltrovi mezurojn kaj transformon
   // de enhavita g, rect
@@ -246,13 +261,13 @@ function foreignObject(gid,fid) {
 function jmol_preparo() {
   // anstataŭigu SVG-grupon _fo_proteino per foreignObject/div por
   // tie montri proteinojn per JSMol
-  foreignObject(_fo_proteino_gid,_jmol_proteino);
-  foreignObject(_fo_fonto_gid,_jmol_fonto);
-  foreignObject(_fo_produkto_gid,_jmol_produkto);
+  foreignObject("#fo_proteino",_jmol_proteino);
+  foreignObject("#fo_fonto",_jmol_fonto);
+  foreignObject("#fo_produkto",_jmol_produkto);
 
   jmol_proteino_ref = jmol_div(_jmol_proteino,
       "inc/citratsintazo_5uzq.cif.gz",
-      360,360,
+      400,400,
       (app) => { Jmol.script(app,
       'cartoon only; color cartoon structure; set antialiasDisplay ON'
       )}
@@ -260,7 +275,7 @@ function jmol_preparo() {
 
   jmol_fonto_ref = jmol_div(_jmol_fonto,
       "inc/okzalacetato_CID_970.sdf",
-      128,128,
+      180,180,
       (app) => { Jmol.script(app,
       'set antialiasDisplay ON'
     )}
@@ -268,7 +283,7 @@ function jmol_preparo() {
 
   jmol_produkto_ref = jmol_div(_jmol_produkto,
       "inc/citrato_CID_311.sdf",
-      128,128,
+      180,180,
       (app) => { Jmol.script(app,
       'set antialiasDisplay ON'
     )}
