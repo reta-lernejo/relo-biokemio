@@ -50,6 +50,12 @@ NADH: https://pubchem.ncbi.nlm.nih.gov/compound/439153#section=3D-Conformer
     overflow: hidden;
   }
 
+  .fokuso {
+    stroke: silver;
+    stroke-width: 3;
+    stroke-dasharray: 1 6;
+  }
+
   g.aktiva, #sekva_pasho {
     cursor: pointer;
     pointer-events: all;
@@ -59,6 +65,10 @@ NADH: https://pubchem.ncbi.nlm.nih.gov/compound/439153#section=3D-Conformer
     stroke: #800;
     stroke-width: 2;
     stroke-dasharray: 3 3;
+  }
+
+  .proceso.aktiva rect {
+    fill: #444;
   }
 </style>
 
@@ -110,7 +120,7 @@ let svg;
 lanĉe(() => {
   // povas esti pluraj SVG en la paĝo, sed nur unu havas
   // "#P_citrato"
-  const eniro = document.querySelector('a[*|href="#P_citrato"]');
+  const eniro = document.getElementById("y.node.0"); // querySelector('a[*|href="#P_citrato"]');
   svg = eniro.closest("svg");
 
   // yEd ne enmetas viewBox, sed ni bezonos tion
@@ -144,12 +154,72 @@ function svg_elekto(event) {
 
     // montru la molekulon - fontoj en maldekstra fenestreto, celoj en dekstra
     if (molekuloj[molekulo]) {
+      svg.style.cursor = "wait";
       const jmol_ref = g.classList.contains("celo")? jmol_produkto_ref : jmol_fonto_ref;
+      const jmol_id = g.classList.contains("celo")? "jmol_produkto" : "jmol_fonto";
+      fokuso(jmol_id,g);
       Jmol.script(jmol_ref, `load "inc/${molekuloj[molekulo]}"; set antialiasDisplay ON`);
     } else if (proteinoj[molekulo]) {
+      svg.style.cursor = "wait";
+      fokuso("jmol_proteino",g);
       Jmol.script(jmol_proteino_ref, `load "inc/${proteinoj[molekulo]}"; cartoon only; color cartoon structure; set antialiasDisplay ON`);
     };
   }
+}
+
+/**
+ * Kalkulas la punkton de la fokuslinio sur la rando
+ * de cirklo (flanko = 1|-1) 
+ */
+function radipunkto(ax,ay,cx,cy,r,flanko=1) {
+  // longo de la kateto a_c
+  const dx = ax-cx;
+  const dy = ay-cy;
+  const A = Math.sqrt(dx*dx + dy*dy);
+
+  const bx = cx + r*(dy/A)*flanko;
+  const by = cy + r*(-dx/A)*flanko;
+
+  return[bx,by];
+}
+
+function fokuso(jmol_id,g) {
+  // ŝanĝu la eliron de fokuslinoj al la elektita molekulo
+  const l1 = svg.querySelector("#"+jmol_id+"_fokus_1");
+  const l2 = svg.querySelector("#"+jmol_id+"_fokus_2");
+  const jm = svg.querySelector("#"+jmol_id);
+
+  const bb1 = g.getBBox();
+  const bb2 = jm.parentElement.getBBox();
+
+  const ax = bb1.x+bb1.width/2;
+  const ay = bb1.y+bb1.height/2;
+
+  const cx = bb2.x+bb2.width/2;
+  const cy = bb2.y+bb2.height/2;
+
+  const fp1 = radipunkto(ax,ay,cx,cy,bb2.width/2,1);
+  const fp2 = radipunkto(ax,ay,cx,cy,bb2.width/2,-1);
+
+  // tio estas la ŝoviĝo, kiun yEd aplikas
+  // al ĉiuj grupoj, pro simpleco ni metas tie
+  // ĉi fikse, sed:
+  // PLIBONIGU: eltrovu tion prepare unufoje!
+  const tx = -249;
+  const ty = +192;
+
+  SVG.a(l1,{
+    x1: ax-tx,
+    y1: ay-ty,
+    x2: fp1[0]-tx,
+    y2: fp1[1]-ty
+  });
+  SVG.a(l2,{
+    x1: ax-tx,
+    y1: ay-ty,
+    x2: fp2[0]-tx,
+    y2: fp2[1]-ty
+  });
 }
 
 /*
@@ -157,9 +227,16 @@ function svg_elekto(event) {
       <a xlink:href="#fo_proteino">
 */
 
-function nodo_klaso(ref,...klasoj) {
-  const a = svg.querySelector(`a[*|href="${ref}"`);
-  const g = a.parentElement;
+/**
+ * redonas g-elementon de nodo identigitan per xlink:href
+ */
+function nodo_href(href) {
+  const a = svg.querySelector(`a[*|href="${href}"`);
+  if (a) return a.parentElement;
+}
+
+function nodo_klaso(href,...klasoj) {
+  const g = nodo_href(href);
   if (g) {
     if (klasoj)
       g.classList.add(...klasoj);
@@ -191,6 +268,10 @@ function paŝo(proceso) {
   if (! proceso) {
     // eltrovu la sekvan paŝon
     proceso = procezoj[(procezoj.indexOf(akt_proc) + 1) % procezoj.length];
+    // kaj forigu la molekulojn el JsMol-rigardoj
+    Jmol.script(jmol_proteino_ref, "zap;");
+    Jmol.script(jmol_fonto_ref, "zap;");
+    Jmol.script(jmol_produkto_ref, "zap;");
   }
 
   // antaŭ ŝanĝo malaktivigu ĉiujn aliajn
@@ -200,10 +281,6 @@ function paŝo(proceso) {
       g.classList.remove("celo");
       g.classList.remove("fonto");
     });
-    // kaj forigu la molekulojn el JsMol-rigardoj
-    Jmol.script(jmol_proteino_ref, "zap;");
-    Jmol.script(jmol_fonto_ref, "zap;");
-    Jmol.script(jmol_produkto_ref, "zap;");
   }
 
   // aktivigu la koncernan proceson
@@ -252,36 +329,69 @@ function foreignObject(gid,fid) {
   // matrix(1,0,0,1,-249,192)
   let x = parseFloat(r.getAttribute("x"));
   let y = parseFloat(r.getAttribute("y"));
+  let width = parseFloat(r.getAttribute("width"));
+  let height = parseFloat(r.getAttribute("height"));
+  let dx = 0;
+  let dy = 0;
+
   const m = tf.match(re_mx);
   if (m) {
     const coord = m[1].split(',');
-    x += parseFloat(coord[0]);
-    y += parseFloat(coord[1]);
+    dx = parseFloat(coord[0]);
+    dy = parseFloat(coord[1]);
   } else {
     g.setAttribute("transform",tf);
   }
 
-  // aldonu du pikselojn por la rando
+  // ni kreas fokusliniojn por montri de la
+  // molekulo en la ciklo al al JMol-rigardo
+  const fono = svg.querySelector('g[fill="white"][stroke="white"]');
+  // PLIBONIGU: ni supozas ke estas la sama transformo kiel de fO
+  // sed pli bone estus forigi la transformon de la fono
+  // kaj ĝustigi la koordinatojn de ĝia rektangulo
+  //const fono_tf = fono.getAttribute("transform");
+  const l1 = SVG.e("line",{
+    id: fid+"_fokus_1",
+    class: "fokuso",
+    //transform: fono_tf,
+    x1: -dx, y1: -dy,
+    x2: x+width/2,
+    y2: y+height/2
+  });
+  const l2 = SVG.e("line",{
+    id: fid+"_fokus_2",
+    class: "fokuso",
+    //transform: fono_tf,
+    x1: -dx, y1: -dy,
+    x2: x+width/2,
+    y2: y+height/2
+  });
+  fono.append(l1,l2);
+
+  // aldonu 3 pikselojn por la rando
   // CSS box-sizing: content-box ne funkcias tie ĉi
   SVG.a(fO,{
       //transform: tf,
-      x: x,
-      y: y,
-      width: parseFloat(r.getAttribute("width"))+2,
-      height: parseFloat(r.getAttribute("height"))+2
+      x: x+dx,
+      y: y+dy,
+      width: width+3,
+      height: height+3
   });
 
   const div = document.createElementNS("http://www.w3.org/1999/xhtml","div")
   div.id = fid;
   fO.append(div);
 
-  // anstataigu enhavon de t per fO
+  // anstataŭgu enhavon de t per fO
   g.textContent="";
   g.append(fO);
 
   return div;
 }
 
+function postShargo() {
+  console.log("post ŝargo"); svg.style.cursor = "auto";
+}
 
 function jmol_preparo() {
   // anstataŭigu SVG-grupon _fo_proteino per foreignObject/div por
@@ -290,28 +400,34 @@ function jmol_preparo() {
   foreignObject("#fo_fonto",_jmol_fonto);
   foreignObject("#fo_produkto",_jmol_produkto);
 
+  fokuso("jmol_proteino",nodo_href("#citratsintazo"));
   jmol_proteino_ref = jmol_div(_jmol_proteino,
-      "inc/citratsintazo_5uzq.cif.gz",
-      400,400,
-      (app) => { Jmol.script(app,
+    "inc/citratsintazo_5uzq.cif.gz",
+    400,400,
+    (app) => { Jmol.script(app,
       'cartoon only; color cartoon structure; set antialiasDisplay ON'
-      )}
+    )},
+    "postShargo"
   );
 
+  fokuso("jmol_fonto",nodo_href("#okzalacetato"));
   jmol_fonto_ref = jmol_div(_jmol_fonto,
-      "inc/okzalacetato_CID_970.sdf",
-      180,180,
-      (app) => { Jmol.script(app,
+    "inc/okzalacetato_CID_970.sdf",
+    180,180,
+    (app) => { Jmol.script(app,
       'set antialiasDisplay ON'
-    )}
+    )},
+    "postShargo"
   );
 
+  fokuso("jmol_produkto",nodo_href("#citrato"));
   jmol_produkto_ref = jmol_div(_jmol_produkto,
-      "inc/citrato_CID_311.sdf",
-      180,180,
-      (app) => { Jmol.script(app,
+    "inc/citrato_CID_311.sdf",
+    180,180,
+    (app) => { Jmol.script(app,
       'set antialiasDisplay ON'
-    )}
+    )},
+    "postShargo"
   );
 }
 

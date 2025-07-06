@@ -7,7 +7,7 @@
  * @param alto alto de la fenestreto en pikseloj
  * @param kiam_preta funkcio vokata kiam la aplikaĵeto estas preta, tie vi ekz-e povas lanĉi aldonan JMol-skripton kiel Jmol.script(applet,'spacefill 80%');
  */
-function jmol_info(id,modelo,largho,alto,kiam_preta) {
+function jmol_info(id,modelo,largho,alto,kiam_preta,post_skripto) {
     // vd. https://wiki.jmol.org/index.php/Jmol_JavaScript_Object/Info
     return {
         src: modelo,
@@ -20,6 +20,7 @@ function jmol_info(id,modelo,largho,alto,kiam_preta) {
         j2sPath: JsPath + "j2s", // this needs to point to where the j2s directory is.
         serverURL: '',
         readyFunction: kiam_preta,
+        loadStructCallback: post_skripto,
         disableJ2SLoadMonitor: true,
         disableInitialConsole: true,
         allowJavaScript: true
@@ -44,7 +45,7 @@ function jmol_kesto(id,modelo,largho,alto,kiam_preta) {
     JsPath = '../assets/js/jsmol/';
     delete Jmol._tracker; 
 
-    const info = jmol_info(id,modelo,largho,alto,kiam_preta)
+    const info = jmol_info(id,modelo,largho,alto,kiam_preta);
     return Jmol.getApplet(id, info);
 }
 
@@ -63,11 +64,11 @@ function jmol_kesto(id,modelo,largho,alto,kiam_preta) {
  * @param alto alto de la fenestreto en pikseloj
  * @param kiam_preta funkcio vokata kiam la aplikaĵeto estas preta, tie vi ekz-e povas lanĉi aldonan JMol-skripton kiel Jmol.script(applet,'spacefill 80%');
  */
- function jmol_html(id,modelo,largho,alto,kiam_preta) {
+ function jmol_html(id,modelo,largho,alto,kiam_preta,post_skripto) {
     JsPath = '../assets/js/jsmol/';
     delete Jmol._tracker; 
 
-    const info = jmol_info(id,modelo,largho,alto,kiam_preta)
+    const info = jmol_info(id,modelo,largho,alto,kiam_preta,post_skripto);
     return Jmol.getAppletHtml(id, info);
 }
 
@@ -89,10 +90,11 @@ function jmol_kesto(id,modelo,largho,alto,kiam_preta) {
  * @param largho larĝo de la fenestreto en pikseloj
  * @param alto alto de la fenestreto en pikseloj
  * @param kiam_preta funkcio vokata kiam la aplikaĵeto estas preta, tie vi ekz-e povas lanĉi aldonan JMol-skripton kiel Jmol.script(applet,'spacefill 80%');
+ * @param post_skripto (string) la nomo de Javoskriptofunkcio vokenda post ŝargo de strukturoj aŭ "jmolscript:..."
  */
-function jmol_div(id,modelo,largho,alto,kiam_preta) {
+function jmol_div(id,modelo,largho,alto,kiam_preta,post_skripto) {
     const div = document.getElementById(id);
     //window.Jmol._isAsync = true;
-    div.innerHTML = jmol_html(id,modelo,largho,alto,kiam_preta);
+    div.innerHTML = jmol_html(id,modelo,largho,alto,kiam_preta,post_skripto);
     return window[id];
 }
