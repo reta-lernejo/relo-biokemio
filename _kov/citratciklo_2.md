@@ -33,13 +33,21 @@ NADH: https://pubchem.ncbi.nlm.nih.gov/compound/439153#section=3D-Conformer
 
 <style>
   svg {
-    width: 800px;
+    /*width: 800px;*/
     height: auto;
   }
 
+/*
   foreignObject {
+    box-sizing: content-box;
     border: 2px solid cornflowerblue;
     border-radius: 50%;
+  }*/
+
+  foreignObject>div {
+    border: 2px solid cornflowerblue;
+    border-radius: 50%;
+    overflow: hidden;
   }
 
   g.aktiva, #sekva_pasho {
@@ -228,6 +236,7 @@ function paŝo(proceso) {
 // anstataŭigas la enhavon de la sVG-grupo gid
 // per foreignObject por uzi ĝin kun JsMol
 function foreignObject(gid,fid) {
+  const re_mx = /matrix\(1,0,0,1,(.*)\)/
 
   const a = svg.querySelector(`a[*|href="${gid}"`);
   const g = a.parentElement;
@@ -240,12 +249,26 @@ function foreignObject(gid,fid) {
   const tf = g.querySelector("g[transform]").getAttribute("transform");
   const r = g.querySelector("rect");
 
+  // matrix(1,0,0,1,-249,192)
+  let x = parseFloat(r.getAttribute("x"));
+  let y = parseFloat(r.getAttribute("y"));
+  const m = tf.match(re_mx);
+  if (m) {
+    const coord = m[1].split(',');
+    x += parseFloat(coord[0]);
+    y += parseFloat(coord[1]);
+  } else {
+    g.setAttribute("transform",tf);
+  }
+
+  // aldonu du pikselojn por la rando
+  // CSS box-sizing: content-box ne funkcias tie ĉi
   SVG.a(fO,{
-      transform: tf,
-      x: r.getAttribute("x"),
-      y: r.getAttribute("y"),
-      width: r.getAttribute("width"),
-      height: r.getAttribute("height")
+      //transform: tf,
+      x: x,
+      y: y,
+      width: parseFloat(r.getAttribute("width"))+2,
+      height: parseFloat(r.getAttribute("height"))+2
   });
 
   const div = document.createElementNS("http://www.w3.org/1999/xhtml","div")
