@@ -60,7 +60,7 @@
           <data key="d5" xml:space="preserve"><![CDATA[#P1_aCoA]]></data>
           <data key="d7">
             <y:GenericNode configuration="com.yworks.sbgn.SimpleChemical">
-              <y:Geometry height="71.0" width="73.0" x="572.6852413820582" y="-143.96558397085568"/>
+              <y:Geometry height="71.0" width="73.0" x="580.7999999999997" y="-143.96558397085568"/>
               <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="center" visible="true" width="64.966796875" x="4.0166015625" xml:space="preserve" y="26.515625">acetil-CoA<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
@@ -71,7 +71,7 @@
           <data key="d5" xml:space="preserve"><![CDATA[#okzalacetato]]></data>
           <data key="d7">
             <y:GenericNode configuration="com.yworks.sbgn.SimpleChemical">
-              <y:Geometry height="31.020135519125688" width="80.0" x="569.1852413820582" y="-61.06666666666678"/>
+              <y:Geometry height="31.020135519125688" width="80.0" x="580.7999999999997" y="-61.06666666666678"/>
               <y:Fill color="#FFCC99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="center" visible="true" width="80.716796875" x="-0.3583984375" xml:space="preserve" y="6.525692759562844">okzalacetato<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
@@ -533,7 +533,7 @@ sintetazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:
           <data key="d5" xml:space="preserve"><![CDATA[#P6_FAD]]></data>
           <data key="d7">
             <y:GenericNode configuration="com.yworks.sbgn.SimpleChemical">
-              <y:Geometry height="40.0" width="40.0" x="548.7909768257634" y="419.5773690346083"/>
+              <y:Geometry height="40.0" width="40.0" x="548.7909768257634" y="439.95346885245897"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="center" visible="true" width="28.3515625" x="5.82421875" xml:space="preserve" y="11.015625">FAD<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
@@ -690,7 +690,6 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </node>
         <node id="n1::n42">
           <data key="d5" xml:space="preserve"><![CDATA[#sekva_pasho]]></data>
-          <data key="d6"/>
           <data key="d7">
             <y:GenericNode configuration="com.yworks.sbgn.Tag">
               <y:Geometry height="49.0" width="125.36021286216396" x="301.10162241895796" y="586.9333333333332"/>
@@ -864,17 +863,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e12" source="n1::n9" target="n1::n12">
-      <data key="d11">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="line" width="1.0"/>
-          <y:Arrows source="none" target="none"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="n1::e13" source="n1::n10" target="n1::n9">
+    <edge id="n1::e12" source="n1::n10" target="n1::n9">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -884,7 +873,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e14" source="n1::n14" target="n1::n15">
+    <edge id="n1::e13" source="n1::n14" target="n1::n15">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -894,7 +883,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e15" source="n1::n15" target="n1::n19">
+    <edge id="n1::e14" source="n1::n15" target="n1::n19">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -904,7 +893,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e16" source="n1::n15" target="n1::n21">
+    <edge id="n1::e15" source="n1::n15" target="n1::n21">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -914,7 +903,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e17" source="n1::n15" target="n1::n20">
+    <edge id="n1::e16" source="n1::n15" target="n1::n20">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -924,7 +913,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e18" source="n1::n16" target="n1::n15">
+    <edge id="n1::e17" source="n1::n16" target="n1::n15">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -934,7 +923,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e19" source="n1::n17" target="n1::n15">
+    <edge id="n1::e18" source="n1::n17" target="n1::n15">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -944,7 +933,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e20" source="n1::n18" target="n1::n15">
+    <edge id="n1::e19" source="n1::n18" target="n1::n15">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -954,7 +943,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e21" source="n1::n21" target="n1::n22">
+    <edge id="n1::e20" source="n1::n21" target="n1::n22">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -964,7 +953,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e22" source="n1::n22" target="n1::n23">
+    <edge id="n1::e21" source="n1::n22" target="n1::n23">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -974,7 +963,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e23" source="n1::n22" target="n1::n25">
+    <edge id="n1::e22" source="n1::n22" target="n1::n25">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -984,7 +973,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e24" source="n1::n22" target="n1::n28">
+    <edge id="n1::e23" source="n1::n22" target="n1::n28">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -994,7 +983,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e25" source="n1::n24" target="n1::n22">
+    <edge id="n1::e24" source="n1::n24" target="n1::n22">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -1004,7 +993,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e26" source="n1::n26" target="n1::n22">
+    <edge id="n1::e25" source="n1::n26" target="n1::n22">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -1014,7 +1003,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e27" source="n1::n27" target="n1::n22">
+    <edge id="n1::e26" source="n1::n27" target="n1::n22">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -1024,7 +1013,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e28" source="n1::n28" target="n1::n29">
+    <edge id="n1::e27" source="n1::n28" target="n1::n29">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -1034,7 +1023,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e29" source="n1::n29" target="n1::n31">
+    <edge id="n1::e28" source="n1::n29" target="n1::n31">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -1044,7 +1033,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e30" source="n1::n29" target="n1::n32">
+    <edge id="n1::e29" source="n1::n29" target="n1::n32">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -1054,7 +1043,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e31" source="n1::n30" target="n1::n29">
+    <edge id="n1::e30" source="n1::n30" target="n1::n29">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -1064,7 +1053,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e32" source="n1::n32" target="n1::n36">
+    <edge id="n1::e31" source="n1::n32" target="n1::n36">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -1074,7 +1063,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e33" source="n1::n33" target="n1::n29">
+    <edge id="n1::e32" source="n1::n33" target="n1::n29">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -1084,7 +1073,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e34" source="n1::n34" target="n1::n36">
+    <edge id="n1::e33" source="n1::n34" target="n1::n36">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -1094,7 +1083,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e35" source="n1::n35" target="n1::n38">
+    <edge id="n1::e34" source="n1::n35" target="n1::n38">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -1104,7 +1093,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e36" source="n1::n36" target="n1::n35">
+    <edge id="n1::e35" source="n1::n36" target="n1::n35">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -1114,7 +1103,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e37" source="n1::n36" target="n1::n37">
+    <edge id="n1::e36" source="n1::n36" target="n1::n37">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -1124,7 +1113,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e38" source="n1::n38" target="n1::n1">
+    <edge id="n1::e37" source="n1::n38" target="n1::n1">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -1134,7 +1123,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e39" source="n1::n38" target="n1::n39">
+    <edge id="n1::e38" source="n1::n38" target="n1::n39">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -1144,7 +1133,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e40" source="n1::n40" target="n1::n38">
+    <edge id="n1::e39" source="n1::n40" target="n1::n38">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -1154,12 +1143,23 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e41" source="n1::n41" target="n1::n38">
+    <edge id="n1::e40" source="n1::n41" target="n1::n38">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="white_circle"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n1::e41" source="n1::n12" target="n1::n9">
+      <data key="d10"/>
+      <data key="d11">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="none"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
