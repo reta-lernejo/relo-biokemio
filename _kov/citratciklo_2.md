@@ -38,10 +38,16 @@ fumarato: https://pubchem.ncbi.nlm.nih.gov/compound/444972
 l-malato: https://pubchem.ncbi.nlm.nih.gov/compound/222656
 
 CoA: https://pubchem.ncbi.nlm.nih.gov/compound/6816 / https://www.kegg.jp/entry/C00010 / https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:15346
+acetil-CoA: ttps://pubchem.ncbi.nlm.nih.gov/compound/444493
+NAD: https://pubchem.ncbi.nlm.nih.gov/compound/925
 NADH: https://pubchem.ncbi.nlm.nih.gov/compound/439153#section=3D-Conformer
 CO2: https://pubchem.ncbi.nlm.nih.gov/compound/280#section=3D-Conformer
 GDP: https://pubchem.ncbi.nlm.nih.gov/compound/730
 GTP: https://pubchem.ncbi.nlm.nih.gov/compound/6830
+FAD: https://pubchem.ncbi.nlm.nih.gov/compound/643975
+FADH2: https://pubchem.ncbi.nlm.nih.gov/compound/446013
+
+fostfato: https://pubchem.ncbi.nlm.nih.gov/compound/1061
 
 -->
 
@@ -111,16 +117,21 @@ const molekuloj = {
   "citrato": "citrato_CID_311.sdf",
   "izocitrato": "izocitrato_CID_1198.sdf",
   "alfoketo-glutarato": "alfoketoglutarato_CID_51.sdf",
+  "acetil-CoA": "aCoA_CID_444493.sdf",
   "sukcinil-CoA": "sukcinilCoA_15380.sdf", // aŭ sukcinilCoA_CID_92133.sdf
   "sukcinato": "sukcinato_CID_1110.sdf",
   "fumarato": "fumarato_CID_444972.sdf",
   "l-malato": "lmalato_CID_222656.sdf",
+  "NAD+": "NAD_CID_925.sdf",
   "NADH": "NADH_CID_439153.sdf",
   "CoA-SH": "CoASH_ChEBI_15346.sdf", //"CoA.mol",
   "GDP": "GDP_CID_730.sdf",
   "GTP": "GTP_CID_6830.sdf",
   "H₂O": "H2O.mol",
-  "CO₂": "CO2_CID_280.sdf"
+  "CO₂": "CO2_CID_280.sdf",
+  "fosfato": "fosfato_CID_1061.sdf",
+  "FAD": "FAD_CID_643975.sdf",
+  "FADH₂": "FADH2_CID_446013.sdf"
 };
 
 const proteinoj = {
@@ -138,7 +149,7 @@ const proteinoj = {
 
 let svg;
 
-lanĉe(() => {
+lanĉe(() => {  
   // povas esti pluraj SVG en la paĝo, sed nur unu havas
   // "#P_citrato"
   const eniro = document.getElementById("y.node.0"); // querySelector('a[*|href="#P_citrato"]');
@@ -162,7 +173,30 @@ lanĉe(() => {
     }
   });
 
+  // kontrolu ĉu mankas molekuloj/proteinoj
+  kompleteco();
+
 });
+
+function kompleteco() {
+  for (const n of Object.values(modelo.nodoj)) {
+    if (n[0] == "sbgn.SimpleChemical") {
+      const g = nodo_href(n[1]);
+      const text = g.querySelector("text");
+      const molekulo = g.textContent.replace(/[\s\n]/g,"");
+      if (!molekuloj[molekulo]) {
+        console.error(`Mankas molekulo: ${molekulo} (${n[1]})`);
+      }
+    } else if (n[0] == "sbgn.Macromolecule") {
+      const g = nodo_href(n[1]);
+      const text = g.querySelector("text");
+      const molekulo = g.textContent.replace(/[\s\n]/g,"");
+      if (!proteinoj[molekulo]) {
+        console.error(`Mankas proteino: ${molekulo} (${n[1]})`);
+      }
+    }
+  }
+}
 
 function svg_elekto(event) {
   const g = event.currentTarget;
