@@ -227,6 +227,15 @@ function fokuso(jmol_id,g) {
   const bb1 = g.getBBox();
   const bb2 = jm.parentElement.getBBox();
 
+  // console.log(jm.parentElement);
+  // console.log(bb2);
+
+  // elturniĝu pro cimo en Safari/Webkit
+  if (!bb2.x && !bb2.y) {
+    bb2.x = jm.parentElement.getAttribute("x");
+    bb2.y = jm.parentElement.getAttribute("y");
+  }
+
   const ax = bb1.x+bb1.width/2;
   const ay = bb1.y+bb1.height/2;
 
