@@ -219,7 +219,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
           <data key="d7">
             <y:GenericNode configuration="com.yworks.sbgn.SimpleChemical">
               <y:Geometry height="40.0" width="40.0" x="1097.006489675834" y="232.43333333333322"/>
-              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:Fill color="#CCFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="center" visible="true" width="26.634765625" x="6.6826171875" xml:space="preserve" y="11.015625">CO₂<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
             </y:GenericNode>
@@ -230,7 +230,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
           <data key="d7">
             <y:GenericNode configuration="com.yworks.sbgn.SimpleChemical">
               <y:Geometry height="40.0" width="40.0" x="948.8557814207652" y="133.74919344262253"/>
-              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="center" visible="true" width="40.48046875" x="-0.240234375" xml:space="preserve" y="11.015625">NAD+<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
             </y:GenericNode>
@@ -241,7 +241,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
           <data key="d7">
             <y:GenericNode configuration="com.yworks.sbgn.SimpleChemical">
               <y:Geometry height="40.0" width="40.0" x="950.3193783388125" y="232.43333333333322"/>
-              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:Fill color="#CCFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="center" visible="true" width="39.44921875" x="0.275390625" xml:space="preserve" y="11.015625">NADH<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
             </y:GenericNode>
@@ -364,7 +364,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
           <data key="d7">
             <y:GenericNode configuration="com.yworks.sbgn.SimpleChemical">
               <y:Geometry height="40.0" width="40.0" x="975.7771220400729" y="323.24375664845263"/>
-              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="center" visible="true" width="40.48046875" x="-0.240234375" xml:space="preserve" y="11.015625">NAD+<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
             </y:GenericNode>
@@ -389,7 +389,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
           <data key="d7">
             <y:GenericNode configuration="com.yworks.sbgn.SimpleChemical">
               <y:Geometry height="40.0" width="40.0" x="888.8550762501425" y="426.19150601092895"/>
-              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:Fill color="#CCFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="center" visible="true" width="39.44921875" x="0.275390625" xml:space="preserve" y="11.015625">NADH<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
             </y:GenericNode>
@@ -400,7 +400,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
           <data key="d7">
             <y:GenericNode configuration="com.yworks.sbgn.SimpleChemical">
               <y:Geometry height="40.0" width="40.0" x="977.8557814207652" y="497.7185224043708"/>
-              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:Fill color="#CCFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="center" visible="true" width="26.634765625" x="6.6826171875" xml:space="preserve" y="11.015625">CO₂<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
             </y:GenericNode>
@@ -442,7 +442,7 @@ CoA<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelP
           <data key="d7">
             <y:GenericNode configuration="com.yworks.sbgn.SimpleChemical">
               <y:Geometry height="38.59129180327986" width="47.48322040072867" x="663.7909768257634" y="447.4982601092903"/>
-              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:Fill color="#CCFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="center" visible="true" width="48.900390625" x="-0.7085851121356654" xml:space="preserve" y="10.311270901639944">CoA-SH<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:StyleProperties>
@@ -456,7 +456,7 @@ CoA<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelP
           <data key="d7">
             <y:GenericNode configuration="com.yworks.sbgn.SimpleChemical">
               <y:Geometry height="40.0" width="40.0" x="750.1032448379165" y="446.79390601093024"/>
-              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="center" visible="true" width="29.775390625" x="5.1123046875" xml:space="preserve" y="11.015625">GDP<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
             </y:GenericNode>
@@ -467,7 +467,7 @@ CoA<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelP
           <data key="d7">
             <y:GenericNode configuration="com.yworks.sbgn.SimpleChemical">
               <y:Geometry height="40.0" width="40.0" x="630.6738302367928" y="491.71852240437073"/>
-              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:Fill color="#CCFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="center" visible="true" width="27.865234375" x="6.0673828125" xml:space="preserve" y="11.015625000000057">GTP<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
             </y:GenericNode>
@@ -478,7 +478,7 @@ CoA<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelP
           <data key="d7">
             <y:GenericNode configuration="com.yworks.sbgn.SimpleChemical">
               <y:Geometry height="40.0" width="47.48322040072867" x="797.6302456490495" y="480.4811395264117"/>
-              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="center" visible="true" width="45.443359375" x="1.0199305128643346" xml:space="preserve" y="11.015625">fosfato<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
             </y:GenericNode>
@@ -534,7 +534,7 @@ sintetazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:
           <data key="d7">
             <y:GenericNode configuration="com.yworks.sbgn.SimpleChemical">
               <y:Geometry height="40.0" width="40.0" x="548.7909768257634" y="439.95346885245897"/>
-              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="center" visible="true" width="28.3515625" x="5.82421875" xml:space="preserve" y="11.015625">FAD<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
             </y:GenericNode>
@@ -545,7 +545,7 @@ sintetazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:
           <data key="d7">
             <y:GenericNode configuration="com.yworks.sbgn.SimpleChemical">
               <y:Geometry height="40.0" width="40.0" x="498.8519400728569" y="326.4362156648458"/>
-              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:Fill color="#CCFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="center" visible="true" width="42.185546875" x="-1.0927734375" xml:space="preserve" y="11.015625">FADH₂<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
             </y:GenericNode>
@@ -625,8 +625,8 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
           <data key="d5" xml:space="preserve"><![CDATA[#P7_H2O]]></data>
           <data key="d7">
             <y:GenericNode configuration="com.yworks.sbgn.SimpleChemical">
-              <y:Geometry height="40.0" width="40.0" x="343.86678268371634" y="123.90187249544627"/>
-              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:Geometry height="40.0" width="40.0" x="449.8519400728569" y="246.8502761384336"/>
+              <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="center" visible="true" width="27.279296875" x="6.3603515625" xml:space="preserve" y="11.015625">H₂O<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
             </y:GenericNode>
@@ -656,7 +656,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
           <data key="d7">
             <y:GenericNode configuration="com.yworks.sbgn.SimpleChemical">
               <y:Geometry height="40.0" width="40.0" x="596.6852413820582" y="6.787523178506447"/>
-              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:Fill color="#CCFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="center" visible="true" width="39.44921875" x="0.275390625" xml:space="preserve" y="11.015625">NADH<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
             </y:GenericNode>
@@ -667,7 +667,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
           <data key="d7">
             <y:GenericNode configuration="com.yworks.sbgn.SimpleChemical">
               <y:Geometry height="40.0" width="40.0" x="509.8519400728569" y="76.10993078324184"/>
-              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="center" visible="true" width="40.48046875" x="-0.240234375" xml:space="preserve" y="11.015625">NAD+<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
             </y:GenericNode>
@@ -699,6 +699,17 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
               <y:StyleProperties>
                 <y:Property class="java.lang.Boolean" name="com.yworks.sbgn.style.inverse" value="true"/>
               </y:StyleProperties>
+            </y:GenericNode>
+          </data>
+        </node>
+        <node id="n1::n43">
+          <data key="d5" xml:space="preserve"><![CDATA[#P7_H2O]]></data>
+          <data key="d7">
+            <y:GenericNode configuration="com.yworks.sbgn.SimpleChemical">
+              <y:Geometry height="40.0" width="40.0" x="666.6852413820582" y="-33.86450127504463"/>
+              <y:Fill color="#FFFF99" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="center" visible="true" width="27.279296875" x="6.3603515625" xml:space="preserve" y="11.015625">H₂O<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
             </y:GenericNode>
           </data>
         </node>
@@ -1103,7 +1114,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e36" source="n1::n36" target="n1::n37">
+    <edge id="n1::e36" source="n1::n38" target="n1::n1">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -1113,7 +1124,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e37" source="n1::n38" target="n1::n1">
+    <edge id="n1::e37" source="n1::n38" target="n1::n39">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -1123,17 +1134,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e38" source="n1::n38" target="n1::n39">
-      <data key="d11">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="line" width="1.0"/>
-          <y:Arrows source="none" target="delta"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="n1::e39" source="n1::n40" target="n1::n38">
+    <edge id="n1::e38" source="n1::n40" target="n1::n38">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -1143,7 +1144,7 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e40" source="n1::n41" target="n1::n38">
+    <edge id="n1::e39" source="n1::n41" target="n1::n38">
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -1153,7 +1154,28 @@ dehidrogenazo<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n1::e41" source="n1::n12" target="n1::n9">
+    <edge id="n1::e40" source="n1::n12" target="n1::n9">
+      <data key="d11">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n1::e41" source="n1::n43" target="n1::n6">
+      <data key="d10"/>
+      <data key="d11">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n1::e42" source="n1::n37" target="n1::n36">
       <data key="d10"/>
       <data key="d11">
         <y:PolyLineEdge>
