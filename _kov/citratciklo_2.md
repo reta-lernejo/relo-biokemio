@@ -46,7 +46,7 @@ GDP: https://pubchem.ncbi.nlm.nih.gov/compound/730
 GTP: https://pubchem.ncbi.nlm.nih.gov/compound/6830
 FAD: https://pubchem.ncbi.nlm.nih.gov/compound/643975
 FADH2: https://pubchem.ncbi.nlm.nih.gov/compound/446013
-
+H+: https://pubchem.ncbi.nlm.nih.gov/compound/1038
 fostfato: https://pubchem.ncbi.nlm.nih.gov/compound/1061
 
 -->
@@ -122,11 +122,12 @@ const molekuloj = {
   "sukcinato": "sukcinato_CID_1110.sdf",
   "fumarato": "fumarato_CID_444972.sdf",
   "l-malato": "lmalato_CID_222656.sdf",
-  "NAD+": "NAD_CID_925.sdf",
+  "NAD⁺": "NAD_CID_925.sdf",
   "NADH": "NADH_CID_439153.sdf",
   "CoA-SH": "CoASH_ChEBI_15346.sdf", //"CoA.mol",
   "GDP": "GDP_CID_730.sdf",
   "GTP": "GTP_CID_6830.sdf",
+  "H⁺": "H.sdf", //.pdb", //H_CID_5362549.sdf", // H_CID_5460653.sdf", //H_CID_1038.sdf",
   "H₂O": "H2O.mol",
   "CO₂": "CO2_CID_280.sdf",
   "fosfato": "fosfato_CID_1061.sdf",
