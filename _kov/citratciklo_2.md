@@ -283,8 +283,7 @@ function fokuso(jmol_id,g) {
   // al ĉiuj grupoj, pro simpleco ni metas tie
   // ĉi fikse, sed:
   // PLIBONIGU: eltrovu tion prepare unufoje!
-  const tx = -249;
-  const ty = +192;
+  const [tf,tx,ty] = translation(g);
 
   SVG.a(l1,{
     x1: ax-tx,
@@ -426,11 +425,23 @@ function paŝo(proceso) {
   }
 }
 
+function translation(g) {
+  const re_mx = /matrix\(1,0,0,1,(.*)\)/
+
+  const tf = g.querySelector("g[transform]").getAttribute("transform");
+
+  const m = tf.match(re_mx);
+  if (m) {
+    const coord = m[1].split(',');
+    return["",parseFloat(coord[0]), dy = parseFloat(coord[1])];
+  } else {
+    return [tf,0,0];
+  }
+}
 
 // anstataŭigas la enhavon de la SVG-grupo gid
 // per foreignObject por uzi ĝin kun JsMol
 function foreignObject(gid,fid) {
-  const re_mx = /matrix\(1,0,0,1,(.*)\)/
 
   const a = svg.querySelector(`a[*|href="${gid}"`);
   const g = a.parentElement;
@@ -439,8 +450,6 @@ function foreignObject(gid,fid) {
   // de enhavita g, rect
 
   const fO = SVG.e("foreignObject");
-
-  const tf = g.querySelector("g[transform]").getAttribute("transform");
   const r = g.querySelector("rect");
 
   // matrix(1,0,0,1,-249,192)
@@ -448,17 +457,11 @@ function foreignObject(gid,fid) {
   let y = parseFloat(r.getAttribute("y"));
   let width = parseFloat(r.getAttribute("width"));
   let height = parseFloat(r.getAttribute("height"));
-  let dx = 0;
-  let dy = 0;
 
-  const m = tf.match(re_mx);
-  if (m) {
-    const coord = m[1].split(',');
-    dx = parseFloat(coord[0]);
-    dy = parseFloat(coord[1]);
-  } else {
+  const [tf,dx,dy] = translation(g);
+
+  if (!dx && !dy && tf.length)
     g.setAttribute("transform",tf);
-  }
 
   // ni kreas fokusliniojn por montri de la
   // molekulo en la ciklo al al JMol-rigardo

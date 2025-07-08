@@ -88,7 +88,7 @@
     "n1::n40": ["sbgn.SimpleChemical", "#P8_NAD" ],
     "n1::n41": ["sbgn.Macromolecule", "#malatdehidrogenazo" ],
     "n1::n42": ["sbgn.Tag", "#sekva_pasho" ],
-    "n1::n43": ["sbgn.SimpleChemical", "#P7_H2O" ],
+    "n1::n43": ["sbgn.SimpleChemical", "#P1_H2O" ],
     "n1::n5": ["sbgn.Macromolecule", "#citratsintazo" ],
     "n1::n6": ["sbgn.Process", "#P_citrato" ],
     "n1::n7": ["sbgn.SimpleChemical", "#P1_CoA" ],
@@ -96,6 +96,7 @@
     "n1::n9": ["sbgn.Process", "#P_glutarato" ],
     "n2": ["", "#fo_proteino" ],
     "n3": ["", "#fo_fonto" ],
-    "n4": ["", "#fo_produkto" ]
+    "n4": ["", "#fo_produkto" ],
+    "n5": ["" ]
   }
 }
