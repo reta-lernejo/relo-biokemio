@@ -76,11 +76,17 @@ Acetyl-CoA + 3 NAD+ + FAD + GDP + Pi ​+ 2 H2​O  →  2 CO2 ​+ 3 NADH + 3H+
 -->
 
 Ĉe eŭkariotaj organismoj (vegetaĵoj, fungoj, bestoj), la ciklo okazas en la mitoĥondrioj, ĉe prokariotaj organismoj (bakterioj) ĝi okazas 
-en la citoplasmo. En iuj bakterioj la ciklo okazas en inversa direkto por asimili karbondioksidon.
+en la ĉelplasmo. En iuj bakterioj la ciklo okazas en inversa direkto por asimili karbondioksidon.
 
 Pli preciza formulo cetere estas:
 
-$$\ce {CH_3CO-S-KoA + 3NAD+ + FAD + GDP + P_i + 2H2O -> 2CO2 + 3NADH + 3H+ + FADH2 + GTP + KoA-SH}$$
+$$\ce {CH_3CO-S-KoA + 3NAD+ + FAD + GDP + P_i + 2H2O  ->  2CO2 + 3NADH + 3H+ + FADH2 + GTP + KoA-SH}$$
+
+
+<!--
+
+Pi = [HPO4]2−
+-->
 
 <style>
   svg {
@@ -588,6 +594,12 @@ function jmol_preparo() {
 
 </script>
 
+## fontoj
+{: .fontoj}
+
+[^F1]: [Proteindaumbazo - RCSB PDB](https://www.rcsb.org)
+[^F2]: [PubChem de Usona Nacia Centro por Bioteĥnologia Informoj - NCBI](https://pubchem.ncbi.nlm.nih.gov)
+[^W1]: [(en) Wikipdedia - Citric acid cycle](https://en.wikipedia.org/wiki/Citric_acid_cycle)
 
 <!-- fontoj:
 

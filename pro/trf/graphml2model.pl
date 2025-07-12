@@ -15,7 +15,8 @@
 % graph('modeloj/elementcikloj/fosforciklo-detala').
 % graph('modeloj/elementcikloj/sulfurciklo-detala').
 
-graph('modeloj/procezoj/TCA_SGBN_PD').
+% graph('modeloj/procezoj/TCA_SGBN_PD').
+graph('modeloj/procezoj/Glikolizo_SGBN_PD').
 
 %output('cikloj/fosforciklo-detala.mdl').
 
