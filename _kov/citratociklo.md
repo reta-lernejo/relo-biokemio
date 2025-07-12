@@ -1,14 +1,10 @@
 ---
-layout: page
+layout: laborfolio
 title: Citratociklo
+js:
+  - folio-0c
+  - mathjax/es5/tex-chtml  
 ---
-
-  <!-- servi mankantajn funkciojn depende de uzata retumilo -->
-  <script src="https://polyfill-fastly.io/v3/polyfill.min.js?features=es6"></script>
-  <!-- subteno por matematikaj kaj kemiaj formuloj -->
-  <script id="MathJax-script" async
-          src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js">
-  </script>
   
   <!-- vd. pri baza ideo de diagramoj en md-teksto: https://www.jappoker.com/blog/2018/markdown-grammar/ -->
   <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>

@@ -18,9 +18,6 @@
       <rect x="299" width="896" height="863" y="-202" clip-path="url(#clipPath2)" stroke="none"/>
     </g>
     <g id="y.node.0">
-      <g stroke-linecap="butt" transform="matrix(1,0,0,1,-299,202)" fill="red" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" stroke-dasharray="6,2" stroke="red" stroke-miterlimit="1.45">
-        <ellipse rx="338.2508" fill="none" ry="323.25" cx="738.3524" cy="262.1833"/>
-      </g>
       <g>
         <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
           <text x="708.7596" xml:space="preserve" y="266.3376" stroke="none">citratciklo</text>
@@ -47,7 +44,7 @@
         </g>
         <g>
           <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-            <text x="638.8166" xml:space="preserve" y="-113.5488" stroke="none">acetil-CoA</text>
+            <text x="639.0715" xml:space="preserve" y="-113.5488" stroke="none">acetil-KoA</text>
           </g>
         </g>
       </a>
@@ -100,14 +97,14 @@
     <g id="y.node.6">
       <a xlink:href="#akonitazo">
         <g fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke="white">
-          <path d="M893.1594 55.2339 Q893.1594 45.2339 903.1594 45.2339 L963.1594 45.2339 Q973.1594 45.2339 973.1594 55.2339 L973.1594 75.2339 Q973.1594 85.2339 963.1594 85.2339 L903.1594 85.2339 Q893.1594 85.2339 893.1594 75.2339 Z" stroke="none"/>
+          <path d="M893.1594 68.6328 Q893.1594 58.6328 903.1594 58.6328 L963.1594 58.6328 Q973.1594 58.6328 973.1594 68.6328 L973.1594 88.6328 Q973.1594 98.6328 963.1594 98.6328 L903.1594 98.6328 Q893.1594 98.6328 893.1594 88.6328 Z" stroke="none"/>
         </g>
         <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-          <path fill="none" d="M893.1594 55.2339 Q893.1594 45.2339 903.1594 45.2339 L963.1594 45.2339 Q973.1594 45.2339 973.1594 55.2339 L973.1594 75.2339 Q973.1594 85.2339 963.1594 85.2339 L903.1594 85.2339 Q893.1594 85.2339 893.1594 75.2339 Z"/>
+          <path fill="none" d="M893.1594 68.6328 Q893.1594 58.6328 903.1594 58.6328 L963.1594 58.6328 Q973.1594 58.6328 973.1594 68.6328 L973.1594 88.6328 Q973.1594 98.6328 963.1594 98.6328 L903.1594 98.6328 Q893.1594 98.6328 893.1594 88.6328 Z"/>
         </g>
         <g>
           <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-            <text x="904.0178" xml:space="preserve" y="69.3882" stroke="none">akonitazo</text>
+            <text x="904.0178" xml:space="preserve" y="82.7871" stroke="none">akonitazo</text>
           </g>
         </g>
       </a>
@@ -141,14 +138,14 @@
     <g id="y.node.9">
       <a xlink:href="#P1_CoA">
         <g fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke="white">
-          <rect x="797.3168" y="-21.0667" width="47.4832" rx="15.5101" ry="15.5101" height="31.0201" stroke="none"/>
+          <rect x="797.3168" y="-25.0667" width="47.4832" rx="24.0253" ry="24.0253" height="48.0505" stroke="none"/>
         </g>
         <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-          <rect x="797.3168" y="-21.0667" fill="none" width="47.4832" rx="15.5101" ry="15.5101" height="31.0201"/>
+          <rect x="797.3168" y="-25.0667" fill="none" width="47.4832" rx="24.0253" ry="24.0253" height="48.0505"/>
         </g>
         <g>
           <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-            <text x="798.6082" xml:space="preserve" y="-1.4023" stroke="none">CoA-SH</text>
+            <text x="798.8631" xml:space="preserve" y="3.1129" stroke="none">KoA-SH</text>
           </g>
         </g>
       </a>
@@ -156,10 +153,10 @@
     <g id="y.node.10">
       <a xlink:href="#P_izocitrato">
         <g fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke="white">
-          <rect x="982.1594" width="18" height="18" y="27.9333" stroke="none"/>
+          <rect x="977.6794" width="18" height="18" y="27.9333" stroke="none"/>
         </g>
         <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-          <rect fill="none" x="982.1594" width="18" height="18" y="27.9333"/>
+          <rect fill="none" x="977.6794" width="18" height="18" y="27.9333"/>
         </g>
         <g/>
       </a>
@@ -167,10 +164,10 @@
     <g id="y.node.11">
       <a xlink:href="#P_glutarato">
         <g fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke="white">
-          <rect x="1070.5187" width="18" height="18" y="201.2492" stroke="none"/>
+          <rect x="1065.1187" width="18" height="18" y="201.2492" stroke="none"/>
         </g>
         <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-          <rect fill="none" x="1070.5187" width="18" height="18" y="201.2492"/>
+          <rect fill="none" x="1065.1187" width="18" height="18" y="201.2492"/>
         </g>
         <g/>
       </a>
@@ -178,15 +175,15 @@
     <g id="y.node.12">
       <a xlink:href="#izocitratdehidrogenazo">
         <g fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke="white">
-          <path d="M956.0815 227.1872 Q956.0815 217.1872 966.0815 217.1872 L1043.293 217.1872 Q1053.293 217.1872 1053.293 227.1872 L1053.293 247.1872 Q1053.293 257.1872 1043.293 257.1872 L966.0815 257.1872 Q956.0815 257.1872 956.0815 247.1872 Z" stroke="none"/>
+          <path d="M953.3815 229.2492 Q953.3815 219.2492 963.3815 219.2492 L1040.593 219.2492 Q1050.593 219.2492 1050.593 229.2492 L1050.593 249.2492 Q1050.593 259.2492 1040.593 259.2492 L963.3815 259.2492 Q953.3815 259.2492 953.3815 249.2492 Z" stroke="none"/>
         </g>
         <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-          <path fill="none" d="M956.0815 227.1872 Q956.0815 217.1872 966.0815 217.1872 L1043.293 217.1872 Q1053.293 217.1872 1053.293 227.1872 L1053.293 247.1872 Q1053.293 257.1872 1043.293 257.1872 L966.0815 257.1872 Q956.0815 257.1872 956.0815 247.1872 Z"/>
+          <path fill="none" d="M953.3815 229.2492 Q953.3815 219.2492 963.3815 219.2492 L1040.593 219.2492 Q1050.593 219.2492 1050.593 229.2492 L1050.593 249.2492 Q1050.593 259.2492 1040.593 259.2492 L963.3815 259.2492 Q953.3815 259.2492 953.3815 249.2492 Z"/>
         </g>
         <g>
           <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-            <text x="978.2205" xml:space="preserve" y="234.3571" stroke="none">izocitrat-</text>
-            <text x="959.9714" xml:space="preserve" y="248.3259" stroke="none">dehidrogenazo</text>
+            <text x="975.5204" xml:space="preserve" y="236.4191" stroke="none">izocitrat-</text>
+            <text x="957.2714" xml:space="preserve" y="250.3879" stroke="none">dehidrogenazo</text>
           </g>
         </g>
       </a>
@@ -290,61 +287,61 @@
     </g>
     <g id="y.edge.7">
       <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-        <path fill="none" d="M743.7923 -58.7723 L794.2294 -24.0346"/>
-        <path d="M803.2887 -17.7952 L796.8092 -29.5432 L790.0026 -19.6604 Z" stroke="none"/>
+        <path fill="none" d="M743.7923 -58.3016 L793.0928 -21.7661"/>
+        <path d="M801.9305 -15.2167 L795.8618 -27.1821 L788.7169 -17.5409 Z" stroke="none"/>
       </g>
     </g>
     <g id="y.edge.2">
       <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-        <path fill="none" d="M918.3036 -18.1779 L982.1591 30.1252"/>
+        <path fill="none" d="M917.8212 -17.9149 L977.7023 29.7827"/>
       </g>
     </g>
     <g id="y.edge.4">
       <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-        <path fill="none" d="M970.0607 47.2282 L974.945 44.845"/>
-        <path fill="white" d="M982.1348 41.3368 C983.1035 43.3222 982.2794 45.717 980.2939 46.6858 C978.3086 47.6545 975.9138 46.8304 974.945 44.845 C973.9763 42.8596 974.8004 40.4648 976.7858 39.496 C978.7712 38.5273 981.166 39.3514 982.1348 41.3368 Z" stroke="none"/>
-        <path fill="none" d="M982.1348 41.3368 C983.1035 43.3222 982.2794 45.717 980.2939 46.6858 C978.3086 47.6545 975.9138 46.8304 974.945 44.845 C973.9763 42.8596 974.8004 40.4648 976.7858 39.496 C978.7712 38.5273 981.166 39.3514 982.1348 41.3368 Z"/>
+        <path fill="none" d="M958.8479 58.6179 L971.3724 48.8596"/>
+        <path fill="white" d="M977.683 43.9427 C979.0408 45.6853 978.7288 48.1987 976.9861 49.5564 C975.2435 50.9142 972.7302 50.6022 971.3724 48.8596 C970.0146 47.1169 970.3267 44.6036 972.0693 43.2458 C973.8119 41.888 976.3253 42.2 977.683 43.9427 Z" stroke="none"/>
+        <path fill="none" d="M977.683 43.9427 C979.0408 45.6853 978.7288 48.1987 976.9861 49.5564 C975.2435 50.9142 972.7302 50.6022 971.3724 48.8596 C970.0146 47.1169 970.3267 44.6036 972.0693 43.2458 C973.8119 41.888 976.3253 42.2 977.683 43.9427 Z"/>
       </g>
     </g>
     <g id="y.edge.8">
       <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-        <path fill="none" d="M997.1498 45.9406 L1024.1094 86.4771"/>
-        <path d="M1030.2009 95.6364 L1028.5516 82.3217 L1018.5596 88.967 Z" stroke="none"/>
+        <path fill="none" d="M993.2277 45.9406 L1022.8881 86.7391"/>
+        <path d="M1029.3563 95.6364 L1027.1531 82.4021 L1017.447 89.4584 Z" stroke="none"/>
       </g>
     </g>
     <g id="y.edge.3">
       <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-        <path fill="none" d="M1044.7048 122.9067 L1075.9319 201.2505"/>
+        <path fill="none" d="M1043.9757 122.9067 L1071.0132 201.2505"/>
       </g>
     </g>
     <g id="y.edge.12">
       <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-        <path fill="none" d="M1051.4204 220.3641 L1063.0188 216.1889"/>
-        <path fill="white" d="M1070.5459 213.4792 C1071.2942 215.5578 1070.2157 217.8494 1068.1372 218.5976 C1066.0586 219.3459 1063.767 218.2674 1063.0188 216.1889 C1062.2705 214.1103 1063.349 211.8187 1065.4275 211.0705 C1067.5061 210.3222 1069.7976 211.4007 1070.5459 213.4792 Z" stroke="none"/>
-        <path fill="none" d="M1070.5459 213.4792 C1071.2942 215.5578 1070.2157 217.8494 1068.1372 218.5976 C1066.0586 219.3459 1063.767 218.2674 1063.0188 216.1889 C1062.2705 214.1103 1063.349 211.8187 1065.4275 211.0705 C1067.5061 210.3222 1069.7976 211.4007 1070.5459 213.4792 Z"/>
+        <path fill="none" d="M1047.2455 221.0534 L1057.6947 216.8524"/>
+        <path fill="white" d="M1065.1173 213.8682 C1065.9414 215.9179 1064.9478 218.2475 1062.8981 219.0716 C1060.8484 219.8956 1058.5188 218.9021 1057.6947 216.8524 C1056.8707 214.8027 1057.8643 212.4731 1059.9139 211.649 C1061.9636 210.8249 1064.2932 211.8185 1065.1173 213.8682 Z" stroke="none"/>
+        <path fill="none" d="M1065.1173 213.8682 C1065.9414 215.9179 1064.9478 218.2475 1062.8981 219.0716 C1060.8484 219.8956 1058.5188 218.9021 1057.6947 216.8524 C1056.8707 214.8027 1057.8643 212.4731 1059.9139 211.649 C1061.9636 210.8249 1064.2932 211.8185 1065.1173 213.8682 Z"/>
       </g>
     </g>
     <g id="y.edge.10">
       <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-        <path fill="none" d="M1081.0173 219.247 L1096.9124 314.6801"/>
-        <path d="M1098.7196 325.5306 L1102.6665 312.7079 L1090.8296 314.6794 Z" stroke="none"/>
+        <path fill="none" d="M1075.9773 219.247 L1095.7311 314.881"/>
+        <path d="M1097.9563 325.6536 L1101.4048 312.688 L1089.6528 315.1155 Z" stroke="none"/>
       </g>
     </g>
     <g id="y.edge.40">
       <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-        <path fill="none" d="M1099.6969 169.1969 L1083.9524 201.2289"/>
+        <path fill="none" d="M1098.4574 168.5055 L1079.3715 201.2401"/>
       </g>
     </g>
     <g id="y.edge.11">
       <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-        <path fill="none" d="M1085.632 219.2663 L1102.1111 243.5729"/>
-        <path d="M1108.2838 252.6777 L1106.5161 239.3783 L1096.5836 246.1122 Z" stroke="none"/>
+        <path fill="none" d="M1081.0573 219.2663 L1100.6223 244.6921"/>
+        <path d="M1107.3306 253.4099 L1104.7676 240.2406 L1095.2573 247.5586 Z" stroke="none"/>
       </g>
     </g>
     <g id="y.edge.9">
       <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-        <path fill="none" d="M1078.5585 219.2076 L1063.3514 361.0841"/>
-        <path d="M1062.1791 372.0214 L1069.4238 360.7292 L1057.4922 359.4503 Z" stroke="none"/>
+        <path fill="none" d="M1073.4314 219.2076 L1062.5487 361.0537"/>
+        <path d="M1061.7073 372.0215 L1068.6077 360.5156 L1056.6428 359.5977 Z" stroke="none"/>
       </g>
     </g>
     <g id="y.edge.13">
@@ -427,14 +424,14 @@
     <g id="y.node.23">
       <a xlink:href="#P4_CoA">
         <g fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke="white">
-          <rect x="792.356" y="481.1855" width="47.4832" rx="19.2956" ry="19.2956" height="38.5913" stroke="none"/>
+          <rect x="792.356" y="481.1855" width="47.4832" rx="24.0253" ry="24.0253" height="48.0505" stroke="none"/>
         </g>
         <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-          <rect x="792.356" y="481.1855" fill="none" width="47.4832" rx="19.2956" ry="19.2956" height="38.5913"/>
+          <rect x="792.356" y="481.1855" fill="none" width="47.4832" rx="24.0253" ry="24.0253" height="48.0505"/>
         </g>
         <g>
           <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-            <text x="793.6475" xml:space="preserve" y="504.6354" stroke="none">CoA-SH</text>
+            <text x="793.9023" xml:space="preserve" y="509.3651" stroke="none">KoA-SH</text>
           </g>
         </g>
       </a>
@@ -480,7 +477,7 @@
         <g>
           <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
             <text x="747.1993" xml:space="preserve" y="585.1033" stroke="none">sukcinil-</text>
-            <text x="759.9054" xml:space="preserve" y="599.072" stroke="none">CoA</text>
+            <text x="760.1603" xml:space="preserve" y="599.072" stroke="none">KoA</text>
           </g>
         </g>
       </a>
@@ -488,10 +485,10 @@
     <g id="y.node.27">
       <a xlink:href="#P_sukcinato">
         <g fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke="white">
-          <rect x="617.6738" width="18" height="18" y="567.4333" stroke="none"/>
+          <rect x="620.7458" width="18" height="18" y="559.549" stroke="none"/>
         </g>
         <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-          <rect fill="none" x="617.6738" width="18" height="18" y="567.4333"/>
+          <rect fill="none" x="620.7458" width="18" height="18" y="559.549"/>
         </g>
         <g/>
       </a>
@@ -499,14 +496,14 @@
     <g id="y.node.28">
       <a xlink:href="#P5_CoA">
         <g fill="rgb(204,255,255)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke="rgb(204,255,255)">
-          <rect x="503.5463" y="546.6377" width="47.4832" rx="19.2956" ry="19.2956" height="38.5913" stroke="none"/>
+          <rect x="503.5463" y="538.7185" width="47.4832" rx="23.2552" ry="23.2552" height="46.5105" stroke="none"/>
         </g>
         <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-          <rect x="503.5463" y="546.6377" fill="none" width="47.4832" rx="19.2956" ry="19.2956" height="38.5913"/>
+          <rect x="503.5463" y="538.7185" fill="none" width="47.4832" rx="23.2552" ry="23.2552" height="46.5105"/>
         </g>
         <g>
           <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-            <text x="504.8378" xml:space="preserve" y="570.0876" stroke="none">CoA-SH</text>
+            <text x="505.0927" xml:space="preserve" y="566.1281" stroke="none">KoA-SH</text>
           </g>
         </g>
       </a>
@@ -544,14 +541,14 @@
     <g id="y.node.31">
       <a xlink:href="#P5_fosfato">
         <g fill="rgb(255,255,153)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke="rgb(255,255,153)">
-          <rect x="690.6454" y="527.7185" width="47.4832" rx="20" ry="20" height="40" stroke="none"/>
+          <rect x="690.6454" y="521.9421" width="47.4832" rx="22.8882" ry="22.8882" height="45.7764" stroke="none"/>
         </g>
         <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-          <rect x="690.6454" y="527.7185" fill="none" width="47.4832" rx="20" ry="20" height="40"/>
+          <rect x="690.6454" y="521.9421" fill="none" width="47.4832" rx="22.8882" ry="22.8882" height="45.7764"/>
         </g>
         <g>
           <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-            <text x="693.6653" xml:space="preserve" y="551.8728" stroke="none">fosfato</text>
+            <text x="693.6653" xml:space="preserve" y="548.9846" stroke="none">fosfato</text>
           </g>
         </g>
       </a>
@@ -566,7 +563,7 @@
         </g>
         <g>
           <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-            <text x="587.873" xml:space="preserve" y="497.6511" stroke="none">sukcinil-CoA-</text>
+            <text x="588.1279" xml:space="preserve" y="497.6511" stroke="none">sukcinil-KoA-</text>
             <text x="599.1846" xml:space="preserve" y="511.6198" stroke="none">sintetazo</text>
           </g>
         </g>
@@ -802,7 +799,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.53">
+    <g id="y.node.49">
       <a xlink:href="#P3_H">
         <g fill="rgb(204,255,255)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke="rgb(204,255,255)">
           <rect x="1113.1187" y="213.0492" width="26.4" rx="13.2" ry="13.2" height="26.4" stroke="none"/>
@@ -817,7 +814,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.54">
+    <g id="y.node.50">
       <a xlink:href="#P4_H">
         <g fill="rgb(204,255,255)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke="rgb(204,255,255)">
           <rect x="930.5157" y="572.4233" width="26.4" rx="13.2" ry="13.2" height="26.4" stroke="none"/>
@@ -832,7 +829,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.55">
+    <g id="y.node.51">
       <a xlink:href="#P8_H">
         <g fill="rgb(204,255,255)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke="rgb(204,255,255)">
           <rect x="509.8519" y="-73.9656" width="26.4" rx="13.2" ry="13.2" height="26.4" stroke="none"/>
@@ -847,7 +844,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.49">
+    <g id="y.node.52">
       <a xlink:href="#fo_proteino">
         <g transform="matrix(1,0,0,1,-299,202)" fill-opacity="0.1412" fill="rgb(255,204,0)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" stroke="rgb(255,204,0)" stroke-opacity="0.1412">
           <rect x="536.833" width="400" height="400" y="32.2173" stroke="none"/>
@@ -862,7 +859,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.50">
+    <g id="y.node.53">
       <a xlink:href="#fo_fonto">
         <g transform="matrix(1,0,0,1,-299,202)" fill-opacity="0.1412" fill="rgb(255,204,0)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" stroke="rgb(255,204,0)" stroke-opacity="0.1412">
           <rect x="329.8519" width="180" height="180" y="-157.0161" stroke="none"/>
@@ -877,7 +874,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.51">
+    <g id="y.node.54">
       <a xlink:href="#fo_produkto">
         <g transform="matrix(1,0,0,1,-299,202)" fill-opacity="0.1412" fill="rgb(255,204,0)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" stroke="rgb(255,204,0)" stroke-opacity="0.1412">
           <rect x="959.5187" width="180" height="180" y="-164.7661" stroke="none"/>
@@ -892,7 +889,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.52">
+    <g id="y.node.55">
       <g/>
     </g>
     <g id="y.edge.17">
@@ -909,7 +906,7 @@
     </g>
     <g id="y.edge.19">
       <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-        <path fill="none" d="M836.3536 511.4832 L894.0435 542.8176"/>
+        <path fill="none" d="M837.4577 515.6509 L894.0646 543.3186"/>
       </g>
     </g>
     <g id="y.edge.14">
@@ -932,41 +929,41 @@
     </g>
     <g id="y.edge.20">
       <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-        <path fill="none" d="M738.3716 585.2802 L635.7002 577.1483"/>
+        <path fill="none" d="M738.8027 583.4233 L638.7718 569.78"/>
       </g>
     </g>
     <g id="y.edge.21">
       <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-        <path fill="none" d="M617.6961 575.4849 L561.8444 569.5842"/>
-        <path d="M550.9053 568.4285 L562.2085 575.656 L563.4692 563.7224 Z" stroke="none"/>
+        <path fill="none" d="M620.7657 567.9727 L561.9543 564.1985"/>
+        <path d="M550.9769 563.494 L562.5681 570.2502 L563.3365 558.2748 Z" stroke="none"/>
       </g>
     </g>
     <g id="y.edge.24">
       <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-        <path fill="none" d="M670.9696 600.7878 L635.7147 581.4041"/>
+        <path fill="none" d="M672.2429 598.8374 L638.7308 574.9528"/>
       </g>
     </g>
     <g id="y.edge.22">
       <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-        <path fill="none" d="M617.6805 581.9285 L597.4774 594.2731"/>
-        <path d="M588.0909 600.0084 L601.459 598.8716 L595.2023 588.6318 Z" stroke="none"/>
+        <path fill="none" d="M620.7721 574.9503 L596.2822 592.4198"/>
+        <path d="M587.3271 598.8078 L600.5806 596.7237 L593.6119 586.9545 Z" stroke="none"/>
       </g>
     </g>
     <g id="y.edge.25">
       <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-        <path fill="none" d="M692.0732 555.0234 L635.6471 573.4957"/>
+        <path fill="none" d="M691.5322 551.2348 L638.7664 566.0212"/>
       </g>
     </g>
     <g id="y.edge.26">
       <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-        <path fill="none" d="M626.6738 520.4705 L626.6738 559.4432"/>
-        <path fill="white" d="M626.6738 567.4432 C624.4647 567.4432 622.6738 565.6524 622.6738 563.4432 C622.6738 561.2341 624.4647 559.4432 626.6738 559.4432 C628.883 559.4432 630.6738 561.2341 630.6738 563.4432 C630.6738 565.6524 628.883 567.4432 626.6738 567.4432 Z" stroke="none"/>
-        <path fill="none" d="M626.6738 567.4432 C624.4647 567.4432 622.6738 565.6524 622.6738 563.4432 C622.6738 561.2341 624.4647 559.4432 626.6738 559.4432 C628.883 559.4432 630.6738 561.2341 630.6738 563.4432 C630.6738 565.6524 628.883 567.4432 626.6738 567.4432 Z"/>
+        <path fill="none" d="M627.5753 520.4561 L628.9803 551.5867"/>
+        <path fill="white" d="M629.341 559.5786 C627.1341 559.6782 625.2643 557.9698 625.1647 555.763 C625.0651 553.5561 626.7734 551.6863 628.9803 551.5867 C631.1872 551.4871 633.0569 553.1954 633.1566 555.4023 C633.2562 557.6091 631.5479 559.4789 629.341 559.5786 Z" stroke="none"/>
+        <path fill="none" d="M629.341 559.5786 C627.1341 559.6782 625.2643 557.9698 625.1647 555.763 C625.0651 553.5561 626.7734 551.6863 628.9803 551.5867 C631.1872 551.4871 633.0569 553.1954 633.1566 555.4023 C633.2562 557.6091 631.5479 559.4789 629.341 559.5786 Z"/>
       </g>
     </g>
     <g id="y.edge.23">
       <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-        <path fill="none" d="M617.6549 570.9474 L524.4002 514.2236"/>
+        <path fill="none" d="M620.7594 563.7614 L526.2051 513.3874"/>
       </g>
     </g>
     <g id="y.edge.27">
@@ -1057,8 +1054,8 @@
     </g>
     <g id="y.edge.43">
       <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,202)" stroke-linecap="butt">
-        <path fill="none" d="M1088.5222 213.3273 L1103.3975 218.4129"/>
-        <path d="M1113.806 221.9713 L1104.3922 212.412 L1100.5103 223.7668 Z" stroke="none"/>
+        <path fill="none" d="M1083.1161 213.007 L1103.1869 219.159"/>
+        <path d="M1113.704 222.3826 L1103.9891 213.1293 L1100.4725 224.6025 Z" stroke="none"/>
       </g>
     </g>
     <g id="y.edge.44">

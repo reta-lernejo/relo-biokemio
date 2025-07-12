@@ -1,7 +1,7 @@
 ---
 layout: laborfolio
 title: Genkodilo
-chapter: 4
+chapter: 4.1
 js:
   - folio-0c
   - svg-0c

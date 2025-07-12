@@ -1,12 +1,16 @@
 ---
 layout: laborfolio
 title: Citratciklo
+chapter: 4.2
 js:
   - folio-0c
+  - mathjax/es5/tex-chtml  
   - svg-0d
   - jmol-0b
   - jsmol/JSmol.min
 ---
+
+(paĝo en preparo)
 
 <!-- 
 
@@ -50,6 +54,33 @@ H+: https://pubchem.ncbi.nlm.nih.gov/compound/1038
 fostfato: https://pubchem.ncbi.nlm.nih.gov/compound/1061
 
 -->
+
+La citratciklo eluzas bioĥemiajn reakciojn por provizi energion al oksigenspiraj ĉeloj. En ĝi ankaŭ estiĝas
+molekuloj por sintezo de organikaj kombinaĵoj.
+
+Ĉe la digesto de grasoj, sukeroj, alkoholo kaj aminacidoj estiĝas acetil-konezimo A, kiu malkombiniĝas en la citratciklo
+al karbondioksido kaj hidrogeno (protonoj) laŭ la resuma, simpligita, formulo:
+
+$$
+\begin{align*}
+&\ce{O}\\
+&||\\
+\ce{CH3-&C-S-KoA + 3H2O -> 2CO2 + 8H + KoA-SH}
+\end{align*}
+$$
+
+<!--
+pli ekzakta:
+
+Acetyl-CoA + 3 NAD+ + FAD + GDP + Pi ​+ 2 H2​O  →  2 CO2 ​+ 3 NADH + 3H+ + FADH2 ​+ GTP + CoA-SH
+-->
+
+Ĉe eŭkariotaj organismoj (vegetaĵoj, fungoj, bestoj), la ciklo okazas en la mitoĥondrioj, ĉe prokariotaj organismoj (bakterioj) ĝi okazas 
+en la citoplasmo. En iuj bakterioj la ciklo okazas en inversa direkto por asimili karbondioksidon.
+
+Pli preciza formulo cetere estas:
+
+$$\ce {CH_3CO-S-KoA + 3NAD+ + FAD + GDP + P_i + 2H2O -> 2CO2 + 3NADH + 3H+ + FADH2 + GTP + KoA-SH}$$
 
 <style>
   svg {
@@ -117,14 +148,14 @@ const molekuloj = {
   "citrato": "citrato_CID_311.sdf",
   "izocitrato": "izocitrato_CID_1198.sdf",
   "alfoketo-glutarato": "alfoketoglutarato_CID_51.sdf",
-  "acetil-CoA": "aCoA_CID_444493.sdf",
-  "sukcinil-CoA": "sukcinilCoA_15380.sdf", // aŭ sukcinilCoA_CID_92133.sdf
+  "acetil-KoA": "aCoA_CID_444493.sdf",
+  "sukcinil-KoA": "sukcinilCoA_15380.sdf", // aŭ sukcinilCoA_CID_92133.sdf
   "sukcinato": "sukcinato_CID_1110.sdf",
   "fumarato": "fumarato_CID_444972.sdf",
   "l-malato": "lmalato_CID_222656.sdf",
   "NAD⁺": "NAD_CID_925.sdf",
   "NADH": "NADH_CID_439153.sdf",
-  "CoA-SH": "CoASH_ChEBI_15346.sdf", //"CoA.mol",
+  "KoA-SH": "CoASH_ChEBI_15346.sdf", //"CoA.mol",
   "GDP": "GDP_CID_730.sdf",
   "GTP": "GTP_CID_6830.sdf",
   "H⁺": "H.sdf", //.pdb", //H_CID_5362549.sdf", // H_CID_5460653.sdf", //H_CID_1038.sdf",
@@ -142,7 +173,7 @@ const proteinoj = {
   "α-ketoglutarat-dehidrogenazo": "ODGH_7wgr.cif.gz",
   "dihidrolipoamid-sukciniltransferazo": "-",
   "dihidrolipoamid-dehidrogenazo": "-",
-  "sukcinil-CoA-sintetazo": "SCS_6wcv.cif.gz",
+  "sukcinil-KoA-sintetazo": "SCS_6wcv.cif.gz",
   "sukcinat-dehidrogenazo": "SDH_1nek.cif.gz",
   "fumarazo": "fumarazo_3e04.cif.gz",
   "malat-dehidrogenazo": "MDH_1ie3.cif.gz"
@@ -557,4 +588,19 @@ function jmol_preparo() {
 
 </script>
 
-<div id="svgujo"></div>
+
+<!-- fontoj:
+
+Wikipedia:...
+
+https://www.pathwayz.org/Tree/Plain/AEROBIC+RESPIRATION
+
+https://chem.libretexts.org/Bookshelves/General_Chemistry/Book%3A_Structure_and_Reactivity_in_Organic_Biological_and_Inorganic_Chemistry_(Schaller)/III%3A_Reactivity_in_Organic_Biological_and_Inorganic_Chemistry_1/09%3A_Mechanisms_of_the_Tricarboxylic_Acid_Cycle/9.03%3A_Catalysis_in_the_TCA_Cycle
+
+https://www.khanacademy.org/science/biology/cellular-respiration-and-fermentation/pyruvate-oxidation-and-the-citric-acid-cycle/a/the-citric-acid-cycle
+
+https://basicmedicalkey.com/tricarboxylic-acid-cycle/
+
+https://researchtweet.com/tca-cycle-definition-function-mechanism-location/
+
+-->
