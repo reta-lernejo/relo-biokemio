@@ -243,7 +243,7 @@ function ŝargu_molekulon(g) {
 
 function jmol_ŝargu(jmol_id,dosiero,g) {
     svg.style.cursor = "wait";
-    fokuso(jmol_id,g);
+    sbgn.jmol_fokuso(jmol_id,g);
 
     switch (jmol_id) {
       case "jmol_proteino": 
@@ -258,68 +258,6 @@ function jmol_ŝargu(jmol_id,dosiero,g) {
     }
 }
 
-/**
- * Kalkulas la punkton de la fokuslinio sur la rando
- * de cirklo (flanko = 1|-1) 
- */
-function radipunkto(ax,ay,cx,cy,r,flanko=1) {
-  // longo de la kateto a_c
-  const dx = ax-cx;
-  const dy = ay-cy;
-  const A = Math.sqrt(dx*dx + dy*dy);
-
-  const bx = cx + r*(dy/A)*flanko;
-  const by = cy + r*(-dx/A)*flanko;
-
-  return[bx,by];
-}
-
-function fokuso(jmol_id,g) {
-  // ŝanĝu la eliron de fokuslinoj al la elektita molekulo
-  const l1 = svg.querySelector("#"+jmol_id+"_fokus_1");
-  const l2 = svg.querySelector("#"+jmol_id+"_fokus_2");
-  const jm = svg.querySelector("#"+jmol_id);
-
-  const bb1 = g.getBBox();
-  const bb2 = jm.parentElement.getBBox();
-
-  // console.log(jm.parentElement);
-  // console.log(bb2);
-
-  // elturniĝu pro cimo en Safari/Webkit
-  if (!bb2.x && !bb2.y) {
-    bb2.x = jm.parentElement.getAttribute("x");
-    bb2.y = jm.parentElement.getAttribute("y");
-  }
-
-  const ax = bb1.x+bb1.width/2;
-  const ay = bb1.y+bb1.height/2;
-
-  const cx = bb2.x+bb2.width/2;
-  const cy = bb2.y+bb2.height/2;
-
-  const fp1 = radipunkto(ax,ay,cx,cy,bb2.width/2,1);
-  const fp2 = radipunkto(ax,ay,cx,cy,bb2.width/2,-1);
-
-  // tio estas la ŝoviĝo, kiun yEd aplikas
-  // al ĉiuj grupoj, pro simpleco ni metas tie
-  // ĉi fikse, sed:
-  // PLIBONIGU: eltrovu tion prepare unufoje!
-  const [tf,tx,ty] = sbgn.translation(g);
-
-  SVG.a(l1,{
-    x1: ax-tx,
-    y1: ay-ty,
-    x2: fp1[0]-tx,
-    y2: fp1[1]-ty
-  });
-  SVG.a(l2,{
-    x1: ax-tx,
-    y1: ay-ty,
-    x2: fp2[0]-tx,
-    y2: fp2[1]-ty
-  });
-}
 
 
 function paŝo(proceso) {
@@ -414,7 +352,7 @@ function jmol_preparo() {
   sbgn.foreignObject("#fo_fonto",_jmol_fonto);
   sbgn.foreignObject("#fo_produkto",_jmol_produkto);
 
-  fokuso("jmol_proteino",sbgn.nodo_href("#citratsintazo"));
+  sbgn.jmol_fokuso("jmol_proteino",sbgn.nodo_href("#citratsintazo"));
   jmol_proteino_ref = jmol_div(_jmol_proteino,
     "", //inc/citratsintazo_5uzq.cif.gz",
     400,400,
@@ -425,7 +363,7 @@ function jmol_preparo() {
     "postShargo"
   );
 
-  fokuso("jmol_fonto",sbgn.nodo_href("#okzalacetato"));
+  sbgn.jmol_fokuso("jmol_fonto",sbgn.nodo_href("#okzalacetato"));
   jmol_fonto_ref = jmol_div(_jmol_fonto,
     "", //inc/okzalacetato_CID_970.sdf",
     180,180,
@@ -435,7 +373,7 @@ function jmol_preparo() {
     "postShargo"
   );
 
-  fokuso("jmol_produkto",sbgn.nodo_href("#citrato"));
+  sbgn.jmol_fokuso("jmol_produkto",sbgn.nodo_href("#citrato"));
   jmol_produkto_ref = jmol_div(_jmol_produkto,
     "", //inc/citrato_CID_311.sdf",
     180,180,

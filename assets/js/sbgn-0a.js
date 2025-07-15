@@ -56,6 +56,24 @@ class SVG {
 }
 
 class SBGN {
+
+    /**
+     * Kalkulas la punkton de la fokuslinio sur la rando
+     * de cirklo (flanko = 1|-1) 
+     */
+    static radipunkto(ax,ay,cx,cy,r,flanko=1) {
+        // longo de la kateto a_c
+        const dx = ax-cx;
+        const dy = ay-cy;
+        const A = Math.sqrt(dx*dx + dy*dy);
+    
+        const bx = cx + r*(dy/A)*flanko;
+        const by = cy + r*(-dx/A)*flanko;
+    
+        return[bx,by];
+    }
+  
+
     /**
      * 
      * @param {*} modelo - modelo eltirita per pro/trf/graphml2mdl.pl el SBGN graphml-dosiero (kreita per yEd)
@@ -166,6 +184,55 @@ class SBGN {
       
         return div;
     }
+
+
+    jmol_fokuso(jmol_id,g) {
+        // ŝanĝu la eliron de fokuslinoj al la elektita molekulo
+        const l1 = svg.querySelector("#"+jmol_id+"_fokus_1");
+        const l2 = svg.querySelector("#"+jmol_id+"_fokus_2");
+        const jm = svg.querySelector("#"+jmol_id);
+      
+        const bb1 = g.getBBox();
+        const bb2 = jm.parentElement.getBBox();
+      
+        // console.log(jm.parentElement);
+        // console.log(bb2);
+      
+        // elturniĝu pro cimo en Safari/Webkit
+        if (!bb2.x && !bb2.y) {
+          bb2.x = jm.parentElement.getAttribute("x");
+          bb2.y = jm.parentElement.getAttribute("y");
+        }
+      
+        const ax = bb1.x+bb1.width/2;
+        const ay = bb1.y+bb1.height/2;
+      
+        const cx = bb2.x+bb2.width/2;
+        const cy = bb2.y+bb2.height/2;
+      
+        const fp1 = SBGN.radipunkto(ax,ay,cx,cy,bb2.width/2,1);
+        const fp2 = SBGN.radipunkto(ax,ay,cx,cy,bb2.width/2,-1);
+      
+        // tio estas la ŝoviĝo, kiun yEd aplikas
+        // al ĉiuj grupoj, pro simpleco ni metas tie
+        // ĉi fikse, sed:
+        // PLIBONIGU: eltrovu tion prepare unufoje!
+        const [tf,tx,ty] = sbgn.translation(g);
+      
+        SVG.a(l1,{
+          x1: ax-tx,
+          y1: ay-ty,
+          x2: fp1[0]-tx,
+          y2: fp1[1]-ty
+        });
+        SVG.a(l2,{
+          x1: ax-tx,
+          y1: ay-ty,
+          x2: fp2[0]-tx,
+          y2: fp2[1]-ty
+        });
+      }
+      
 
     /**
      * la molekulo href estas produkto de iu procezo
