@@ -5,7 +5,7 @@ chapter: 4.2
 js:
   - folio-0c
   - mathjax/es5/tex-chtml  
-  - svg-0d
+  - sbgn-0a
   - jmol-0b
   - jsmol/JSmol.min
 ---
@@ -186,6 +186,7 @@ const proteinoj = {
 };
 
 let svg;
+let sbgn;
 
 lanĉe(() => {  
   // povas esti pluraj SVG en la paĝo, sed nur unu havas
@@ -198,6 +199,8 @@ lanĉe(() => {
   const w = svg.getAttribute("width");
   const h = svg.getAttribute("height");
   svg.setAttribute("viewBox",`0 0 ${w} ${h}`);
+
+  sbgn = new SBGN(svg,modelo,molekuloj,proteinoj);
 
   jmol_preparo(svg);
 
@@ -212,29 +215,10 @@ lanĉe(() => {
   });
 
   // kontrolu ĉu mankas molekuloj/proteinoj
-  kompleteco();
+  // eraroj/avertoj estas skribataj al la konsolo
+  sbgn.kompleteco();
 
 });
-
-function kompleteco() {
-  for (const n of Object.values(modelo.nodoj)) {
-    if (n[0] == "sbgn.SimpleChemical") {
-      const g = nodo_href(n[1]);
-      const text = g.querySelector("text");
-      const molekulo = g.textContent.replace(/[\s\n]/g,"");
-      if (!molekuloj[molekulo]) {
-        console.error(`Mankas molekulo: ${molekulo} (${n[1]})`);
-      }
-    } else if (n[0] == "sbgn.Macromolecule") {
-      const g = nodo_href(n[1]);
-      const text = g.querySelector("text");
-      const molekulo = g.textContent.replace(/[\s\n]/g,"");
-      if (!proteinoj[molekulo]) {
-        console.error(`Mankas proteino: ${molekulo} (${n[1]})`);
-      }
-    }
-  }
-}
 
 function svg_elekto(event) {
   const g = event.currentTarget;
@@ -321,7 +305,7 @@ function fokuso(jmol_id,g) {
   // al ĉiuj grupoj, pro simpleco ni metas tie
   // ĉi fikse, sed:
   // PLIBONIGU: eltrovu tion prepare unufoje!
-  const [tf,tx,ty] = translation(g);
+  const [tf,tx,ty] = sbgn.translation(g);
 
   SVG.a(l1,{
     x1: ax-tx,
@@ -335,51 +319,6 @@ function fokuso(jmol_id,g) {
     x2: fp2[0]-tx,
     y2: fp2[1]-ty
   });
-}
-
-/*
-    <g id="y.node.47">
-      <a xlink:href="#fo_proteino">
-*/
-
-/**
- * redonas g-elementon de nodo identigitan per xlink:href
- */
-function nodo_href(href) {
-  const a = svg.querySelector(`a[*|href="${href}"`);
-  if (a) return a.parentElement;
-}
-
-function nodo_klaso(href,...klasoj) {
-  const g = nodo_href(href);
-  if (g) {
-    if (klasoj)
-      g.classList.add(...klasoj);
-    else
-      g.className = "";
-  }
-}
-
-/**
- * la molekulo href estas produkto de iu proceso
- */
-function produkto_de_proceso(href) {
-  for (const ev of Object.values(modelo.eĝoj)) {
-    const n0 = modelo.nodoj[ev[0]];
-    const n1 = modelo.nodoj[ev[1]];
-    if (n1[1] == href && n0[0] == "sbgn.Process") return true;
-  }
-}
-
-/**
- * la molekulo href estas fonto de iu proceso
- */
-function fonto_de_proceso(href) {
-  for (const ev of Object.values(modelo.eĝoj)) {
-    const n0 = modelo.nodoj[ev[0]];
-    const n1 = modelo.nodoj[ev[1]];
-    if (n0[1] == href && n1[0] == "sbgn.Process") return true;
-  }
 }
 
 
@@ -422,7 +361,7 @@ function paŝo(proceso) {
   }
 
   // aktivigu la koncernan proceson
-  nodo_klaso(proceso,"proceso","aktiva");
+  sbgn.nodo_klaso(proceso,"proceso","aktiva");
 
   // ni trovu tiun proceso-nodon en la modelo?
   for (const [n,nv] of Object.entries(modelo.nodoj)) {
@@ -432,27 +371,27 @@ function paŝo(proceso) {
       for (const [e,ev] of Object.entries(modelo.eĝoj)) {
         if (ev[0] == n) {
           const n2 = modelo.nodoj[ev[1]];
-          nodo_klaso(n2[1],"celo","aktiva");
+          sbgn.nodo_klaso(n2[1],"celo","aktiva");
           // se la celo estas fonto de alia proceso, ni
           // scias ke ĝi estas en la ciklo la sekva produkto
           // kaj montras ĝin per JMol
-          if (fonto_de_proceso(n2[1])) {
-            ŝargu_molekulon(nodo_href(n2[1]));
+          if (sbgn.fonto_de_procezo(n2[1])) {
+            ŝargu_molekulon(sbgn.nodo_href(n2[1]));
           }
         } else if (ev[1] == n) {
           const n2 = modelo.nodoj[ev[0]];
           // se estas sgbn.Macromolecule ni povus
           // donas klason "proteino","aktiva" kaj montras en la centra JMol-rigardo
           if (n2[0] == "sbgn.Macromolecule") {
-            nodo_klaso(n2[1],"proteino","aktiva");
-            ŝargu_molekulon(nodo_href(n2[1]));
+            sbgn.nodo_klaso(n2[1],"proteino","aktiva");
+            ŝargu_molekulon(sbgn.nodo_href(n2[1]));
           } else {
-            nodo_klaso(n2[1],"fonto","aktiva");
+            sbgn.nodo_klaso(n2[1],"fonto","aktiva");
             // se la fonto estas celo de alia proceso, ni
             // scias ke ĝi estas en la ciklo la elira molekulo
             // de la aktuala proceso kaj montras ĝin per JMol
-            if (produkto_de_proceso(n2[1])) {
-              ŝargu_molekulon(nodo_href(n2[1]));
+            if (sbgn.produkto_de_procezo(n2[1])) {
+              ŝargu_molekulon(sbgn.nodo_href(n2[1]));
             }
           }
         }
@@ -463,90 +402,6 @@ function paŝo(proceso) {
   }
 }
 
-function translation(g) {
-  const re_mx = /matrix\(1,0,0,1,(.*)\)/
-
-  const tf = g.querySelector("g[transform]").getAttribute("transform");
-
-  const m = tf.match(re_mx);
-  if (m) {
-    const coord = m[1].split(',');
-    return["",parseFloat(coord[0]), dy = parseFloat(coord[1])];
-  } else {
-    return [tf,0,0];
-  }
-}
-
-// anstataŭigas la enhavon de la SVG-grupo gid
-// per foreignObject por uzi ĝin kun JsMol
-function foreignObject(gid,fid) {
-
-  const a = svg.querySelector(`a[*|href="${gid}"`);
-  const g = a.parentElement;
-
-  // ni devas eltrovi mezurojn kaj transformon
-  // de enhavita g, rect
-
-  const fO = SVG.e("foreignObject");
-  const r = g.querySelector("rect");
-
-  // matrix(1,0,0,1,-249,192)
-  let x = parseFloat(r.getAttribute("x"));
-  let y = parseFloat(r.getAttribute("y"));
-  let width = parseFloat(r.getAttribute("width"));
-  let height = parseFloat(r.getAttribute("height"));
-
-  const [tf,dx,dy] = translation(g);
-
-  if (!dx && !dy && tf.length)
-    g.setAttribute("transform",tf);
-
-  // ni kreas fokusliniojn por montri de la
-  // molekulo en la ciklo al al JMol-rigardo
-  const fono = svg.querySelector('g[fill="white"][stroke="white"]');
-  // PLIBONIGU: ni supozas ke estas la sama transformo kiel de fO
-  // sed pli bone estus forigi la transformon de la fono
-  // kaj ĝustigi la koordinatojn de ĝia rektangulo
-  //const fono_tf = fono.getAttribute("transform");
-  const klaso = fid.split('_')[1];
-  const l1 = SVG.e("line",{
-    id: fid+"_fokus_1",
-    class: "fokuso "+klaso,
-    //transform: fono_tf,
-    x1: -dx, y1: -dy,
-    x2: x+width/2,
-    y2: y+height/2
-  });
-  const l2 = SVG.e("line",{
-    id: fid+"_fokus_2",
-    class: "fokuso "+klaso,
-    //transform: fono_tf,
-    x1: -dx, y1: -dy,
-    x2: x+width/2,
-    y2: y+height/2
-  });
-  fono.append(l1,l2);
-
-  // aldonu 3 pikselojn por la rando
-  // CSS box-sizing: content-box ne funkcias tie ĉi
-  SVG.a(fO,{
-      //transform: tf,
-      x: x+dx,
-      y: y+dy,
-      width: width+3,
-      height: height+3
-  });
-
-  const div = document.createElementNS("http://www.w3.org/1999/xhtml","div")
-  div.id = fid;
-  fO.append(div);
-
-  // anstataŭgu enhavon de t per fO
-  g.textContent="";
-  g.append(fO);
-
-  return div;
-}
 
 function postShargo() {
   console.log("post ŝargo"); svg.style.cursor = "auto";
@@ -555,11 +410,11 @@ function postShargo() {
 function jmol_preparo() {
   // anstataŭigu SVG-grupon _fo_proteino per foreignObject/div por
   // tie montri proteinojn per JSMol
-  foreignObject("#fo_proteino",_jmol_proteino);
-  foreignObject("#fo_fonto",_jmol_fonto);
-  foreignObject("#fo_produkto",_jmol_produkto);
+  sbgn.foreignObject("#fo_proteino",_jmol_proteino);
+  sbgn.foreignObject("#fo_fonto",_jmol_fonto);
+  sbgn.foreignObject("#fo_produkto",_jmol_produkto);
 
-  fokuso("jmol_proteino",nodo_href("#citratsintazo"));
+  fokuso("jmol_proteino",sbgn.nodo_href("#citratsintazo"));
   jmol_proteino_ref = jmol_div(_jmol_proteino,
     "", //inc/citratsintazo_5uzq.cif.gz",
     400,400,
@@ -570,7 +425,7 @@ function jmol_preparo() {
     "postShargo"
   );
 
-  fokuso("jmol_fonto",nodo_href("#okzalacetato"));
+  fokuso("jmol_fonto",sbgn.nodo_href("#okzalacetato"));
   jmol_fonto_ref = jmol_div(_jmol_fonto,
     "", //inc/okzalacetato_CID_970.sdf",
     180,180,
@@ -580,7 +435,7 @@ function jmol_preparo() {
     "postShargo"
   );
 
-  fokuso("jmol_produkto",nodo_href("#citrato"));
+  fokuso("jmol_produkto",sbgn.nodo_href("#citrato"));
   jmol_produkto_ref = jmol_div(_jmol_produkto,
     "", //inc/citrato_CID_311.sdf",
     180,180,
