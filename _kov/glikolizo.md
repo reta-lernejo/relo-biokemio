@@ -5,7 +5,7 @@ chapter: 4.2
 js:
   - folio-0c
   - mathjax/es5/tex-chtml  
-  - svg-0d
+  - sbgn-0a
   - jmol-0b
   - jsmol/JSmol.min
 ---
@@ -84,10 +84,10 @@ const molekuloj = {
 const proteinoj = {};
 
 let svg;
+let sbgn;
 
 lanĉe(() => {  
-  // povas esti pluraj SVG en la paĝo, sed nur unu havas
-  // "#P_citrato"
+  // povas esti pluraj SVG en la paĝo, sed nur unu havas y.node.0"
   const eniro = document.getElementById("y.node.0"); // querySelector('a[*|href="#P_citrato"]');
   svg = eniro.closest("svg");
 
@@ -97,9 +97,10 @@ lanĉe(() => {
   const h = svg.getAttribute("height");
   svg.setAttribute("viewBox",`0 0 ${w} ${h}`);
 
+  sbgn = new SBGN(svg,modelo,molekuloj,proteinoj);
   jmol_preparo(svg);
 
-  paŝo("#P_citrato");
+  paŝo("#P1");
 
   svg.querySelectorAll("g[id]").forEach((g) => {
     if (g.querySelector('a[*|href="#sekva_pasho"]')) {
@@ -110,29 +111,9 @@ lanĉe(() => {
   });
 
   // kontrolu ĉu mankas molekuloj/proteinoj
-  kompleteco();
+  sgbn.kompleteco();
 
 });
-
-function kompleteco() {
-  for (const n of Object.values(modelo.nodoj)) {
-    if (n[0] == "sbgn.SimpleChemical") {
-      const g = nodo_href(n[1]);
-      const text = g.querySelector("text");
-      const molekulo = g.textContent.replace(/[\s\n]/g,"");
-      if (!molekuloj[molekulo]) {
-        console.error(`Mankas molekulo: ${molekulo} (${n[1]})`);
-      }
-    } else if (n[0] == "sbgn.Macromolecule") {
-      const g = nodo_href(n[1]);
-      const text = g.querySelector("text");
-      const molekulo = g.textContent.replace(/[\s\n]/g,"");
-      if (!proteinoj[molekulo]) {
-        console.error(`Mankas proteino: ${molekulo} (${n[1]})`);
-      }
-    }
-  }
-}
 
 function svg_elekto(event) {
   const g = event.currentTarget;
@@ -157,7 +138,7 @@ function ŝargu_molekulon(g) {
 
 function jmol_ŝargu(jmol_id,dosiero,g) {
     svg.style.cursor = "wait";
-    fokuso(jmol_id,g);
+    sbgn.jmol_fokuso(jmol_id,g);
 
     switch (jmol_id) {
       case "jmol_proteino": 
@@ -171,4 +152,122 @@ function jmol_ŝargu(jmol_id,dosiero,g) {
         break;
     }
 }
+
+
+
+function paŝo(proceso) {
+
+  // por eviti akrobataĵojn per la modelaj eĝoj
+  // ni uzas ordigitan liston de la procezoj por
+  // ekscii la sekvan
+  const procezoj = ["#P1", "#P2", "#P3", "#P4", "#P5", "#P6", "#P7", "#P8", "#P9", "#P10"];
+
+  // kio estas la aktiva procezo?
+  const akt_a = svg.querySelector(".proceso.aktiva a");
+  const akt_proc = akt_a? akt_a.getAttributeNS(XLINKNS,"href") : undefined;
+
+  if (! proceso) {
+    // eltrovu la sekvan paŝon
+    proceso = procezoj[(procezoj.indexOf(akt_proc) + 1) % procezoj.length];
+    // kaj forigu la molekulojn el JsMol-rigardoj
+    Jmol.script(jmol_proteino_ref, "zap;");
+    Jmol.script(jmol_fonto_ref, "zap;");
+    Jmol.script(jmol_produkto_ref, "zap;");
+  }
+
+  // antaŭ ŝanĝo malaktivigu ĉiujn aliajn
+  if (proceso != akt_proc) {
+    svg.querySelectorAll("g.aktiva").forEach((g) => {
+      g.classList.remove("aktiva");
+      g.classList.remove("celo");
+      g.classList.remove("fonto");
+    });
+  }
+
+  // aktivigu la koncernan proceson
+  sbgn.nodo_klaso(proceso,"proceso","aktiva");
+
+  // ni trovu tiun proceso-nodon en la modelo?
+  for (const [n,nv] of Object.entries(modelo.nodoj)) {
+    if (nv[1] == proceso) {
+      // sekvu ĉiujn eĝojn de tie kaj aktivigu ilin kaj la
+      // aliflankajn nodojn
+      for (const [e,ev] of Object.entries(modelo.eĝoj)) {
+        if (ev[0] == n) {
+          const n2 = modelo.nodoj[ev[1]];
+          sbgn.nodo_klaso(n2[1],"celo","aktiva");
+          // se la celo estas fonto de alia proceso, ni
+          // scias ke ĝi estas en la ciklo la sekva produkto
+          // kaj montras ĝin per JMol
+          if (sbgn.fonto_de_procezo(n2[1])) {
+            ŝargu_molekulon(sbgn.nodo_href(n2[1]));
+          }
+        } else if (ev[1] == n) {
+          const n2 = modelo.nodoj[ev[0]];
+          // se estas sgbn.Macromolecule ni povus
+          // donas klason "proteino","aktiva" kaj montras en la centra JMol-rigardo
+          if (n2[0] == "sbgn.Macromolecule") {
+            sbgn.nodo_klaso(n2[1],"proteino","aktiva");
+            ŝargu_molekulon(sbgn.nodo_href(n2[1]));
+          } else {
+            sbgn.nodo_klaso(n2[1],"fonto","aktiva");
+            // se la fonto estas celo de alia proceso, ni
+            // scias ke ĝi estas en la ciklo la elira molekulo
+            // de la aktuala proceso kaj montras ĝin per JMol
+            if (sbgn.produkto_de_procezo(n2[1])) {
+              ŝargu_molekulon(sbgn.nodo_href(n2[1]));
+            }
+          }
+        }
+      }
+
+      return;
+    }
+  }
+}
+
+
+function postShargo() {
+  console.log("post ŝargo"); svg.style.cursor = "auto";
+}
+
+function jmol_preparo() {
+  // anstataŭigu SVG-grupon _fo_proteino per foreignObject/div por
+  // tie montri proteinojn per JSMol
+  sbgn.foreignObject("#fo_proteino",_jmol_proteino);
+  sbgn.foreignObject("#fo_fonto",_jmol_fonto);
+  sbgn.foreignObject("#fo_produkto",_jmol_produkto);
+
+  sbgn.jmol_fokuso("jmol_proteino",sbgn.nodo_href("#heksokinazo"));
+  jmol_proteino_ref = jmol_div(_jmol_proteino,
+    "", //inc/heksokinazo_....cif.gz",
+    400,400,
+    (app) => { Jmol.script(app,
+      'cartoon only; color cartoon structure; set antialiasDisplay ON'
+    )}
+    ,
+    "postShargo"
+  );
+
+  sbgn.jmol_fokuso("jmol_fonto",sbgn.nodo_href("#P1_glukozo"));
+  jmol_fonto_ref = jmol_div(_jmol_fonto,
+    "", //inc/oglukozo_CID_999.sdf",
+    180,180,
+    (app) => { Jmol.script(app,
+      'set antialiasDisplay ON'
+    )},
+    "postShargo"
+  );
+
+  sbgn.jmol_fokuso("jmol_produkto",sbgn.nodo_href("#G6P"));
+  jmol_produkto_ref = jmol_div(_jmol_produkto,
+    "", //inc/G6P_CID_999.sdf",
+    180,180,
+    (app) => { Jmol.script(app,
+      'set antialiasDisplay ON'
+    )},
+    "postShargo"
+  );
+}
+
 </script>

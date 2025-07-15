@@ -3,6 +3,10 @@
   <defs id="genericDefs"/>
   <g>
     <defs id="defs1">
+      <linearGradient x1="334.7747" gradientUnits="userSpaceOnUse" x2="460.1349" y1="584.464" y2="633.464" id="linearGradient1" spreadMethod="reflect">
+        <stop stop-opacity="1" stop-color="rgb(255,255,153)" offset="0%"/>
+        <stop stop-opacity="1" stop-color="rgb(255,204,0)" offset="100%"/>
+      </linearGradient>
       <clipPath clipPathUnits="userSpaceOnUse" id="clipPath1">
         <path d="M0 0 L874 0 L874 862 L0 862 L0 0 Z"/>
       </clipPath>
@@ -17,9 +21,6 @@
       <g/>
     </g>
     <g id="y.node.1">
-      <g stroke-linecap="butt" transform="matrix(1,0,0,1,-299,198)" fill="red" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" stroke-dasharray="6,2" stroke="red" stroke-miterlimit="1.45">
-        <ellipse rx="338.2508" fill="none" ry="323.25" cx="738.3524" cy="262.1833"/>
-      </g>
       <g>
         <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,-299,198)" stroke-linecap="butt">
           <text x="713.91" xml:space="preserve" y="266.3376" stroke="none">glikolizo</text>
@@ -188,7 +189,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.18">
+    <g id="y.node.15">
       <a xlink:href="#P1_ADP">
         <g fill="rgb(204,255,255)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="rgb(204,255,255)">
           <rect x="723.0989" y="-117.7911" width="40" rx="20" ry="20" height="40" stroke="none"/>
@@ -203,7 +204,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.19">
+    <g id="y.node.16">
       <a xlink:href="#F1_6bP">
         <g fill="rgb(255,204,153)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="rgb(255,204,153)">
           <rect x="1027.3788" y="253.2741" width="107.5916" rx="13.6393" ry="13.6393" height="27.2785" stroke="none"/>
@@ -218,7 +219,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.20">
+    <g id="y.node.17">
       <a xlink:href="#DHAP">
         <g fill="rgb(255,204,153)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="rgb(255,204,153)">
           <rect x="1085.7458" y="422.1785" width="56.6677" rx="13.6393" ry="13.6393" height="27.2785" stroke="none"/>
@@ -233,7 +234,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.21">
+    <g id="y.node.18">
       <a xlink:href="#GADP">
         <g fill="rgb(255,204,153)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="rgb(255,204,153)">
           <rect x="912.4104" y="422.1785" width="56.6677" rx="13.6393" ry="13.6393" height="27.2785" stroke="none"/>
@@ -248,7 +249,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.22">
+    <g id="y.node.19">
       <a xlink:href="#1_3bPG">
         <g fill="rgb(255,204,153)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="rgb(255,204,153)">
           <rect x="813.6097" y="558.1548" width="56.6677" rx="13.6393" ry="13.6393" height="27.2785" stroke="none"/>
@@ -263,7 +264,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.23">
+    <g id="y.node.20">
       <a xlink:href="#3PG">
         <g fill="rgb(255,204,153)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="rgb(255,204,153)">
           <rect x="551.7613" y="536.1855" width="56.6677" rx="13.6393" ry="13.6393" height="27.2785" stroke="none"/>
@@ -278,7 +279,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.24">
+    <g id="y.node.21">
       <a xlink:href="#2PG">
         <g fill="rgb(255,204,153)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="rgb(255,204,153)">
           <rect x="420.217" y="416.5444" width="56.6677" rx="13.6393" ry="13.6393" height="27.2785" stroke="none"/>
@@ -293,7 +294,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.25">
+    <g id="y.node.22">
       <a xlink:href="#PEP">
         <g fill="rgb(255,204,153)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="rgb(255,204,153)">
           <rect x="369.121" y="245.2425" width="56.6677" rx="13.6393" ry="13.6393" height="27.2785" stroke="none"/>
@@ -308,7 +309,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.26">
+    <g id="y.node.23">
       <a xlink:href="#piruvato">
         <g fill="rgb(255,204,153)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="rgb(255,204,153)">
           <rect x="367.4549" y="52.9839" width="60" rx="30" ry="30" height="60" stroke="none"/>
@@ -323,7 +324,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.27">
+    <g id="y.node.24">
       <a xlink:href="#GPizomerazo">
         <g fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="white">
           <path d="M798.0878 13.125 Q798.0878 3.125 808.0878 3.125 L895.6794 3.125 Q905.6794 3.125 905.6794 13.125 L905.6794 33.125 Q905.6794 43.125 895.6794 43.125 L808.0878 43.125 Q798.0878 43.125 798.0878 33.125 Z" stroke="none"/>
@@ -338,7 +339,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.28">
+    <g id="y.node.25">
       <a xlink:href="#PFK">
         <g fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="white">
           <path d="M920.833 153.2741 Q920.833 143.2741 930.833 143.2741 L1030.833 143.2741 Q1040.833 143.2741 1040.833 153.2741 L1040.833 173.2741 Q1040.833 183.2741 1030.833 183.2741 L930.833 183.2741 Q920.833 183.2741 920.833 173.2741 Z" stroke="none"/>
@@ -353,7 +354,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.29">
+    <g id="y.node.26">
       <a xlink:href="#aldolazo">
         <g fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="white">
           <path d="M936.833 296.5437 Q936.833 286.5437 946.833 286.5437 L1014.833 286.5437 Q1024.833 286.5437 1024.833 296.5437 L1024.833 316.5437 Q1024.833 326.5437 1014.833 326.5437 L946.833 326.5437 Q936.833 326.5437 936.833 316.5437 Z" stroke="none"/>
@@ -368,7 +369,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.30">
+    <g id="y.node.27">
       <a xlink:href="#TPizomerazo">
         <g fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="white">
           <path d="M1054.833 499.0919 Q1054.833 489.0919 1064.833 489.0919 L1132.833 489.0919 Q1142.833 489.0919 1142.833 499.0919 L1142.833 519.0919 Q1142.833 529.0919 1132.833 529.0919 L1064.833 529.0919 Q1054.833 529.0919 1054.833 519.0919 Z" stroke="none"/>
@@ -384,7 +385,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.31">
+    <g id="y.node.28">
       <a xlink:href="#P6">
         <g fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="white">
           <rect x="931.7443" width="18" height="18" y="511.0919" stroke="none"/>
@@ -395,7 +396,7 @@
         <g/>
       </a>
     </g>
-    <g id="y.node.32">
+    <g id="y.node.29">
       <a xlink:href="#GADPH">
         <g fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="white">
           <path d="M804.9436 477.0173 Q804.9436 467.0173 814.9436 467.0173 L896.9436 467.0173 Q906.9436 467.0173 906.9436 477.0173 L906.9436 497.0173 Q906.9436 507.0173 896.9436 507.0173 L814.9436 507.0173 Q804.9436 507.0173 804.9436 497.0173 Z" stroke="none"/>
@@ -411,7 +412,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.33">
+    <g id="y.node.30">
       <a xlink:href="#P8">
         <g fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="white">
           <rect x="503.7613" width="18" height="18" y="498.55" stroke="none"/>
@@ -422,7 +423,7 @@
         <g/>
       </a>
     </g>
-    <g id="y.node.34">
+    <g id="y.node.31">
       <a xlink:href="#P7">
         <g fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="white">
           <rect x="693.8097" width="18" height="18" y="575.464" stroke="none"/>
@@ -433,7 +434,7 @@
         <g/>
       </a>
     </g>
-    <g id="y.node.35">
+    <g id="y.node.32">
       <a xlink:href="#PGkinazo">
         <g fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="white">
           <path d="M672.8098 499.0919 Q672.8098 489.0919 682.8098 489.0919 L764.8098 489.0919 Q774.8098 489.0919 774.8098 499.0919 L774.8098 519.0919 Q774.8098 529.0919 764.8098 529.0919 L682.8098 529.0919 Q672.8098 529.0919 672.8098 519.0919 Z" stroke="none"/>
@@ -448,7 +449,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.36">
+    <g id="y.node.33">
       <a xlink:href="#PGmutazo">
         <g fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="white">
           <path d="M527.5613 455.3836 Q527.5613 445.3836 537.5613 445.3836 L619.5613 445.3836 Q629.5613 445.3836 629.5613 455.3836 L629.5613 475.3836 Q629.5613 485.3836 619.5613 485.3836 L537.5613 485.3836 Q527.5613 485.3836 527.5613 475.3836 Z" stroke="none"/>
@@ -463,7 +464,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.37">
+    <g id="y.node.34">
       <a xlink:href="#enolazo">
         <g fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="white">
           <path d="M442.6191 268.9367 Q442.6191 258.9367 452.6191 258.9367 L534.6191 258.9367 Q544.6191 258.9367 544.6191 268.9367 L544.6191 288.9367 Q544.6191 298.9367 534.6191 298.9367 L452.6191 298.9367 Q442.6191 298.9367 442.6191 288.9367 Z" stroke="none"/>
@@ -478,7 +479,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.38">
+    <g id="y.node.35">
       <a xlink:href="#piruvatkinazo">
         <g fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="white">
           <path d="M442.6191 122.9367 Q442.6191 112.9367 452.6191 112.9367 L534.6191 112.9367 Q544.6191 112.9367 544.6191 122.9367 L544.6191 142.9367 Q544.6191 152.9367 534.6191 152.9367 L452.6191 152.9367 Q442.6191 152.9367 442.6191 142.9367 Z" stroke="none"/>
@@ -494,7 +495,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.39">
+    <g id="y.node.36">
       <a xlink:href="#P3_ATP">
         <g fill="rgb(255,255,153)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="rgb(255,255,153)">
           <rect x="1068.061" y="94.0321" width="40" rx="20" ry="20" height="40" stroke="none"/>
@@ -509,7 +510,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.40">
+    <g id="y.node.37">
       <a xlink:href="#P3_ADP">
         <g fill="rgb(204,255,255)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="rgb(204,255,255)">
           <rect x="1080.2045" y="183.2741" width="40" rx="20" ry="20" height="40" stroke="none"/>
@@ -524,7 +525,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.41">
+    <g id="y.node.38">
       <a xlink:href="#P7_ADP">
         <g fill="rgb(255,255,153)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="rgb(255,255,153)">
           <rect x="757.6097" y="593.464" width="40" rx="20" ry="20" height="40" stroke="none"/>
@@ -539,7 +540,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.42">
+    <g id="y.node.39">
       <a xlink:href="#P10_ADP">
         <g fill="rgb(255,255,153)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="rgb(255,255,153)">
           <rect x="329.8519" y="195.094" width="40" rx="20" ry="20" height="40" stroke="none"/>
@@ -554,7 +555,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.43">
+    <g id="y.node.40">
       <a xlink:href="#P10_ATP">
         <g fill="rgb(204,255,255)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="rgb(204,255,255)">
           <rect x="329.8519" y="114.9455" width="40" rx="20" ry="20" height="40" stroke="none"/>
@@ -569,7 +570,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.44">
+    <g id="y.node.41">
       <a xlink:href="#P7_ATP">
         <g fill="rgb(204,255,255)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="rgb(204,255,255)">
           <rect x="609.5613" y="593.464" width="40" rx="20" ry="20" height="40" stroke="none"/>
@@ -584,7 +585,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.45">
+    <g id="y.node.42">
       <a xlink:href="#P6_NAD">
         <g fill="rgb(255,255,153)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="rgb(255,255,153)">
           <rect x="989.633" y="518.0919" width="40" rx="20" ry="20" height="40" stroke="none"/>
@@ -599,7 +600,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.46">
+    <g id="y.node.43">
       <a xlink:href="#P6_fosfato">
         <g fill="rgb(255,255,153)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="rgb(255,255,153)">
           <rect x="975.7295" y="471.4053" width="46" rx="23" ry="23" height="46" stroke="none"/>
@@ -614,7 +615,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.47">
+    <g id="y.node.44">
       <a xlink:href="#P6_NADH">
         <g fill="rgb(204,255,255)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="rgb(204,255,255)">
           <rect x="889.633" y="559.0919" width="40" rx="20" ry="20" height="40" stroke="none"/>
@@ -629,7 +630,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.48">
+    <g id="y.node.45">
       <a xlink:href="#P6_H">
         <g fill="rgb(204,255,255)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="rgb(204,255,255)">
           <rect x="934.633" y="588.0919" width="25" rx="13.3117" ry="13.3117" height="26.6234" stroke="none"/>
@@ -644,7 +645,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.49">
+    <g id="y.node.46">
       <a xlink:href="#P9_H2O">
         <g fill="rgb(204,255,255)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="rgb(204,255,255)">
           <rect x="329.8519" y="302.521" width="40" rx="20" ry="20" height="40" stroke="none"/>
@@ -659,7 +660,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.50">
+    <g id="y.node.47">
       <g fill="silver" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="silver">
         <rect x="928.2443" y="472.7745" width="25" rx="7.5" ry="7.5" height="15" stroke="none"/>
       </g>
@@ -672,7 +673,7 @@
         </g>
       </g>
     </g>
-    <g id="y.node.15">
+    <g id="y.node.48">
       <a xlink:href="#fo_proteino">
         <g transform="matrix(1,0,0,1,-299,198)" fill-opacity="0.1412" fill="rgb(255,204,0)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" stroke="rgb(255,204,0)" stroke-opacity="0.1412">
           <rect x="536.833" width="400" height="400" y="32.2173" stroke="none"/>
@@ -687,7 +688,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.16">
+    <g id="y.node.49">
       <a xlink:href="#fo_fonto">
         <g transform="matrix(1,0,0,1,-299,198)" fill-opacity="0.1412" fill="rgb(255,204,0)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" stroke="rgb(255,204,0)" stroke-opacity="0.1412">
           <rect x="329.8519" width="180" height="180" y="-157.0161" stroke="none"/>
@@ -702,7 +703,7 @@
         </g>
       </a>
     </g>
-    <g id="y.node.17">
+    <g id="y.node.50">
       <a xlink:href="#fo_produkto">
         <g transform="matrix(1,0,0,1,-299,198)" fill-opacity="0.1412" fill="rgb(255,204,0)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" stroke="rgb(255,204,0)" stroke-opacity="0.1412">
           <rect x="959.5187" width="180" height="180" y="-164.7661" stroke="none"/>
@@ -713,6 +714,21 @@
         <g>
           <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,-299,198)" stroke-linecap="butt">
             <text x="1010.6799" xml:space="preserve" y="-70.6118" stroke="none">_fo_produkto</text>
+          </g>
+        </g>
+      </a>
+    </g>
+    <g id="y.node.51">
+      <a xlink:href="#sekva_pasho">
+        <g fill="url(#linearGradient1)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke="url(#linearGradient1)">
+          <path d="M334.7747 584.464 L447.8849 584.464 L460.1349 608.964 L447.8849 633.464 L334.7747 633.464 Z" stroke="none"/>
+        </g>
+        <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-299,198)" stroke-linecap="butt">
+          <path fill="none" d="M334.7747 584.464 L447.8849 584.464 L460.1349 608.964 L447.8849 633.464 L334.7747 633.464 Z"/>
+        </g>
+        <g>
+          <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,-299,198)" stroke-linecap="butt">
+            <text x="363.7459" xml:space="preserve" y="613.1183" stroke="none">sekva paŝo</text>
           </g>
         </g>
       </a>
