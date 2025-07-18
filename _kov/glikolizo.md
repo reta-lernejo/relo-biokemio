@@ -15,6 +15,24 @@ js:
 <!--
 https://en.wikipedia.org/wiki/Glycolysis
 https://de.wikipedia.org/wiki/Glykolyse
+
+
+heksokinazo: https://www.rcsb.org/structure/1HKC
+G6P-izomerazo: https://www.rcsb.org/structure/1IAT
+
+
+glukozo: https://pubchem.ncbi.nlm.nih.gov/compound/5793
+G6P: https://pubchem.ncbi.nlm.nih.gov/compound/439284
+F6P: https://pubchem.ncbi.nlm.nih.gov/compound/444848
+PEP: https://pubchem.ncbi.nlm.nih.gov/compound/1005
+piruvato: https://pubchem.ncbi.nlm.nih.gov/compound/1060
+
+ADP: https://pubchem.ncbi.nlm.nih.gov/compound/6022
+ATP: https://pubchem.ncbi.nlm.nih.gov/compound/5957
+
+GADP: https://pubchem.ncbi.nlm.nih.gov/compound/729
+DHAP: https://pubchem.ncbi.nlm.nih.gov/compound/668
+
 -->
 
 
@@ -79,9 +97,22 @@ let jmol_produkto_ref;
 const _jmol_produkto = "jmol_produkto";
 
 const molekuloj = {
+  "glukozo": "glukozo_CID_5793.sdf",
+  "glukozo-6-P": "G6P_CID_439284.sdf",
+  "fruktozo-6-P": "F6P_CID_444848.sdf",
+  "PEP": "PEP_CID_1005.sdf",
+  "piruvato": "piruvato_CID_1060.sdf",
+
+  "ADP": "ADP_CID_6022.sdf",
+  "ATP": "ATP_CID_5957.sdf",
+  "GADP": "GADP_CID_729.sdf",
+  "DHAP": "DHAP_CID_668.sdf",
 };
 
-const proteinoj = {};
+const proteinoj = {
+  "heksokinazo": "heksokinazo_1hkc.cif.gz",
+  "G-6-P-izomerazo": "G6P_izomrazo_1iat.cif.gz",
+};
 
 let svg;
 let sbgn;
@@ -111,7 +142,7 @@ lanĉe(() => {
   });
 
   // kontrolu ĉu mankas molekuloj/proteinoj
-  sgbn.kompleteco();
+  sbgn.kompleteco();
 
 });
 
@@ -155,7 +186,7 @@ function jmol_ŝargu(jmol_id,dosiero,g) {
 
 
 
-function paŝo(proceso) {
+function paŝo(procezo) {
 
   // por eviti akrobataĵojn per la modelaj eĝoj
   // ni uzas ordigitan liston de la procezoj por
@@ -166,9 +197,9 @@ function paŝo(proceso) {
   const akt_a = svg.querySelector(".proceso.aktiva a");
   const akt_proc = akt_a? akt_a.getAttributeNS(XLINKNS,"href") : undefined;
 
-  if (! proceso) {
+  if (! procezo) {
     // eltrovu la sekvan paŝon
-    proceso = procezoj[(procezoj.indexOf(akt_proc) + 1) % procezoj.length];
+    procezo = procezoj[(procezoj.indexOf(akt_proc) + 1) % procezoj.length];
     // kaj forigu la molekulojn el JsMol-rigardoj
     Jmol.script(jmol_proteino_ref, "zap;");
     Jmol.script(jmol_fonto_ref, "zap;");
@@ -176,7 +207,7 @@ function paŝo(proceso) {
   }
 
   // antaŭ ŝanĝo malaktivigu ĉiujn aliajn
-  if (proceso != akt_proc) {
+  if (procezo != akt_proc) {
     svg.querySelectorAll("g.aktiva").forEach((g) => {
       g.classList.remove("aktiva");
       g.classList.remove("celo");
@@ -184,25 +215,27 @@ function paŝo(proceso) {
     });
   }
 
-  // aktivigu la koncernan proceson
-  sbgn.nodo_klaso(proceso,"proceso","aktiva");
+  // aktivigu la koncernan procezon
+  sbgn.nodo_klaso(procezo,"proceso","aktiva");
 
   // ni trovu tiun proceso-nodon en la modelo?
-  for (const [n,nv] of Object.entries(modelo.nodoj)) {
-    if (nv[1] == proceso) {
+  for (const [pn,pv] of Object.entries(modelo.nodoj)) {
+    if (pv[1] == procezo) {
       // sekvu ĉiujn eĝojn de tie kaj aktivigu ilin kaj la
       // aliflankajn nodojn
       for (const [e,ev] of Object.entries(modelo.eĝoj)) {
-        if (ev[0] == n) {
+        if (ev[0] == pn) {
+          // se la eĝo montras de la procezo al alia molekulo...
           const n2 = modelo.nodoj[ev[1]];
           sbgn.nodo_klaso(n2[1],"celo","aktiva");
-          // se la celo estas fonto de alia proceso, ni
+          // se la celo estas fonto de alia procezo, ni
           // scias ke ĝi estas en la ciklo la sekva produkto
           // kaj montras ĝin per JMol
           if (sbgn.fonto_de_procezo(n2[1])) {
             ŝargu_molekulon(sbgn.nodo_href(n2[1]));
           }
-        } else if (ev[1] == n) {
+        } else if (ev[1] == pn) {
+          // se la eĝo montras de alia molekulo al la procezo...
           const n2 = modelo.nodoj[ev[0]];
           // se estas sgbn.Macromolecule ni povus
           // donas klason "proteino","aktiva" kaj montras en la centra JMol-rigardo
@@ -211,9 +244,9 @@ function paŝo(proceso) {
             ŝargu_molekulon(sbgn.nodo_href(n2[1]));
           } else {
             sbgn.nodo_klaso(n2[1],"fonto","aktiva");
-            // se la fonto estas celo de alia proceso, ni
+            // se la fonto estas celo de alia procezo, ni
             // scias ke ĝi estas en la ciklo la elira molekulo
-            // de la aktuala proceso kaj montras ĝin per JMol
+            // de la aktuala procezo kaj montras ĝin per JMol
             if (sbgn.produkto_de_procezo(n2[1])) {
               ŝargu_molekulon(sbgn.nodo_href(n2[1]));
             }
