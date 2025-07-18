@@ -20,21 +20,48 @@ graph('modeloj/procezoj/Glikolizo_SGBN_PD').
 
 %output('cikloj/fosforciklo-detala.mdl').
 
+:- dynamic node/3, edge/2.
+
 go :-
     forall(graph(G),
     (
-        atom_concat(G,'.graphml',File),
-        format('~w...~n',[File]),
-        load_xml(File,DOM,[]),
-        nodes(DOM,JSON1),
-        edges(DOM,JSON2),
+        parse_graph(G),
+        make_json(Json),
         % put_dict(JSON1,JSON2,JSON),
         % skribu rezultojn
         atom_concat(G,'.mdl',OutFile),
         open(OutFile,write,Output),
-        json_write(Output,_{nodoj: JSON1, eĝoj: JSON2}),
+        json_write(Output,Json),
         close(Output)
     )).
+
+parse_graph(Graph) :-
+    atom_concat(Graph,'.graphml',File),
+    format('~w...~n',[File]),
+    load_xml(File,DOM,[]),
+    retractall(node(_,_,_)),
+    retractall(edge(_,_)),
+    nodes(DOM), edges(DOM).
+
+make_json(json([
+    nodes=json(NodeList),
+    edges=EdgeList
+    ])) :-
+    findall(
+        Name=Type,
+        node(_,Name,Type),
+        NodeList
+        ),
+    findall(
+        [N0,N1],
+        (
+            edge(Id0,Id1),
+            node(Id0,N0,_),
+            node(Id1,N1,_)
+        ),
+        EdgeList
+    ).
+
 
 /*
     <node id="n1" yfiles.foldertype="group">
@@ -45,7 +72,7 @@ go :-
             <y:Geometry height="898.1713321493626" width="967.981943111052" x="260.7179767432283" y="-232.96875"/>
             <y:Fill hasColor="false" transparent="false"/>
             <y:BorderStyle color="#000000" type="line" width="3.0"/>
-            <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="t" textColor="#000000" verticalTextPosition="bottom" visible="true" width="76.849609375" x="445.566166868026" xml:space="preserve" y="0.0">mitoĥondrio</y:NodeLabel>
+            <y:NodeLabel ... y="0.0">mitoĥondrio</y:NodeLabel>
 */
 
 /*
@@ -62,19 +89,32 @@ go :-
 
 */
 
-nodes(DOM,JSON) :-
+nodes(DOM) :-
     findall(Node,xpath(DOM,//node,Node),Nodes),
-    foldl(node,Nodes,_{},JSON),!.
+    maplist(node,Nodes),!.
 
-node(Node,JIn,JOut) :-
+
+% provizore ni ignoras grup-nodojn, ĉar tiam
+% la unuan nodon el la grupo ni duoibligus...
+%node(Node,JIn,JIn) :-
+%    Node = element(node,Attr,_Cnt),
+%    member(id=Id,Attr),
+%    print(Id),
+%    member('yfiles.foldertype'='group',Attr),!.
+
+node(Node) :-
     Node = element(node,Attr,_Cnt),
     member(id=Id,Attr),
     print(Id),
     %member(yfiles.foldertype=Type,Attr),
     % print(Node),
 
+    % provizore ni ne traktas grup-nodojn, ĉar tiam
+    % la unuan nodon el la grupo ni duoibligus...
+    %\+ member('yfiles.foldertype'='group',Attr),
+
     once((
-        xpath(Node,//'y:GenericNode'(@configuration),T),
+        xpath(Node,data/'y:GenericNode'(@configuration),T),
         atomic_list_concat([com,yworks|T1],'.',T),
         atomic_list_concat(T1,'.',Type),
         print(Type),nl
@@ -83,26 +123,30 @@ node(Node,JIn,JOut) :-
     )),
 
     once((
-        xpath(Node,//data(normalize_space),Data),
+        xpath(Node,data(normalize_space),Data),
         sub_atom(Data,0,1,_,'#'),
         print(Data),nl,
-        JOut = JIn.put(Id,[Type,Data])
+        %JOut = JIn.put(Id,[Type,Data])
+        assertz(node(Id,Data,Type))
         ;
-        xpath(Node,//'y:NodeLabel'(normalize_space),Label),
+        xpath(Node,data/'y:GenericNode'/'y:NodeLabel'(normalize_space),Label),
         Label \= '', print(Label),nl,
-        JOut = JIn.put(Id,[Type,Label])
+        %JOut = JIn.put(Id,[Type,Label])
+        assertz(node(Id,Label,Type))
         ;
-        JOut = JIn.put(Id,[Type])
+        %JOut = JIn.put(Id,[Type])
+        assertz(node(Id,Id,Type))
     )).
 
 
-edges(DOM,JSON) :-
+edges(DOM) :-
     findall(Edge,xpath(DOM,//edge,Edge),Edges),
-    foldl(edge,Edges,_{},JSON),!.
+    maplist(edge,Edges),!.
 
-edge(Edge,JIn,JOut) :-
+edge(Edge) :-
     Edge = element(edge,Attr,_Cnt),
-    member(id=Id,Attr),
+    member(id=_Id,Attr),
     member(source=Src,Attr),
     member(target=Trg,Attr),
-    JOut = JIn.put(Id,[Src,Trg]).
+    %JOut = JIn.put(Id,[Src,Trg]).
+    assertz(edge(Src,Trg)).
