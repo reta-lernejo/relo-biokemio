@@ -218,47 +218,35 @@ function paŝo(procezo) {
   // aktivigu la koncernan procezon
   sbgn.nodo_klaso(procezo,"proceso","aktiva");
 
-  // ni trovu tiun proceso-nodon en la modelo?
-  for (const [pn,pv] of Object.entries(modelo.nodoj)) {
-    if (pv[1] == procezo) {
-      // sekvu ĉiujn eĝojn de tie kaj aktivigu ilin kaj la
-      // aliflankajn nodojn
-      for (const [e,ev] of Object.entries(modelo.eĝoj)) {
-        if (ev[0] == pn) {
-          // se la eĝo montras de la procezo al alia molekulo...
-          const n2 = modelo.nodoj[ev[1]];
-          sbgn.nodo_klaso(n2[1],"celo","aktiva");
-          // se la celo estas fonto de alia procezo, ni
-          // scias ke ĝi estas en la ciklo la sekva produkto
-          // kaj montras ĝin per JMol
-          if (sbgn.fonto_de_procezo(n2[1])) {
-            ŝargu_molekulon(sbgn.nodo_href(n2[1]));
-          }
-        } else if (ev[1] == pn) {
-          // se la eĝo montras de alia molekulo al la procezo...
-          const n2 = modelo.nodoj[ev[0]];
-          // se estas sgbn.Macromolecule ni povus
-          // donas klason "proteino","aktiva" kaj montras en la centra JMol-rigardo
-          if (n2[0] == "sbgn.Macromolecule") {
-            sbgn.nodo_klaso(n2[1],"proteino","aktiva");
-            ŝargu_molekulon(sbgn.nodo_href(n2[1]));
-          } else {
-            sbgn.nodo_klaso(n2[1],"fonto","aktiva");
-            // se la fonto estas celo de alia procezo, ni
-            // scias ke ĝi estas en la ciklo la elira molekulo
-            // de la aktuala procezo kaj montras ĝin per JMol
-            if (sbgn.produkto_de_procezo(n2[1])) {
-              ŝargu_molekulon(sbgn.nodo_href(n2[1]));
-            }
-          }
-        }
-      }
-
-      return;
+  // sekvu ĉiujn eĝojn de tie kaj aktivigu la
+  // aliflankajn nodojn
+  sbgn.eliroj(procezo).forEach((celo) => {
+    sbgn.nodo_klaso(celo,"celo","aktiva");
+    // se la celo estas fonto de alia procezo, ni
+    // scias ke ĝi estas en la ciklo la sekva produkto
+    // kaj montras ĝin per JMol
+    if (sbgn.fonto_de_procezo(celo)) {
+      ŝargu_molekulon(sbgn.nodo_href(celo));
     }
-  }
-}
+  });
 
+  sbgn.eniroj(procezo).forEach((fonto) => {
+    // se estas sgbn.Macromolecule ni povus
+    // donas klason "proteino","aktiva" kaj montras en la centra JMol-rigardo
+    if (sbgn.speco(fonto) == "sbgn.Macromolecule") {
+      sbgn.nodo_klaso(fonto,"proteino","aktiva");
+      ŝargu_molekulon(sbgn.nodo_href(fonto));
+    } else {
+      sbgn.nodo_klaso(fonto,"fonto","aktiva");
+      // se la fonto estas celo de alia procezo, ni
+      // scias ke ĝi estas en la ciklo la elira molekulo
+      // de la aktuala procezo kaj montras ĝin per JMol
+      if (sbgn.produkto_de_procezo(fonto)) {
+        ŝargu_molekulon(sbgn.nodo_href(fonto));
+      }
+    }
+  });
+}
 
 function postShargo() {
   console.log("post ŝargo"); svg.style.cursor = "auto";
@@ -282,7 +270,7 @@ function jmol_preparo() {
     "postShargo"
   );
 
-  sbgn.jmol_fokuso("jmol_fonto",sbgn.nodo_href("#P1_glukozo"));
+  sbgn.jmol_fokuso("jmol_fonto",sbgn.nodo_href("#glukozo"));
   jmol_fonto_ref = jmol_div(_jmol_fonto,
     "", //inc/oglukozo_CID_999.sdf",
     180,180,

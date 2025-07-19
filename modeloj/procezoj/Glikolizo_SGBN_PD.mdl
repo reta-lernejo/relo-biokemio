@@ -1,5 +1,5 @@
 {
-  "nodes": {
+  "nodoj": {
     "n0":"",
     "n1":"",
     "n2":"",
@@ -53,7 +53,7 @@
     "#P9_H2O":"sbgn.SimpleChemical",
     "2×":"sbgn.StateVariable"
   },
-  "edges": [
+  "eĝoj": [
     ["#glukozo", "#P1" ],
     ["#G6P", "#P2" ],
     ["#F6P", "#P3" ],

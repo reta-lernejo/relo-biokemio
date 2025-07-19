@@ -260,7 +260,7 @@ function jmol_ŝargu(jmol_id,dosiero,g) {
 
 
 
-function paŝo(proceso) {
+function paŝo(procezo) {
 
   // por eviti akrobataĵojn per la modelaj eĝoj
   // ni uzas ordigitan liston de la procezoj por
@@ -280,9 +280,9 @@ function paŝo(proceso) {
   const akt_a = svg.querySelector(".proceso.aktiva a");
   const akt_proc = akt_a? akt_a.getAttributeNS("http://www.w3.org/1999/xlink","href") : undefined;
 
-  if (! proceso) {
+  if (! procezo) {
     // eltrovu la sekvan paŝon
-    proceso = procezoj[(procezoj.indexOf(akt_proc) + 1) % procezoj.length];
+    procezo = procezoj[(procezoj.indexOf(akt_proc) + 1) % procezoj.length];
     // kaj forigu la molekulojn el JsMol-rigardoj
     Jmol.script(jmol_proteino_ref, "zap;");
     Jmol.script(jmol_fonto_ref, "zap;");
@@ -290,7 +290,7 @@ function paŝo(proceso) {
   }
 
   // antaŭ ŝanĝo malaktivigu ĉiujn aliajn
-  if (proceso != akt_proc) {
+  if (procezo != akt_proc) {
     svg.querySelectorAll("g.aktiva").forEach((g) => {
       g.classList.remove("aktiva");
       g.classList.remove("celo");
@@ -299,45 +299,36 @@ function paŝo(proceso) {
   }
 
   // aktivigu la koncernan proceson
-  sbgn.nodo_klaso(proceso,"proceso","aktiva");
+  sbgn.nodo_klaso(procezo,"proceso","aktiva");
 
-  // ni trovu tiun proceso-nodon en la modelo?
-  for (const [n,nv] of Object.entries(modelo.nodoj)) {
-    if (nv[1] == proceso) {
-      // sekvu ĉiujn eĝojn de tie kaj aktivigu ilin kaj la
-      // aliflankajn nodojn
-      for (const [e,ev] of Object.entries(modelo.eĝoj)) {
-        if (ev[0] == n) {
-          const n2 = modelo.nodoj[ev[1]];
-          sbgn.nodo_klaso(n2[1],"celo","aktiva");
-          // se la celo estas fonto de alia proceso, ni
-          // scias ke ĝi estas en la ciklo la sekva produkto
-          // kaj montras ĝin per JMol
-          if (sbgn.fonto_de_procezo(n2[1])) {
-            ŝargu_molekulon(sbgn.nodo_href(n2[1]));
-          }
-        } else if (ev[1] == n) {
-          const n2 = modelo.nodoj[ev[0]];
-          // se estas sgbn.Macromolecule ni povus
-          // donas klason "proteino","aktiva" kaj montras en la centra JMol-rigardo
-          if (n2[0] == "sbgn.Macromolecule") {
-            sbgn.nodo_klaso(n2[1],"proteino","aktiva");
-            ŝargu_molekulon(sbgn.nodo_href(n2[1]));
-          } else {
-            sbgn.nodo_klaso(n2[1],"fonto","aktiva");
-            // se la fonto estas celo de alia proceso, ni
-            // scias ke ĝi estas en la ciklo la elira molekulo
-            // de la aktuala proceso kaj montras ĝin per JMol
-            if (sbgn.produkto_de_procezo(n2[1])) {
-              ŝargu_molekulon(sbgn.nodo_href(n2[1]));
-            }
-          }
-        }
-      }
-
-      return;
+  // sekvu ĉiujn eĝojn de tie kaj aktivigu ilin kaj la
+  // aliflankajn nodojn
+  sbgn.eliroj(procezo).forEach((celo) => {
+    sbgn.nodo_klaso(celo,"celo","aktiva");
+    // se la celo estas fonto de alia proceso, ni
+    // scias ke ĝi estas en la ciklo la sekva produkto
+    // kaj montras ĝin per JMol
+    if (sbgn.fonto_de_procezo(celo)) {
+      ŝargu_molekulon(sbgn.nodo_href(celo));
     }
-  }
+  });
+
+  sbgn.eniroj(procezo).forEach((fonto) => {
+    // se estas sgbn.Macromolecule ni povus
+    // donas klason "proteino","aktiva" kaj montras en la centra JMol-rigardo
+    if (sbgn.speco(fonto) == "sbgn.Macromolecule") {
+      sbgn.nodo_klaso(fonto,"proteino","aktiva");
+      ŝargu_molekulon(sbgn.nodo_href(fonto));
+    } else {
+      sbgn.nodo_klaso(fonto,"fonto","aktiva");
+      // se la fonto estas celo de alia proceso, ni
+      // scias ke ĝi estas en la ciklo la elira molekulo
+      // de la aktuala proceso kaj montras ĝin per JMol
+      if (sbgn.produkto_de_procezo(fonto)) {
+        ŝargu_molekulon(sbgn.nodo_href(fonto));
+      }
+    }
+  });
 }
 
 
