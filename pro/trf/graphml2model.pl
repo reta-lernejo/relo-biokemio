@@ -15,7 +15,7 @@
 % graph('modeloj/elementcikloj/fosforciklo-detala').
 % graph('modeloj/elementcikloj/sulfurciklo-detala').
 
-% graph('modeloj/procezoj/TCA_SGBN_PD').
+graph('modeloj/procezoj/TCA_SGBN_PD').
 graph('modeloj/procezoj/Glikolizo_SGBN_PD').
 
 %output('cikloj/fosforciklo-detala.mdl').
@@ -44,8 +44,8 @@ parse_graph(Graph) :-
     nodes(DOM), edges(DOM).
 
 make_json(json([
-    nodes=json(NodeList),
-    edges=EdgeList
+    nodoj=json(NodeList),
+    eĝoj=EdgeList
     ])) :-
     findall(
         Name=Type,
@@ -105,7 +105,7 @@ nodes(DOM) :-
 node(Node) :-
     Node = element(node,Attr,_Cnt),
     member(id=Id,Attr),
-    print(Id),
+    %print(Id),
     %member(yfiles.foldertype=Type,Attr),
     % print(Node),
 
@@ -116,8 +116,8 @@ node(Node) :-
     once((
         xpath(Node,data/'y:GenericNode'(@configuration),T),
         atomic_list_concat([com,yworks|T1],'.',T),
-        atomic_list_concat(T1,'.',Type),
-        print(Type),nl
+        atomic_list_concat(T1,'.',Type)
+        %print(Type),nl
     ;
         Type = ''
     )),
@@ -125,12 +125,12 @@ node(Node) :-
     once((
         xpath(Node,data(normalize_space),Data),
         sub_atom(Data,0,1,_,'#'),
-        print(Data),nl,
+        %print(Data),nl,
         %JOut = JIn.put(Id,[Type,Data])
         assertz(node(Id,Data,Type))
         ;
         xpath(Node,data/'y:GenericNode'/'y:NodeLabel'(normalize_space),Label),
-        Label \= '', print(Label),nl,
+        Label \= '', %print(Label),nl,
         %JOut = JIn.put(Id,[Type,Label])
         assertz(node(Id,Label,Type))
         ;
@@ -143,6 +143,20 @@ edges(DOM) :-
     findall(Edge,xpath(DOM,//edge,Edge),Edges),
     maplist(edge,Edges),!.
 
+/*
+    <edge id="n2::e16" source="n2::n21" target="n2::n5">
+      <data key="d11">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_circle"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+*/
+
+% PLIBONIGU: estus bone havi ankaŭ atributojn @source kaj @target
 edge(Edge) :-
     Edge = element(edge,Attr,_Cnt),
     member(id=_Id,Attr),

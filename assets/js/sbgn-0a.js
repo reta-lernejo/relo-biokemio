@@ -231,30 +231,53 @@ class SBGN {
           x2: fp2[0]-tx,
           y2: fp2[1]-ty
         });
-      }
+    }
+
+    /**
+     * Redonas la fontojn de nodo, t.e. nodoj kun eĝo montranta al la donita
+     */
+    eniroj(nodo) {
+        return this.modelo.eĝoj
+            .filter((eĝo) => eĝo[1] == nodo)
+            .map((eĝo) => eĝo[0]);
+    }
       
+    /**
+     * Redonas la celojn de nodo, t.e. nodoj kun eĝo eliranta el la donita
+     */
+    eliroj(nodo) {
+        return this.modelo.eĝoj
+            .filter((eĝo) => eĝo[0] == nodo)
+            .map((eĝo) => eĝo[1]);
+    }
 
     /**
      * la molekulo href estas produkto de iu procezo
      */
     produkto_de_procezo(href) {
-        for (const ev of Object.values(this.modelo.eĝoj)) {
-            const n0 = modelo.nodoj[ev[0]];
-            const n1 = modelo.nodoj[ev[1]];
-            if (n1[1] == href && n0[0] == "sbgn.Process") return true;
-        }
+        const prod_proc = this.modelo.eĝoj.filter((eĝo) => 
+                eĝo[1] == href && this.modelo.nodoj[eĝo[0]] =="sbgn.Process"
+            );
+        return (prod_proc.length > 0);
     }
     
     /**
      * la molekulo href estas fonto de iu procezo
      */
     fonto_de_procezo(href) {
-        for (const ev of Object.values(this.modelo.eĝoj)) {
-            const n0 = modelo.nodoj[ev[0]];
-            const n1 = modelo.nodoj[ev[1]];
-            if (n0[1] == href && n1[0] == "sbgn.Process") return true;
-        }
+        const font_proc = 
+            this.modelo.eĝoj.filter((eĝo) => 
+                eĝo[0] == href && this.modelo.nodoj[eĝo[1]] =="sbgn.Process"
+            );
+        return (font_proc.length > 0);
     }    
+
+    /**
+     * Redonas la SBGN-specon sbgn.SimpleChemical, sbgnProcess, sbgn.MacroMolecule
+     */
+    speco(nodo) {
+        return this.modelo.nodoj[nodo];
+    }
     
     /**
      * Redonas g-elementon de nodo identigitan per xlink:href
