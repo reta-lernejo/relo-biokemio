@@ -2,6 +2,7 @@ Clazz.declarePackage("JM");
 Clazz.load(["JM.BondCollection"], "JM.ModelSet", ["java.util.Hashtable", "JU.A4", "$.AU", "$.BS", "$.Lst", "$.M3", "$.M4", "$.Measure", "$.P3", "$.P4", "$.PT", "$.Quat", "$.SB", "$.V3", "J.api.Interface", "J.atomdata.RadiusData", "J.bspt.Bspf", "J.c.PAL", "$.VDW", "JM.Atom", "$.AtomIteratorWithinModel", "$.AtomIteratorWithinModelSet", "$.HBond", "$.Model", "$.StateScript", "JS.ScriptCompiler", "JU.BSUtil", "$.BoxInfo", "$.Edge", "$.Elements", "$.Escape", "$.JmolMolecule", "$.Logger", "JV.JC"], function(){
 var c$ = Clazz.decorateAsClass(function(){
 this.haveBioModels = false;
+this.haveMultipleChains = false;
 this.bsSymmetry = null;
 this.modelSetName = null;
 this.am = null;
@@ -192,7 +193,7 @@ return null;
 }var offsets =  new Array(this.mc);
 for (var i = this.mc; --i >= 0; ) offsets[i] =  new JU.P3();
 
-var lastModel = 0;
+var lastModel = -1;
 var n = 0;
 var lastOffset = null;
 var asTrajectory = (this.trajectory != null && this.trajectory.steps.size() == this.mc);
@@ -236,7 +237,15 @@ Clazz.defineMethod(c$, "findNearestAtomIndex",
 function(x, y, bsNot, min){
 if (this.ac == 0) return -1;
 this.closest[0] = null;
-if (this.g3d.isAntialiased()) {
+if (this.vwr.am.splitFrame) {
+x = this.vwr.am.setSplitFrameMouse(x);
+var bsOtherFrame = this.vwr.am.getSplitFrameAtoms(false);
+if (bsNot == null) {
+bsNot = bsOtherFrame;
+} else {
+bsNot = JU.BSUtil.copy(bsNot);
+bsNot.or(bsOtherFrame);
+}}if (this.g3d.isAntialiased()) {
 x <<= 1;
 y <<= 1;
 }this.findNearest2(x, y, this.closest, bsNot, min);
@@ -250,9 +259,9 @@ function(bsAtoms, center){
 return this.calculatePointGroupForFirstModel(bsAtoms, false, false, null, 0, 0, null, center, null);
 }, "JU.BS,JU.P3");
 Clazz.defineMethod(c$, "getPointGroupInfo", 
-function(bsAtoms){
-return this.calculatePointGroupForFirstModel(bsAtoms, false, true, null, 0, 0, null, null, null);
-}, "JU.BS");
+function(bsAtoms, type){
+return this.calculatePointGroupForFirstModel(bsAtoms, false, true, type, 0, 0, null, null, null);
+}, "JU.BS,~S");
 Clazz.defineMethod(c$, "getPointGroupAsString", 
 function(bsAtoms, type, index, scale, pts, center, id){
 return this.calculatePointGroupForFirstModel(bsAtoms, true, false, type, index, scale, pts, center, id);
@@ -260,7 +269,6 @@ return this.calculatePointGroupForFirstModel(bsAtoms, true, false, type, index, 
 Clazz.defineMethod(c$, "calculatePointGroupForFirstModel", 
 function(bsAtoms, doAll, asInfo, type, index, scale, pts, center, id){
 var pointGroup = this.pointGroup;
-var symmetry = J.api.Interface.getSymmetry(this.vwr, "ms");
 var bs = null;
 var haveVibration = false;
 var isPolyhedron = false;
@@ -299,7 +307,10 @@ if (type != null && (tp = type.indexOf(".")) >= 0) {
 index = JU.PT.parseInt(type.substring(tp + 1));
 if (index < 0) index = 0;
 type = type.substring(0, tp);
-}pointGroup = symmetry.setPointGroup(this.vwr, pointGroup, center, pts, bs, haveVibration, (isPoints ? 0 : this.vwr.getFloat(570425382)), this.vwr.getFloat(570425384), (bs == null ? pts.length : bs.cardinality()), localEnvOnly);
+}var spinModel = this.getJmolDataFrameInt(index, 1095241729);
+var symmetry = null;
+if (spinModel < 0 || (symmetry = this.getUnitCell(index)) == null) symmetry = J.api.Interface.getSymmetry(this.vwr, "calcPG");
+pointGroup = symmetry.setPointGroup(this.vwr, pointGroup, center, pts, bs, haveVibration, (isPoints ? 0 : this.vwr.getFloat(570425382)), this.vwr.getFloat(570425384), (bs == null ? pts.length : bs.cardinality()), localEnvOnly);
 if (!isPolyhedron && !isPoints) this.pointGroup = pointGroup;
 if (!doAll && !asInfo) return pointGroup.getPointGroupName();
 var ret = pointGroup.getPointGroupInfo(modelIndex, id, asInfo, type, index, scale);
@@ -368,7 +379,7 @@ this.stateScripts.removeItemAt(i);
 this.deleteAllBonds2();
 });
 Clazz.defineMethod(c$, "includeAllRelatedFrames", 
-function(bsModels){
+function(bsModels, includeOriginatingModels){
 var baseModel = 0;
 for (var i = 0; i < this.mc; i++) {
 var isTraj = this.isTrajectory(i);
@@ -376,15 +387,17 @@ var isBase = (isTraj && bsModels.get(baseModel = this.am[i].trajectoryBaseIndex)
 if (bsModels.get(i)) {
 if (isTraj && !isBase) {
 bsModels.set(baseModel);
-this.includeAllRelatedFrames(bsModels);
+this.includeAllRelatedFrames(bsModels, false);
 return;
-}} else if (isTraj || this.isJmolDataFrameForModel(i) && bsModels.get(this.am[i].dataSourceFrame)) {
+}} else if (isTraj || this.isJmolDataFrame(i) && bsModels.get(this.am[i].dataSourceFrame)) {
 bsModels.set(i);
+} else if (includeOriginatingModels && this.am[i].dataSourceFrame >= 0) {
+bsModels.set(this.am[i].dataSourceFrame);
 }}
-}, "JU.BS");
+}, "JU.BS,~B");
 Clazz.defineMethod(c$, "deleteModels", 
 function(bsModels){
-this.includeAllRelatedFrames(bsModels);
+this.includeAllRelatedFrames(bsModels, false);
 var nModelsDeleted = bsModels.cardinality();
 if (nModelsDeleted == 0) return null;
 this.moleculeCount = 0;
@@ -580,6 +593,7 @@ this.at = mergeModelSet.at;
 this.bo = mergeModelSet.bo;
 this.stateScripts = mergeModelSet.stateScripts;
 this.proteinStructureTainted = mergeModelSet.proteinStructureTainted;
+this.haveJmolDataFrames = mergeModelSet.haveJmolDataFrames;
 this.thisStateModel = -1;
 this.bsSymmetry = mergeModelSet.bsSymmetry;
 this.modelFileNumbers = mergeModelSet.modelFileNumbers;
@@ -587,6 +601,9 @@ this.modelNumbersForAtomLabel = mergeModelSet.modelNumbersForAtomLabel;
 this.modelNames = mergeModelSet.modelNames;
 this.modelNumbers = mergeModelSet.modelNumbers;
 this.frameTitles = mergeModelSet.frameTitles;
+this.haveBioModels = mergeModelSet.haveBioModels;
+this.someModelsHaveSymmetry = mergeModelSet.someModelsHaveSymmetry;
+this.haveMultipleChains = mergeModelSet.haveMultipleChains;
 this.haveChirality = mergeModelSet.haveChirality;
 this.boxInfo.setBoundBox(mergeModelSet.boxInfo.bbCorner0, mergeModelSet.boxInfo.bbCorner1, true, 1);
 if (this.msInfo != null) this.msInfo.remove("models");
@@ -603,7 +620,11 @@ if (this.isTrajectory(modelIndex)) modelIndex = this.am[modelIndex].trajectoryBa
 var ucSimple = this.am[modelIndex].simpleCage;
 var uc = null;
 if (this.unitCells != null && modelIndex < this.unitCells.length && this.unitCells[modelIndex] != null && this.unitCells[modelIndex].haveUnitCell()) uc = this.unitCells[modelIndex];
-if (uc != null) {
+if (uc == null && ucSimple == null) {
+var cellParams = this.getInfo(modelIndex, "unitCellParams");
+if (cellParams != null) {
+this.setModelCage(modelIndex, this.vwr.getSymTemp().setUnitCellFromParams(cellParams, false, NaN), false);
+}} else if (uc != null) {
 if (returnCage) {
 var cai = this.vwr.getUnitCellAtomIndex();
 if (cai > 0) uc = this.getUnitCellForAtom(cai);
@@ -619,7 +640,7 @@ function(iModel, originABC, name){
 if (iModel < 0 && (iModel = this.vwr.am.cmi) < 0) return null;
 var sym = this.vwr.getSymTemp();
 try {
-return this.setModelCage(iModel, originABC == null ? null : sym.getUnitCell(originABC, false, name));
+return this.setModelCage(iModel, originABC == null ? null : sym.getUnitCell(originABC, false, name), true);
 } catch (e) {
 if (Clazz.exceptionOf(e, Exception)){
 e.printStackTrace();
@@ -635,14 +656,17 @@ return this.mc < 1 ? "" : modelIndex >= 0 ? this.modelNames[modelIndex] : this.m
 }, "~N");
 Clazz.defineMethod(c$, "getModelTitle", 
 function(modelIndex){
+modelIndex = this.getJmolDataSourceFrame(modelIndex);
 return this.getInfo(modelIndex, "title");
 }, "~N");
 Clazz.defineMethod(c$, "getModelFileName", 
 function(modelIndex){
+modelIndex = this.getJmolDataSourceFrame(modelIndex);
 return this.getInfo(modelIndex, "fileName");
 }, "~N");
 Clazz.defineMethod(c$, "getModelFileType", 
 function(modelIndex){
+modelIndex = this.getJmolDataSourceFrame(modelIndex);
 return this.getInfo(modelIndex, "fileType");
 }, "~N");
 Clazz.defineMethod(c$, "setFrameTitle", 
@@ -678,13 +702,20 @@ iGroup++;
 
 return groups;
 });
+Clazz.defineMethod(c$, "getModelIndexFromFileModel", 
+function(mfn){
+for (var i = this.mc; --i >= 0; ) {
+if (this.modelFileNumbers[i] == mfn) return i;
+}
+return -1;
+}, "~N");
 Clazz.defineMethod(c$, "setCrystallographicDefaults", 
 function(){
-return !this.haveBioModels && (this.someModelsHaveSymmetry && this.someModelsHaveFractionalCoordinates || this.getUnitCell(this.vwr.am.cmi) != null);
+return !this.haveBioModels && !this.haveMultipleChains && (this.someModelsHaveSymmetry && this.someModelsHaveFractionalCoordinates || this.getUnitCell(this.vwr.am.cmi) != null);
 });
 Clazz.defineMethod(c$, "getBoundBoxCenter", 
 function(modelIndex){
-return (this.isJmolDataFrameForModel(modelIndex) ?  new JU.P3() : (this.getDefaultBoundBox() == null ? this.boxInfo : this.defaultBBox).getBoundBoxCenter());
+return (this.isJmolDataFrame(modelIndex) ?  new JU.P3() : (this.getDefaultBoundBox() == null ? this.boxInfo : this.defaultBBox).getBoundBoxCenter());
 }, "~N");
 Clazz.defineMethod(c$, "getBoundBoxCornerVector", 
 function(){
@@ -737,14 +768,14 @@ return (!this.am[modelIndex].isBioModel ? J.c.VDW.AUTO_BABEL : this.am[modelInde
 }, "~N");
 Clazz.defineMethod(c$, "setRotationRadius", 
 function(modelIndex, angstroms){
-if (this.isJmolDataFrameForModel(modelIndex)) {
+if (this.isJmolDataFrame(modelIndex)) {
 this.am[modelIndex].defaultRotationRadius = angstroms;
 return false;
 }return true;
 }, "~N,~N");
 Clazz.defineMethod(c$, "calcRotationRadius", 
 function(modelIndex, center, useBoundBox){
-if (this.isJmolDataFrameForModel(modelIndex)) {
+if (this.isJmolDataFrame(modelIndex)) {
 var r = this.am[modelIndex].defaultRotationRadius;
 return (r == 0 ? 10 : r);
 }if (useBoundBox && this.getDefaultBoundBox() != null) return this.defaultBBox.getMaxDim() / 2 * 1.2;
@@ -916,7 +947,7 @@ Clazz.defineMethod(c$, "setAPm",
 function(bs, tok, iValue, fValue, sValue, values, list){
 this.setAPa(bs, tok, iValue, fValue, sValue, values, list);
 switch (tok) {
-case 1094715418:
+case 1094715420:
 case 1631586315:
 if (this.vwr.getBoolean(603979944)) this.assignAromaticBondsBs(true, null);
 break;
@@ -938,8 +969,11 @@ this.stateScripts.addLast(stateScript);
 Clazz.defineMethod(c$, "freezeModels", 
 function(){
 this.haveBioModels = false;
-for (var iModel = this.mc; --iModel >= 0; ) this.haveBioModels = new Boolean (this.haveBioModels | this.am[iModel].freeze()).valueOf();
-
+this.haveMultipleChains = false;
+for (var iModel = this.mc; --iModel >= 0; ) {
+this.haveBioModels = new Boolean (this.haveBioModels | this.am[iModel].freeze()).valueOf();
+if (this.am[iModel].chainCount > 1) this.haveMultipleChains = true;
+}
 });
 Clazz.defineMethod(c$, "getStructureList", 
 function(){
@@ -986,7 +1020,7 @@ Clazz.defineMethod(c$, "getIterativeModels",
 function(allowJmolData){
 var bs =  new JU.BS();
 for (var i = 0; i < this.mc; i++) {
-if (!allowJmolData && this.isJmolDataFrameForModel(i)) continue;
+if (!allowJmolData && this.isJmolDataFrame(i)) continue;
 if (!this.isTrajectorySubFrame(i)) bs.set(i);
 }
 return bs;
@@ -1090,7 +1124,7 @@ var bsSelected = this.vwr.bsA();
 for (var i = this.mc; --i >= 0; ) this.am[i].calcSelectedGroupsCount(bsSelected);
 
 });
-Clazz.defineMethod(c$, "isJmolDataFrameForModel", 
+Clazz.defineMethod(c$, "isJmolDataFrame", 
 function(modelIndex){
 return this.haveJmolDataFrames && (this.am != null && modelIndex >= 0 && modelIndex < this.mc && this.am[modelIndex].isJmolDataFrame);
 }, "~N");
@@ -1098,22 +1132,6 @@ Clazz.defineMethod(c$, "isJmolDataFrameForAtom",
 function(atom){
 return this.haveJmolDataFrames && this.am[atom.mi].isJmolDataFrame;
 }, "JM.Atom");
-Clazz.defineMethod(c$, "setJmolDataFrame", 
-function(type, modelIndex, modelDataIndex){
-this.haveJmolDataFrames = true;
-var model = this.am[type == null ? this.am[modelDataIndex].dataSourceFrame : modelIndex];
-if (type == null) {
-type = this.am[modelDataIndex].jmolFrameType;
-}if (modelIndex >= 0) {
-if (model.dataFrames == null) {
-model.dataFrames =  new java.util.Hashtable();
-}this.am[modelDataIndex].dataSourceFrame = modelIndex;
-this.am[modelDataIndex].jmolFrameType = type;
-model.dataFrames.put(type, Integer.$valueOf(modelDataIndex));
-}if (type.startsWith("quaternion") && type.indexOf("deriv") < 0) {
-type = type.substring(0, type.indexOf(" "));
-model.dataFrames.put(type, Integer.$valueOf(modelDataIndex));
-}}, "~S,~N,~N");
 Clazz.defineMethod(c$, "getJmolDataFrameIndex", 
 function(modelIndex, type){
 if (this.am[modelIndex].dataFrames == null) {
@@ -1121,6 +1139,17 @@ return -1;
 }var index = this.am[modelIndex].dataFrames.get(type);
 return (index == null ? -1 : index.intValue());
 }, "~N,~S");
+Clazz.defineMethod(c$, "getJmolDataFrameInt", 
+function(modelIndex, type){
+modelIndex = this.getJmolDataSourceFrame(modelIndex);
+if (!this.haveJmolDataFrames || this.am[modelIndex].dataFrames == null) {
+return -1;
+}for (var e, $e = this.am[modelIndex].dataFrames.entrySet().iterator (); $e.hasNext()&& ((e = $e.next ()) || true);) {
+var index = e.getValue().intValue();
+if (this.am[index].jmolFrameTypeInt == type) return index;
+}
+return -1;
+}, "~N,~N");
 Clazz.defineMethod(c$, "clearDataFrameReference", 
 function(modelIndex){
 for (var i = 0; i < this.mc; i++) {
@@ -1132,11 +1161,16 @@ while (e.hasNext()) {
 if ((e.next()).intValue() == modelIndex) {
 e.remove();
 }}
+if (df.isEmpty()) this.am[i].dataFrames = null;
 }
 }, "~N");
 Clazz.defineMethod(c$, "getJmolFrameType", 
 function(modelIndex){
 return (modelIndex >= 0 && modelIndex < this.mc ? this.am[modelIndex].jmolFrameType : "modelSet");
+}, "~N");
+Clazz.defineMethod(c$, "getJmolFrameTypeInt", 
+function(modelIndex){
+return (this.haveJmolDataFrames && modelIndex >= 0 && modelIndex < this.mc ? this.am[modelIndex].jmolFrameTypeInt : 0);
 }, "~N");
 Clazz.defineMethod(c$, "getJmolDataSourceFrame", 
 function(modelIndex){
@@ -1297,8 +1331,9 @@ cPos += c;
 pos.scaleAdd2(c, this.at[i], pos);
 }}
 if (Math.abs(cPos + cNeg) > 0.015) {
-JU.Logger.info("Dipole calculation requires balanced charges: " + cPos + " " + cNeg);
-return null;
+var err = "Dipole calculation requires balanced charges: " + cPos + " " + cNeg;
+JU.Logger.info(err);
+throw  new RuntimeException(err);
 }if (nNeg == 0 || nPos == 0) return null;
 pos.add(neg);
 pos.scale(4.8);
@@ -1444,6 +1479,7 @@ return (asCopy ? JU.BSUtil.copy(bs) : bs);
 Clazz.defineMethod(c$, "getAtomBitsMaybeDeleted", 
 function(tokType, specInfo){
 var bs;
+var o = null;
 switch (tokType) {
 default:
 return this.getAtomBitsMDa(tokType, specInfo, bs =  new JU.BS());
@@ -1503,10 +1539,14 @@ return bs;
 case 1088421903:
 return JU.BSUtil.copy(this.bsSymmetry == null ? this.bsSymmetry = JU.BS.newN(this.ac) : this.bsSymmetry);
 case 1814695966:
-var isSelectUC = ("unitcell".equals(specInfo));
-if (isSelectUC) {
-specInfo = JU.P3.new3(1, 1, 1);
-} else {
+var isSU = "unitcell".equals(specInfo);
+var d = (specInfo == null || isSU ? null : (o = specInfo)[1]);
+var d2 = (o != null && o.length == 3 ? (o[2]) : null);
+var packing = (d == null ? NaN : d.floatValue());
+var packing2 = (d2 == null ? NaN : d2.floatValue());
+if (o != null) specInfo = o[0];
+var isWithin = (specInfo == null || (Clazz.instanceOf(specInfo,"J.api.SymmetryInterface")));
+if (isWithin) {
 bs =  new JU.BS();
 var isStatic = (specInfo != null);
 var uc1 = (Clazz.instanceOf(specInfo,"J.api.SymmetryInterface") ? specInfo : null);
@@ -1525,23 +1565,37 @@ if (uc != null) uc = uc.getUnitCellMultiplied();
 }if (uc == null) continue;
 }this.ptTemp1.setT(this.at[i]);
 uc.toFractional(this.ptTemp1, false);
-if (uc.checkPeriodic(this.ptTemp1)) bs.set(i);
+if (uc.checkPeriodic(this.ptTemp1, packing, packing2)) bs.set(i);
 }}
 return bs;
+}if ("unitcell".equals(specInfo)) {
+specInfo = JU.P3.new3(1, 1, 1);
 }case 1094713349:
 bs =  new JU.BS();
-var pt = specInfo;
-var uc = this.vwr.getSymTemp();
-for (var mi = -1, i = this.ac; --i >= 0; ) {
+var distance;
+var pt;
+var uc0;
+var uc;
+if (Clazz.instanceOf(specInfo,"JU.P3")) {
+pt = specInfo;
+distance = NaN;
+uc = uc0 = null;
+} else {
+uc = uc0 = (specInfo)[0];
+distance = ((specInfo)[1] == null ? NaN : ((specInfo)[1]).floatValue());
+var p4 = specInfo;
+pt = JU.P3.newP(p4);
+distance = p4.w;
+}for (var mi = -1, i = this.ac; --i >= 0; ) {
 if (JM.AtomCollection.isDeleted(this.at[i])) continue;
 var mia = this.at[i].getModelIndex();
-if (mi != mia) {
+if (uc0 == null && mi != mia) {
 mi = mia;
 uc = this.getUnitCell(mi);
 }if (uc == null) continue;
 this.ptTemp.setT(this.at[i]);
 uc.toFractional(this.ptTemp, false);
-if (uc.isWithinUnitCell(this.ptTemp, pt.x, pt.y, pt.z)) bs.set(i);
+if (uc.isWithinUnitCell(this.ptTemp, pt.x, pt.y, pt.z, distance)) bs.set(i);
 }
 return bs;
 }
@@ -1823,7 +1877,7 @@ if (JM.AtomCollection.isDeleted(atom)) continue;
 var modelIndex = atom.mi;
 if (modelIndex != lastModelIndex) {
 lastModelIndex = modelIndex;
-if (this.isJmolDataFrameForModel(modelIndex)) {
+if (this.isJmolDataFrame(modelIndex)) {
 i = this.am[modelIndex].firstAtomIndex + this.am[modelIndex].act - 1;
 continue;
 }useOccupation = this.getInfoB(modelIndex, "autoBondUsingOccupation");
@@ -1894,7 +1948,7 @@ if (atom.isDeleted()) continue;
 var modelIndex = atom.mi;
 if (modelIndex != lastModelIndex) {
 lastModelIndex = modelIndex;
-if (this.isJmolDataFrameForModel(modelIndex)) {
+if (this.isJmolDataFrame(modelIndex)) {
 for (; --i >= 0; ) if (JM.AtomCollection.isDeleted(this.at[i]) || this.at[i].mi != modelIndex) break;
 
 i++;
@@ -2205,7 +2259,7 @@ if (this.atomSeqIDs != null) this.atomSeqIDs = JU.AU.arrayCopyI(this.atomSeqIDs,
 }, "~N");
 Clazz.defineMethod(c$, "addAtom", 
 function(modelIndex, group, atomicAndIsotopeNumber, atomName, atomType, atomSerial, atomSeqID, atomSite, xyz, radius, vib, formalCharge, partialCharge, occupancy, bfactor, tensors, isHetero, isNegDisorder, specialAtomID, atomSymmetry, bondRadius){
-var atom =  new JM.Atom().setAtom(modelIndex, this.ac, xyz, radius, atomSymmetry, atomSite, atomicAndIsotopeNumber, formalCharge, isHetero, false);
+var atom =  new JM.Atom().setAtom(modelIndex, this.ac, xyz, radius, atomSymmetry, atomSite, atomicAndIsotopeNumber, formalCharge, isHetero, isNegDisorder);
 this.am[modelIndex].act++;
 this.am[modelIndex].bsAtoms.set(this.ac);
 if (JU.Elements.isElement(atomicAndIsotopeNumber, 1)) this.am[modelIndex].hydrogenCount++;
@@ -2934,17 +2988,9 @@ lstI.addLast(Integer.$valueOf(iAtom));
 }, "~N,JU.BS,JU.P3,~B");
 Clazz.defineMethod(c$, "calculateDssrProperty", 
 function(dataType){
-if (dataType == null) return;
-if (this.dssrData == null || this.dssrData.length < this.ac) this.dssrData =  Clazz.newFloatArray (this.ac, 0);
-for (var i = 0; i < this.ac; i++) this.dssrData[i] = NaN;
-
-for (var i = this.mc; --i >= 0; ) if (this.am[i].isBioModel) (this.am[i]).getAtomicDSSRData(this.dssrData, dataType);
-
+if (this.bioModelset == null || !this.bioModelset.haveDSSR) return;
+this.bioModelset.getDSSRProperties(dataType);
 }, "~S");
-Clazz.defineMethod(c$, "getAtomicDSSRData", 
-function(i){
-return (this.dssrData == null || this.dssrData.length <= i ? NaN : this.dssrData[i]);
-}, "~N");
 Clazz.defineMethod(c$, "getAtomCIPChiralityCode", 
 function(atom){
 this.haveChirality = true;
@@ -3014,7 +3060,7 @@ if (needBasis) {
 basis = JU.BSUtil.copy(bs);
 } else {
 this.setAsymmetricUnit(mi, bs, basis, !isP1);
-}if (nops > 1) this.setModelCage(mi, null);
+}if (nops > 1) this.setModelCage(mi, null, false);
 var nid = (this.atomSeqIDs == null ? 0 : this.atomSeqIDs.length);
 if (nid > 0) {
 for (var i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i + 1)) {
@@ -3069,7 +3115,7 @@ this.setInfo(mi, "spaceGroup", sg.getSpaceGroupName());
 if (this.am[mi].simpleCage != null) {
 sg.getUnitCell(this.am[mi].simpleCage.getUnitCellVectors(), false, null);
 this.setInfo(mi, "unitCellParams", sg.getUnitCellParams());
-}this.setModelCage(mi, null);
+}this.setModelCage(mi, null, false);
 }, "~N,J.api.SymmetryInterface,JU.BS");
 Clazz.defineMethod(c$, "setAsymmetricUnit", 
 function(mi, bsModelAtoms, basis, haveSymmetry){
@@ -3087,12 +3133,13 @@ if (isBasis) this.setSite(this.at[i], ++p, false);
 bsModelAtoms.andNot(basis);
 }}, "~N,JU.BS,JU.BS,~B");
 Clazz.defineMethod(c$, "setModelCage", 
-function(modelIndex, simpleCage){
+function(modelIndex, simpleCage, andSetInfo){
 if (modelIndex >= 0 && modelIndex < this.mc) {
-this.am[modelIndex].setSimpleCage(simpleCage);
+this.am[modelIndex].simpleCage = simpleCage;
+if (simpleCage != null && andSetInfo) this.setInfo(modelIndex, "unitCellParams", simpleCage.getUnitCellParams());
 this.haveUnitCells = true;
 }return simpleCage;
-}, "~N,J.api.SymmetryInterface");
+}, "~N,J.api.SymmetryInterface,~B");
 Clazz.defineMethod(c$, "fixP1AtomSites", 
 function(sym, bsAtoms){
 if (sym == null || sym.getSpaceGroupOperationCount() != 1) return;
@@ -3229,7 +3276,7 @@ return bsFixed;
 Clazz.defineMethod(c$, "getEquivalentAtoms", 
 function(iatom){
 var bs = this.vwr.getModelUndeletedAtomsBitSet(this.at[iatom].mi);
-bs.and(this.getAtomBitsMaybeDeleted(1094713366, JU.BSUtil.newAndSetBit(iatom)));
+bs.and(this.getAtomBitsMaybeDeleted(1094713369, JU.BSUtil.newAndSetBit(iatom)));
 return bs;
 }, "~N");
 Clazz.defineMethod(c$, "morphAtoms", 
@@ -3242,66 +3289,92 @@ a.setT(ptemp);
 this.taintAtom(i, 2);
 }
 }, "JU.BS,~A,~N,~N,JU.P3");
-Clazz.defineMethod(c$, "rotateModelSpinVectors", 
-function(modelIndex, rot){
-if (modelIndex < 0 || modelIndex >= this.mc || this.vibrations == null) return;
-var info = this.getModelAuxiliaryInfo(modelIndex);
-if (rot == null) {
-rot = info.get("spinFrameRotationMatrix");
-if (rot == null) return;
-}var noref = Float.isNaN(rot.getElement(0, 0));
-var isScreenZ = (noref && rot.getElement(2, 2) == 1);
-var deg = (noref || isScreenZ ? rot.getElement(1, 1) : 0);
-if (noref && deg != 0) {
-rot.setElement(1, 1, 0);
-this.rotateModelSpinVectors(modelIndex, rot);
-rot.setElement(1, 1, deg);
-}var m0 = info.get("spinFrameRotationMatrix");
-var mat = info.get("spinRotationMatrixApplied");
-if (mat == null && m0 == null) {
-m0 = JU.M3.newM3(null);
-info.put("spinFrameRotationMatrix", m0);
-}if (mat == null) {
-mat = m0;
-}var matInv = JU.M3.newM3(mat);
-matInv.invert();
-if (noref) {
-var qn;
-if (isScreenZ) {
-var pt3 = JU.P3.new3(0, 0, 100);
-var pt4 = JU.P3.new3(0, 0, 200);
-this.vwr.tm.unTransformPoint(pt3, pt3);
-this.vwr.tm.unTransformPoint(pt4, pt4);
-qn = JU.V3.newVsub(pt3, pt4);
-} else {
-qn = JU.Quat.newM(mat).getNormal();
-}rot = JU.Quat.newVA(qn, deg).getMatrix();
-}var bs = this.am[modelIndex].bsAtoms;
-for (var i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i + 1)) {
-if (i >= this.vibrations.length) return;
-var v = this.vibrations[i];
-if (v == null || v.magMoment == 0) continue;
-matInv.rotate(v);
-rot.rotate(v);
-}
-var quat = JU.Quat.newM(rot);
-var aa = quat.toAxisAngle4f();
-mat = JU.M3.newM3(rot);
-info.put("spinRotationMatrixApplied", mat);
-info.put("spinRotationAxisAngleApplied", aa);
-this.unitCells[modelIndex].setSpinAxisAngle(aa);
-}, "~N,JU.M3");
+Clazz.defineMethod(c$, "getCurrentSpinAtoms", 
+function(){
+var bs = this.vwr.getVisibleFramesBitSet();
+this.includeAllRelatedFrames(bs, true);
+bs = this.vwr.getModelUndeletedAtomsBitSetBs(bs);
+bs.and(this.getAtoms(1095241729, bs));
+return bs;
+});
 Clazz.defineMethod(c$, "getSpin", 
 function(atomIndex){
 var a = this.at[atomIndex];
 if (a == null) return 0;
-var op = a.getSymOp() - 1;
-if (op < 0) return 0;
 var v = this.vibrations[atomIndex];
 if (v == null || v.magMoment == 0) return 0;
+var op = a.getSymOp() - 1;
+if (op < 0) return 0;
 var uc = this.getUnitCellForAtom(atomIndex);
 return (uc == null ? 0 : uc.getSpinIndex(op) + 1);
 }, "~N");
+Clazz.defineMethod(c$, "refreshDataFramePointGroup", 
+function(dataFrameIndex){
+var sym = this.getUnitCell(-1 - dataFrameIndex);
+if (sym != null) {
+sym.updatePointGroup();
+}}, "~N");
+Clazz.defineMethod(c$, "getStructureAssignments", 
+function(){
+if (this.bioModelset != null && this.bioModelset.haveDSSR) this.bioModelset.getStructureDSSRAssignments();
+});
+Clazz.defineMethod(c$, "getAtomicDSSRDataFloat", 
+function(key, i){
+return (this.bioModelset != null && this.bioModelset.haveDSSR ? this.bioModelset.getAtomicDSSRDataFloat(key, i) : NaN);
+}, "~S,~N");
+Clazz.defineMethod(c$, "getDSSRProperties", 
+function(prop){
+return (this.bioModelset != null && this.bioModelset.haveDSSR ? this.bioModelset.getDSSRProperties(prop) : null);
+}, "~S");
+Clazz.defineMethod(c$, "getModelIndexFromPDBId", 
+function(id){
+for (var i = this.mc; --i >= 0; ) {
+var info = this.getModelAuxiliaryInfo(i);
+if (id.equalsIgnoreCase(info.get("pdbID")) || id.equalsIgnoreCase(info.get("pdbID12"))) return i;
+}
+return -1;
+}, "~S");
+/*if3*/;(function(){
+var c$ = Clazz.decorateAsClass(function(){
+this.isValid = false;
+this.dataPath = null;
+this.key = null;
+this.floatData = null;
+this.stringData = null;
+this.parts = null;
+Clazz.instantialize(this, arguments);}, JM.ModelSet, "DataList", null);
+Clazz.makeConstructor(c$, 
+function(dataPath){
+this.dataPath = dataPath;
+this.parts = dataPath.$plit("\\.");
+}, "~S");
+Clazz.defineMethod(c$, "setFloats", 
+function(nAtoms){
+if (this.floatData != null && this.floatData.length >= nAtoms) return this.floatData;
+this.stringData = null;
+this.floatData =  Clazz.newFloatArray (nAtoms, 0);
+for (var i = 0; i < nAtoms; i++) this.floatData[i] = NaN;
+
+this.isValid = true;
+return this.floatData;
+}, "~N");
+Clazz.defineMethod(c$, "setStringData", 
+function(nAtoms){
+if (this.stringData != null && this.stringData.length >= nAtoms) return this.stringData;
+this.floatData = null;
+this.stringData =  new Array(nAtoms);
+this.isValid = true;
+return this.stringData;
+}, "~N");
+Clazz.defineMethod(c$, "isFloat", 
+function(){
+return this.floatData != null;
+});
+Clazz.defineMethod(c$, "getData", 
+function(){
+return (this.isFloat() ? this.floatData : this.stringData);
+});
+/*eoif3*/})();
 c$.hbondMinRasmol = 2.5;
 });
-;//5.0.1-v7 Sun Jun 29 22:48:16 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

@@ -1,6 +1,10 @@
 Clazz.declarePackage("J.api");
 Clazz.load(null, "J.api.Interface", ["JU.Logger"], function(){
 var c$ = Clazz.declareType(J.api, "Interface", null);
+c$.getInstance = Clazz.defineMethod(c$, "getInstance", 
+function(name, isQuiet){
+return J.api.Interface.getInterface(name, null, "");
+}, "~S,~B");
 c$.getInterface = Clazz.defineMethod(c$, "getInterface", 
 function(name, vwr, state){
 try {
@@ -28,4 +32,4 @@ function(vwr, state){
 return (J.api.Interface.getInterface("JS.Symmetry", vwr, state)).setViewer(vwr, state);
 }, "JV.Viewer,~S");
 });
-;//5.0.1-v7 Sun Jun 29 22:48:16 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

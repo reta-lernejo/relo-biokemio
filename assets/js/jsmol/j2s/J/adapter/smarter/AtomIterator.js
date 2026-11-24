@@ -72,7 +72,7 @@ return (this.atom.vib == null || Float.isNaN(this.atom.vib.z) ? null : this.atom
 });
 Clazz.overrideMethod(c$, "getSeqID", 
 function(){
-return (this.atom.vib == null || !Float.isNaN(this.atom.vib.y) || this.atom.vib.z != 1094713365 ? 0 : Clazz.floatToInt(this.atom.vib.x));
+return ((this.atom.seqIdOrWyckoffCode & (-2147483648)) == (-2147483648) ? this.atom.seqIdOrWyckoffCode & 2147483647 : 0);
 });
 Clazz.overrideMethod(c$, "getBfactor", 
 function(){
@@ -92,7 +92,11 @@ return this.atom.atomSerial;
 });
 Clazz.overrideMethod(c$, "getChainID", 
 function(){
-return this.atom.chainID;
+return this.atom.getChainID();
+});
+Clazz.overrideMethod(c$, "getAsymID", 
+function(){
+return this.atom.getAsymID();
 });
 Clazz.overrideMethod(c$, "getAltLoc", 
 function(){
@@ -102,7 +106,7 @@ Clazz.overrideMethod(c$, "getGroup3",
 function(){
 return this.atom.group3;
 });
-Clazz.overrideMethod(c$, "getSequenceNumber", 
+Clazz.overrideMethod(c$, "getAuthResNo", 
 function(){
 return this.atom.sequenceNumber;
 });
@@ -127,4 +131,4 @@ function(){
 return this.atom.part;
 });
 });
-;//5.0.1-v7 Mon Jun 09 19:40:05 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

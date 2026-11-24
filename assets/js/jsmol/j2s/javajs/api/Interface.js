@@ -15,5 +15,19 @@ throw e;
 }
 }
 }, "~S");
+c$.getInstanceWithParams = Clazz.defineMethod(c$, "getInstanceWithParams", 
+function(name, classes, params){
+try {
+var cl = Clazz._4Name(name);
+return cl.getConstructor(classes).newInstance(params);
+} catch (e) {
+if (Clazz.exceptionOf(e, Exception)){
+System.out.println("Interface.getInterfaceWithParams Error creating instance for " + name + ": \n" + e);
+return null;
+} else {
+throw e;
+}
+}
+}, "~S,~A,~A");
 })();
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

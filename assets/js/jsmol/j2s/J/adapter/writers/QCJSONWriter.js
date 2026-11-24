@@ -24,7 +24,6 @@ Clazz.overrideMethod(c$, "set",
 function(viewer, oc, data){
 this.vwr = viewer;
 this.oc = (oc == null ? this.vwr.getOutputChannel(null, null) : oc);
-this.setWriteNullAsString(false);
 this.setStream(oc);
 }, "JV.Viewer,JU.OC,~A");
 Clazz.overrideMethod(c$, "write", 
@@ -465,4 +464,4 @@ return (s.length == 0 ? "[]" : "[\"" + this.type + "\"," + s + (this.repeatCount
 };
 c$.integrationKeyMap = null;
 });
-;//5.0.1-v7 Sun Jun 29 22:48:16 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

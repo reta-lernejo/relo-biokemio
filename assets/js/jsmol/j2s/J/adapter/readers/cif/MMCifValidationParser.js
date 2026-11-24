@@ -14,20 +14,23 @@ return this;
 }, "J.adapter.smarter.AtomSetCollectionReader");
 Clazz.defineMethod(c$, "finalizeValidations", 
 function(vwr, modelMap){
-var map = this.reader.dssr;
-if (map != null) return vwr.getAnnotationParser(true).fixDSSRJSONMap(map);
 this.mapAtomResIDs(modelMap);
 var svMap = this.reader.validation;
-var retProps = this.reader.vwr.getAnnotationParser(false).catalogValidations(this.reader.vwr, svMap, this.getModelAtomIndices(), this.resMap, (this.asResidues ? null : this.atomMap), modelMap);
+var retProps = this.reader.vwr.getAnnotationParser(1073742189).catalogValidations(this.reader.vwr, svMap, this.getModelAtomIndices(), this.resMap, (this.asResidues ? null : this.atomMap), modelMap);
 var note = (retProps == null || retProps.size() == 0 ? null : this.setProperties(retProps));
 svMap.mapPut("_note", JS.SV.newS(note));
 return note;
 }, "JV.Viewer,java.util.Map");
+Clazz.defineMethod(c$, "finalizeDSSR", 
+function(vwr){
+var map = this.reader.dssr;
+return (map == null ? null : vwr.getAnnotationParser(1111490587).fixDSSRJSONMap(map));
+}, "JV.Viewer");
 Clazz.defineMethod(c$, "finalizeRna3d", 
 function(modelMap){
 this.mapAtomResIDs(modelMap);
 var svMap = this.getRna3dMap(this.reader.addedData);
-var note = this.reader.vwr.getAnnotationParser(false).catalogStructureUnits(this.reader.vwr, svMap, this.getModelAtomIndices(), this.resMap, null, modelMap);
+var note = this.reader.vwr.getAnnotationParser(1073742128).catalogStructureUnits(this.reader.vwr, svMap, this.getModelAtomIndices(), this.resMap, null, modelMap);
 svMap.mapPut("_note", JS.SV.newS(note));
 for (var i = this.reader.asc.atomSetCount; --i >= 0; ) {
 var info = this.reader.asc.getAtomSetAuxiliaryInfo(i);
@@ -77,7 +80,7 @@ var smodel = "" + modelMap.get("_0");
 for (var i = 0, model = 1, i0 = 0, n = this.reader.asc.getAtomSetAtomCount(0); i < n; i++) {
 var a = atoms[i];
 var ires = a.sequenceNumber;
-var res = smodel + "_" + a.chainID + "_" + ires + "_" + (a.insertionCode == '\0' ? "" : "" + a.insertionCode);
+var res = smodel + "_" + a.getChainID() + "_" + ires + "_" + (a.insertionCode == '\0' ? "" : "" + a.insertionCode);
 var atom = res + "_" + a.atomName.toUpperCase() + "_" + (a.altLoc == '\0' ? "" : "" + Character.toLowerCase(a.altLoc));
 var ia = Integer.$valueOf(i - i0);
 if (ires != iresLast) {
@@ -126,4 +129,4 @@ this.reader.asc.setAtomProperties(key, f, model, isGroup);
 return note;
 }, "JU.Lst");
 });
-;//5.0.1-v7 Tue Jun 10 01:13:43 CEST 2025
+;//5.0.1-v7 Mon Oct 26 19:45:17 CDT 2026

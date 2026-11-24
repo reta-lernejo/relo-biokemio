@@ -105,4 +105,4 @@ this.params.cutoff = -1.0;
 JU.Logger.info("MapReader: setting cutoff to default value of " + this.params.cutoff + (this.boundingBox == null ? " (no BOUNDBOX parameter)\n" : "\n"));
 }});
 });
-;//5.0.1-v7 Thu May 29 17:45:31 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

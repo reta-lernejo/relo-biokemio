@@ -1,5 +1,5 @@
 Clazz.declarePackage("J.jvxl.readers");
-Clazz.load(["JU.P3", "J.jvxl.readers.AtomDataReader", "JU.P4", "$.V3"], "J.jvxl.readers.IsoSolventReader", ["java.util.Hashtable", "JU.BS", "$.Lst", "$.Measure", "J.jvxl.data.MeshData", "JU.BSUtil", "$.Logger", "$.MeshSurface", "$.TempArray"], function(){
+Clazz.load(["JU.P3", "J.jvxl.readers.AtomDataReader", "JU.P4", "$.V3"], "J.jvxl.readers.IsoSolventReader", ["java.util.Hashtable", "JU.BS", "$.Lst", "$.Measure", "J.jvxl.data.MeshData", "JU.BSUtil", "$.GData", "$.Logger", "$.MeshSurface"], function(){
 var c$ = Clazz.decorateAsClass(function(){
 this.cavityRadius = 0;
 this.envelopeRadius = 0;
@@ -218,7 +218,7 @@ this.updateSurfaceData();
 if (this.meshDataServer != null) {
 this.meshDataServer.fillMeshData(this.meshData, 3, null);
 this.meshData =  new J.jvxl.data.MeshData();
-}}if (this.params.thePlane != null && this.params.slabInfo == null) this.params.addSlabInfo(JU.TempArray.getSlabWithinRange(-100, 0));
+}}if (this.params.thePlane != null && this.params.slabInfo == null) this.params.addSlabInfo(JU.GData.getSlabWithinRange(-100, 0));
 });
 Clazz.defineMethod(c$, "generateSolventCavity", 
 function(){
@@ -630,4 +630,4 @@ return this.ia + "_" + this.ib + "_" + this.ic + "_" + this.pS;
 };
 c$.testLinear = false;
 });
-;//5.0.1-v7 Sat Jun 07 00:08:51 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

@@ -379,11 +379,11 @@ this.r.asc.setInfo("vibration", vibrations);
 });
 Clazz.defineMethod(c$, "setVibrationsFromProperties", 
 function(){
-var freq_modes = this.r.asc.atomSetInfo.get("FREQ_MODES");
+var freq_modes = this.r.asc.getInfo("FREQ_MODES");
 if (freq_modes == null) {
 return;
-}var freq_lab = this.r.asc.atomSetInfo.get("FREQ_LAB");
-var freq_val = this.r.asc.atomSetInfo.get("FREQ_VAL");
+}var freq_lab = this.r.asc.getInfo("FREQ_LAB");
+var freq_val = this.r.asc.getInfo("FREQ_VAL");
 var frequencyCount = freq_val.size();
 var vibrations =  new JU.Lst();
 var freqs =  new JU.Lst();
@@ -447,4 +447,4 @@ function(){
 return (this.line = this.r.rd());
 });
 });
-;//5.0.1-v7 Tue Jun 10 01:13:43 CEST 2025
+;//5.0.1-v7 Mon Oct 26 19:45:17 CDT 2026

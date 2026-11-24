@@ -37,22 +37,26 @@ this.writeInt4(this.crc.getValue());
 });
 Clazz.defineMethod(c$, "writeInt2", 
 function(n){
-this.int2[0] = ((n >> 8) & 0xff);
-this.int2[1] = (n & 0xff);
+javajs.img.CRCEncoder.getInt2(n, this.int2, 0);
 this.writeBytes(this.int2);
 }, "~N");
+c$.getInt2 = Clazz.defineMethod(c$, "getInt2", 
+function(n, b, offset){
+b[offset++] = ((n >> 8) & 0xff);
+b[offset] = (n & 0xff);
+}, "~N,~A,~N");
 Clazz.defineMethod(c$, "writeInt4", 
 function(n){
-javajs.img.CRCEncoder.getInt4(n, this.int4);
+javajs.img.CRCEncoder.getInt4(n, this.int4, 0);
 this.writeBytes(this.int4);
 }, "~N");
 c$.getInt4 = Clazz.defineMethod(c$, "getInt4", 
-function(n, int4){
-int4[0] = ((n >> 24) & 0xff);
-int4[1] = ((n >> 16) & 0xff);
-int4[2] = ((n >> 8) & 0xff);
-int4[3] = (n & 0xff);
-}, "~N,~A");
+function(n, b, offset){
+b[offset++] = ((n >> 24) & 0xff);
+b[offset++] = ((n >> 16) & 0xff);
+b[offset++] = ((n >> 8) & 0xff);
+b[offset] = (n & 0xff);
+}, "~N,~A,~N");
 Clazz.defineMethod(c$, "writeByte", 
 function(b){
 var temp =  Clazz.newByteArray(-1, [b]);
@@ -71,4 +75,4 @@ System.arraycopy(data, 0, this.pngBytes, this.bytePos, data.length);
 this.bytePos = newPos;
 }, "~A");
 });
-;//5.0.1-v7 Fri May 30 05:05:27 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

@@ -96,7 +96,7 @@ offset = 255;
 }
 return offsets;
 }, "~N,~A,~A");
-Clazz.overrideMethod(c$, "getProteinStructureType", 
+Clazz.overrideMethod(c$, "getBioStructureType", 
 function(){
 return J.c.STR.NONE;
 });
@@ -353,11 +353,11 @@ return '?';
 });
 Clazz.overrideMethod(c$, "setGroupID", 
 function(group3){
-this.groupID = JM.BioResolver.getGroupIdFor(group3);
+this.groupID = JM.BioResolver.getGroupIdStatic(group3);
 }, "~S");
 Clazz.overrideMethod(c$, "toString", 
 function(){
 return "[" + this.getGroup3() + "-" + this.getSeqcodeString() + " " + this.getStructure() + "]";
 });
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

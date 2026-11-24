@@ -63,7 +63,7 @@ var $t$;
 //var c$;
 Clazz_declarePackage("J.api");
 Clazz_declareInterface(J.api, "JmolPropertyManager");
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026
 Clazz_declarePackage("JV");
 Clazz_load(["J.api.JmolPropertyManager", "java.util.Hashtable"], "JV.PropertyManager", ["java.util.Arrays", "JU.AU", "$.BArray", "$.BS", "$.Base64", "$.Lst", "$.M3", "$.P3", "$.PT", "$.SB", "$.V3", "J.api.Interface", "JM.LabelToken", "JS.SV", "$.T", "JU.BSUtil", "$.C", "$.Edge", "$.Escape", "$.JmolMolecule", "$.Logger", "JV.ActionManager", "$.FileManager", "$.JC", "$.Viewer", "JV.binding.Binding"], function(){
 var c$ = Clazz_decorateAsClass(function(){
@@ -549,7 +549,7 @@ return this.vwr.getModelExtract(myParam, true, false, "MOL");
 case 32:
 return JV.PropertyManager.getFileInfo(this.vwr.getFileData(), myParam.toString());
 case 45:
-return this.vwr.readCifData(myParam.toString(), null);
+return this.vwr.fm.readCifData(myParam.toString(), null);
 case 1:
 return this.vwr.fm.getFullPathName(false);
 case 2:
@@ -573,7 +573,7 @@ return this.vwr.getStatusChanged(myParam.toString());
 case 22:
 return this.vwr;
 case 38:
-return this.vwr.getJspecViewProperties(myParam);
+return this.vwr.getJspecViewProperties(myParam.toString());
 case 7:
 return this.getLigandInfo(this.vwr.getAtomBitSet(myParam));
 case 9:
@@ -593,7 +593,7 @@ return this.getMouseInfo();
 case 11:
 return this.vwr.tm.getOrientationInfo();
 case 31:
-return this.vwr.ms.getPointGroupInfo(this.vwr.getAtomBitSet(myParam));
+return this.vwr.ms.getPointGroupInfo(this.vwr.getAtomBitSet(myParam), null);
 case 17:
 return this.getAllPolymerInfo(this.vwr.getAtomBitSet(myParam));
 case 39:
@@ -712,47 +712,47 @@ return V;
 Clazz_overrideMethod(c$, "getModelInfo", 
 function(atomExpression){
 var bsModels = this.vwr.ms.getModelBS(this.vwr.getAtomBitSet(atomExpression), false);
-var m = this.vwr.ms;
+var ms = this.vwr.ms;
 var info =  new java.util.Hashtable();
-info.put("modelSetName", m.modelSetName);
+info.put("modelSetName", ms.modelSetName);
 info.put("modelIndex", Integer.$valueOf(this.vwr.am.cmi));
-info.put("modelCount", Integer.$valueOf(m.mc));
-info.put("isTainted", Boolean.$valueOf(m.tainted != null));
-info.put("canSkipLoad", Boolean.$valueOf(m.canSkipLoad));
-info.put("modelSetHasVibrationVectors", Boolean.$valueOf(m.modelSetHasVibrationVectors()));
-if (m.modelSetProperties != null) {
-info.put("modelSetProperties", m.modelSetProperties);
+info.put("modelCount", Integer.$valueOf(ms.mc));
+info.put("isTainted", Boolean.$valueOf(ms.tainted != null));
+info.put("canSkipLoad", Boolean.$valueOf(ms.canSkipLoad));
+info.put("modelSetHasVibrationVectors", Boolean.$valueOf(ms.modelSetHasVibrationVectors()));
+if (ms.modelSetProperties != null) {
+info.put("modelSetProperties", ms.modelSetProperties);
 }info.put("modelCountSelected", Integer.$valueOf(bsModels.cardinality()));
 info.put("modelsSelected", bsModels);
 var vModels =  new JU.Lst();
-m.getMolecules();
+ms.getMolecules();
 for (var i = bsModels.nextSetBit(0); i >= 0; i = bsModels.nextSetBit(i + 1)) {
-var model =  new java.util.Hashtable();
-model.put("_ipt", Integer.$valueOf(i));
-model.put("num", Integer.$valueOf(m.getModelNumber(i)));
-model.put("file_model", m.getModelNumberDotted(i));
-model.put("name", m.getModelName(i));
-var s = m.getModelTitle(i);
-if (s != null) model.put("title", s);
-s = m.getModelFileName(i);
-if (s != null) model.put("file", s);
-s = m.getInfo(i, "modelID");
-if (s != null) model.put("id", s);
-model.put("vibrationVectors", Boolean.$valueOf(this.vwr.modelHasVibrationVectors(i)));
-var mi = m.am[i];
-model.put("atomCount", Integer.$valueOf(mi.act));
-model.put("bondCount", Integer.$valueOf(mi.getBondCount()));
-model.put("groupCount", Integer.$valueOf(mi.getGroupCount()));
-model.put("moleculeCount", Integer.$valueOf(mi.moleculeCount));
-if (mi.isBioModel) model.put("polymerCount", Integer.$valueOf((mi).getBioPolymerCount()));
-model.put("chainCount", Integer.$valueOf(m.getChainCountInModelWater(i, true)));
-if (mi.properties != null) {
-model.put("modelProperties", mi.properties);
-}var energy = m.getInfo(i, "Energy");
+var minfo =  new java.util.Hashtable();
+minfo.put("_ipt", Integer.$valueOf(i));
+minfo.put("num", Integer.$valueOf(ms.getModelNumber(i)));
+minfo.put("file_model", ms.getModelNumberDotted(i));
+minfo.put("name", ms.getModelName(i));
+var s = ms.getModelTitle(i);
+if (s != null) minfo.put("title", s);
+s = ms.getModelFileName(i);
+if (s != null) minfo.put("file", s);
+s = ms.getInfo(i, "modelID");
+if (s != null) minfo.put("id", s);
+minfo.put("vibrationVectors", Boolean.$valueOf(this.vwr.modelHasVibrationVectors(i)));
+var m = ms.am[i];
+minfo.put("atomCount", Integer.$valueOf(m.act));
+minfo.put("bondCount", Integer.$valueOf(m.getBondCount()));
+minfo.put("groupCount", Integer.$valueOf(m.getGroupCount()));
+minfo.put("moleculeCount", Integer.$valueOf(m.moleculeCount));
+if (m.isBioModel) minfo.put("polymerCount", Integer.$valueOf((m).getBioPolymerCount()));
+minfo.put("chainCount", Integer.$valueOf(ms.getChainCountInModelWater(i, true)));
+if (m.properties != null) {
+minfo.put("modelProperties", m.properties);
+}var energy = ms.getInfo(i, "Energy");
 if (energy != null) {
-model.put("energy", energy);
-}model.put("atomCount", Integer.$valueOf(mi.act));
-vModels.addLast(model);
+minfo.put("energy", energy);
+}minfo.put("atomCount", Integer.$valueOf(m.act));
+vModels.addLast(minfo);
 }
 info.put("models", vModels);
 return info;
@@ -850,8 +850,7 @@ var asJSON = uc.equals("JSON") || uc.equals("CD");
 var mol =  new JU.SB();
 var ms = this.vwr.ms;
 var bsModels = this.vwr.ms.getModelBS(bs, true);
-var modelIndex = bsModels.nextSetBit(0);
-var is2D = "2D".equals(this.vwr.ms.am[modelIndex].auxiliaryInfo.get("dimension"));
+var is2D = "2D".equals(this.vwr.getModelInfo("dimension"));
 var atoms = ms.at;
 var bsAtoms = JU.BSUtil.copy(bs);
 for (var i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i + 1)) if (doTransform && atoms[i].isDeleted()) bsAtoms.clear(i);
@@ -1092,7 +1091,7 @@ info.put("chain", atom.getChainIDStr());
 info.put("atomID", Integer.$valueOf(atom.atomID));
 info.put("groupID", Integer.$valueOf(atom.group.groupID));
 if (atom.altloc != '\0') info.put("altLocation", "" + atom.altloc);
-info.put("structure", Integer.$valueOf(atom.group.getProteinStructureType().getId()));
+info.put("structure", Integer.$valueOf(atom.group.getBioStructureType().getId()));
 info.put("polymerLength", Integer.$valueOf(atom.group.getBioPolymerLength()));
 info.put("occupancy", Integer.$valueOf(atom.getOccupancy100()));
 var temp = atom.getBfactor100();
@@ -1292,10 +1291,19 @@ function(atomExpression, type){
 var bsAtoms = this.vwr.getAtomBitSet(atomExpression);
 var iModel = this.vwr.ms.getModelBS(bsAtoms, false).nextSetBit(0);
 if (iModel < 0) return null;
+var key = null;
+switch (type) {
+case 1073741925:
+key = "domains";
+break;
+case 1073742189:
+key = "validation";
+break;
+}
 var modelinfo = this.vwr.ms.getModelAuxiliaryInfo(iModel);
-var objAnn = modelinfo.get(type == 1073741925 ? "domains" : "validation");
+var objAnn = modelinfo.get(key);
 if (objAnn == null || objAnn.tok != 6) return null;
-this.vwr.getAnnotationParser(false).initializeAnnotation(objAnn, type, iModel);
+this.vwr.getAnnotationParser(type).initializeAnnotation(objAnn, type, iModel);
 return objAnn.mapGet("_list");
 }, "~O,~N");
 Clazz_defineMethod(c$, "getMeasurementInfo", 
@@ -1328,43 +1336,103 @@ if (this.vwr.ms.ac == 0 || bs.nextSetBit(0) < 0) return "";
 return this.getModel("PDB", bs,  Clazz_newArray(-1, [new Boolean(isPQR), new Boolean(doTransform), new Boolean(allTrajectories)]), out);
 }, "JU.BS,JU.OC,~B,~B,~B");
 Clazz_overrideMethod(c$, "getPdbData", 
-function(modelIndex, type, bsSelected, parameters, out, addStructure){
-if (this.vwr.ms.isJmolDataFrameForModel(modelIndex)) modelIndex = this.vwr.ms.getJmolDataSourceFrame(modelIndex);
+function(modelIndex, tok, type, bsSelected, parameters, out, addStructure){
+if (this.vwr.ms.isJmolDataFrame(modelIndex)) modelIndex = this.vwr.ms.getJmolDataSourceFrame(modelIndex);
 if (modelIndex < 0) return "";
 var model = this.vwr.ms.am[modelIndex];
 var isPDB = model.isBioModel;
 if (parameters == null && !isPDB) return null;
 if (out == null) out = this.vwr.getOutputChannel(null, null);
 var pdbCONECT =  new JU.SB();
-var isDraw = (type.indexOf("draw") >= 0);
+var isDataOnly = (type.indexOf("reciprocalLattice") >= 0);
 var bsAtoms = null;
+var atoms = null;
 var bsWritten =  new JU.BS();
 var ctype = '\u0000';
 this.vwr.ms.getLabeler();
 var tokens = JM.LabelToken.compile(this.vwr, "ATOM  %-6i%4a%1A%3.-3n %1c%4R%1E   ", '\0', null);
 if (parameters == null) {
 ctype = (type.length > 11 && type.indexOf("quaternion ") >= 0 ? type.charAt(11) : 'R');
-(model).getPdbData(type, ctype, isDraw, bsSelected, out, tokens, pdbCONECT, bsWritten);
+(model).getPdbData(type, ctype, tok == 135176, bsSelected, out, tokens, pdbCONECT, bsWritten);
 bsAtoms = this.vwr.getModelUndeletedAtomsBitSet(modelIndex);
 } else {
-bsAtoms = parameters[0];
 var dataX = parameters[1];
 var dataY = parameters[2];
 var dataZ = parameters[3];
+var data3 = parameters[11];
 var haveY = (dataY != null);
 var haveZ = (dataZ != null);
+var factors = parameters[6];
+var format = parameters[8];
+var isPDBFormat = (factors != null && format == null);
+var strExtra = "";
+var atomLast = null;
+var ptTemp =  new JU.P3();
+if (!isDataOnly) {
+atoms = this.vwr.ms.at;
+bsAtoms = parameters[0];
+}if (isPDBFormat) {
+this.addPDBHeader(tok, type, modelIndex, bsAtoms, factors, parameters, out);
+} else {
+if (format == null) {
+if (isDataOnly) {
+format = "%-10s %-13.5f %-13.5f %-13.5f";
+} else {
+format = "%-5i %-10s %-13.5f " + (haveZ ? "%-13.5f %-13.5f" : haveY ? "%-13.5f" : "");
+}}format += "\n";
+}if (isDataOnly) {
+var n = dataX.length;
+out.append(n + "\n\n");
+for (var i = 0; i < n; i++) {
+out.append(JU.PT.sprintf(format, "sF",  Clazz_newArray(-1, ["Xx",  Clazz_newFloatArray(-1, [dataX[i], dataY[i], dataZ[i]])])));
+}
+return out.toString();
+}for (var i = bsAtoms.nextSetBit(0), n = 0; i >= 0; i = bsAtoms.nextSetBit(i + 1), n++) {
+var x = dataX[n];
+var y = (haveY ? dataY[n] : 0);
+var z = (haveZ ? dataZ[n] : 0);
+var spin = (tok == 1095241729 ? data3[n] : 0);
+if (Float.isNaN(x) || Float.isNaN(y) || Float.isNaN(z)) continue;
+var a = atoms[i];
+if (isPDBFormat) {
+var line = JM.LabelToken.formatLabelAtomArray(this.vwr, a, tokens, '\0', null, ptTemp);
+while (line.charAt(16) != ' ') {
+var pt = line.lastIndexOf(' ', 16);
+if (pt < 0) break;
+line = line.substring(0, pt - 1) + line.substring(pt);
+}
+out.append(line);
+if (isPDB) bsWritten.set(i);
+out.append(JU.PT.sprintf("%-8.2f%-8.2f%-10.2f    %6.3f          %-2s    %s\n", "ssF",  Clazz_newArray(-1, [a.getElementSymbolIso(false).toUpperCase(), strExtra,  Clazz_newFloatArray(-1, [x, y, z, spin])])));
+if (isPDB && atomLast != null && atomLast.group.getBioPolymerIndexInModel() == a.group.getBioPolymerIndexInModel()) pdbCONECT.append("CONECT").append(JU.PT.formatStringI("%5i", "i", atomLast.getAtomNumber())).append(JU.PT.formatStringI("%5i", "i", a.getAtomNumber())).appendC('\n');
+} else {
+this.writeDataFormat(format, a.getAtomNumber(), a.getAtomName(), x, (haveY ? y : NaN), (haveZ ? z : NaN), out);
+}atomLast = a;
+}
+}out.append(pdbCONECT.toString());
+if (tok == 135176) return out.toString();
+bsSelected.and(bsAtoms);
+if (isPDB && addStructure) out.append("\n\n" + this.vwr.ms.getProteinStructureState(bsWritten, ctype == 'R' ? 4138 : 1073742086));
+return out.toString();
+}, "~N,~N,~S,JU.BS,~A,JU.OC,~B");
+Clazz_defineMethod(c$, "writeDataFormat", 
+function(format, atomNumber, atomName, x, y, z, out){
+var d = (Double.isNaN(z) ?  Clazz_newDoubleArray(-1, [x, y, z]) : Double.isNaN(y) ?  Clazz_newDoubleArray(-1, [x, y]) :  Clazz_newDoubleArray(-1, [x]));
+out.append(JU.PT.sprintf(format, "isF",  Clazz_newArray(-1, [Integer.$valueOf(atomNumber), atomName, d])));
+}, "~S,~N,~S,~N,~N,~N,JU.OC");
+Clazz_defineMethod(c$, "addPDBHeader", 
+function(tok, type, modelIndex, bsAtoms, factors, parameters, out){
 var minXYZ = parameters[4];
 var maxXYZ = parameters[5];
-var factors = parameters[6];
 var center = parameters[7];
-var format = parameters[8];
 var properties = parameters[9];
-var isPDBFormat = (factors != null && format == null);
-var atoms = this.vwr.ms.at;
-if (isPDBFormat) {
-out.append("REMARK   6 Jmol PDB-encoded data: ").append(type).append("; ").append(JV.Viewer.getJmolVersion()).append("; ").append(this.vwr.apiPlatform.getDateFormat(null)).append("\n");
-out.append("REMARK   6 Jmol data").append(" min = ").append(JU.Escape.eP(minXYZ)).append(" max = ").append(JU.Escape.eP(maxXYZ)).append(" unScaledXyz = xyz * ").append(JU.Escape.eP(factors)).append(" + ").append(JU.Escape.eP(center)).append(";\n");
+var pdbFactor = (parameters[10]).doubleValue();
+out.append("REMARK   6 Jmol PDB-encoded data: ").append(type).append("; for model " + modelIndex + "; Jmol ").append(JV.Viewer.getJmolVersion()).append("; ").append(this.vwr.apiPlatform.getDateFormat(null)).append("\n");
+out.append("REMARK   6 Jmol data").append(" min = ").append(JU.Escape.eP(minXYZ)).append(" max = ").append(JU.Escape.eP(maxXYZ)).append(" unScaledXyz = xyz * ").append(JU.Escape.eP(factors)).append(" + ").append(JU.Escape.eP(center));
+if (pdbFactor != 1) out.append("pdbfactor = " + pdbFactor);
+out.append(";\n");
 var atomNames = null;
+var atoms = this.vwr.ms.at;
 for (var i = bsAtoms.nextSetBit(0); i >= 0; i = bsAtoms.nextSetBit(i + 1)) {
 var name = "" + atoms[i].getAtomName();
 if (atomNames != null || name.length > 4) {
@@ -1386,39 +1454,13 @@ continue;
 }resNames += " " + name;
 }}
 if (resNames != null) out.append("REMARK   6 Jmol residue names").append(resNames).append("\n");
+if (tok == 1095241729) {
+var mat = this.vwr.ms.getModelAuxiliaryInfo(modelIndex).get("spinRotationMatrixApplied");
+if (mat != null) out.append("REMARK   6 Jmol spin matrix applied ").append(mat.toJSON()).append("\n");
+} else {
 for (var i = 0; i < properties.length; i++) if (properties[i] != null) out.append("REMARK   6 Jmol property ").append(properties[i]).append(";\n");
 
-}var strExtra = "";
-var atomLast = null;
-var ptTemp =  new JU.P3();
-if (!isPDBFormat) {
-if (format == null) format = "%-5i %-10s %-13.5f " + (haveZ ? "%-13.5f %-13.5f" : haveY ? "%-13.5f" : "");
-format += "\n";
-}for (var i = bsAtoms.nextSetBit(0), n = 0; i >= 0; i = bsAtoms.nextSetBit(i + 1), n++) {
-var x = dataX[n];
-var y = (haveY ? dataY[n] : 0);
-var z = (haveZ ? dataZ[n] : 0);
-if (Float.isNaN(x) || Float.isNaN(y) || Float.isNaN(z)) continue;
-var a = atoms[i];
-if (isPDBFormat) {
-out.append(JM.LabelToken.formatLabelAtomArray(this.vwr, a, tokens, '\0', null, ptTemp));
-if (isPDB) bsWritten.set(i);
-out.append(JU.PT.sprintf("%-8.2f%-8.2f%-10.2f    %6.3f          %2s    %s\n", "ssF",  Clazz_newArray(-1, [a.getElementSymbolIso(false).toUpperCase(), strExtra,  Clazz_newFloatArray(-1, [x, y, z, 0])])));
-if (atomLast != null && atomLast.group.getBioPolymerIndexInModel() == a.group.getBioPolymerIndexInModel()) pdbCONECT.append("CONECT").append(JU.PT.formatStringI("%5i", "i", atomLast.getAtomNumber())).append(JU.PT.formatStringI("%5i", "i", a.getAtomNumber())).appendC('\n');
-} else if (haveZ) {
-out.append(JU.PT.sprintf(format, "isF",  Clazz_newArray(-1, [Integer.$valueOf(a.getAtomNumber()), a.getAtomName(),  Clazz_newFloatArray(-1, [x, y, z])])));
-} else if (haveY) {
-out.append(JU.PT.sprintf(format, "isF",  Clazz_newArray(-1, [Integer.$valueOf(a.getAtomNumber()), a.getAtomName(),  Clazz_newFloatArray(-1, [x, y])])));
-} else {
-out.append(JU.PT.sprintf(format, "isF",  Clazz_newArray(-1, [Integer.$valueOf(a.getAtomNumber()), a.getAtomName(),  Clazz_newFloatArray(-1, [x])])));
-}atomLast = a;
-}
-}out.append(pdbCONECT.toString());
-if (isDraw) return out.toString();
-bsSelected.and(bsAtoms);
-if (isPDB && addStructure) out.append("\n\n" + this.vwr.ms.getProteinStructureState(bsWritten, ctype == 'R' ? 4138 : 1073742086));
-return out.toString();
-}, "~N,~S,JU.BS,~A,JU.OC,~B");
+}}, "~N,~S,~N,JU.BS,JU.P3,~A,JU.OC");
 Clazz_overrideMethod(c$, "getModelCml", 
 function(bs, atomsMax, addBonds, doTransform, allTrajectories){
 return this.getModel("CML", bs,  Clazz_newArray(-1, [new Integer(atomsMax), new Boolean(addBonds), new Boolean(doTransform), new Boolean(allTrajectories)]), null);
@@ -1482,7 +1524,7 @@ return mol.toString();
 c$.propertyTypes =  Clazz_newArray(-1, ["appletInfo", "", "", "fileName", "", "", "fileHeader", "", "", "fileContents", "<pathname>", "", "fileContents", "", "", "animationInfo", "", "", "modelInfo", "<atom selection>", "{*}", "ligandInfo", "<atom selection>", "{*}", "shapeInfo", "", "", "measurementInfo", "", "", "centerInfo", "", "", "orientationInfo", "", "", "transformInfo", "", "", "", "", "", "atomInfo", "<atom selection>", "(visible)", "bondInfo", "<atom selection>", "(visible)", "chainInfo", "<atom selection>", "(visible)", "polymerInfo", "<atom selection>", "(visible)", "moleculeInfo", "<atom selection>", "(visible)", "stateInfo", "<state type>", "all", "extractModel", "<atom selection>", "(visible)", "jmolStatus", "statusNameList", "", "jmolViewer", "", "", "messageQueue", "", "", "auxiliaryInfo", "<atom selection>", "{*}", "boundBoxInfo", "", "", "dataInfo", "<data type>", "types", "image", "<width=www,height=hhh>", "", "evaluate", "<expression>", "", "menu", "<type>", "current", "minimizationInfo", "", "", "pointGroupInfo", "<atom selection>", "(visible)", "fileInfo", "<type>", "", "errorMessage", "", "", "mouseInfo", "", "", "isosurfaceInfo", "", "", "isosurfaceData", "", "", "consoleText", "", "", "JSpecView", "<key>", "", "scriptQueueInfo", "", "", "nmrInfo", "<elementSymbol> or 'all' or 'shifts'", "all", "variableInfo", "<name>", "all", "domainInfo", "<atom selection>", "{visible}", "validationInfo", "<atom selection>", "{visible}", "service", "<hashTable>", "", "CIFInfo", "<filename>", "", "modelkitInfo", "<key>", "data", "unitcellInfo", "", ""]);
 c$.readableTypes =  Clazz_newArray(-1, ["", "stateinfo", "extractmodel", "filecontents", "fileheader", "image", "menu", "minimizationInfo"]);
 });
-;//5.0.1-v7 Sun Jun 29 22:48:16 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026
 })(Clazz
 ,Clazz.getClassName
 ,Clazz.newLongArray

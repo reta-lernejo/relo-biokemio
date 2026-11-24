@@ -5,6 +5,15 @@ c$.parseStringInfestedFloatArray = Clazz.defineMethod(c$, "parseStringInfestedFl
 function(str, bs, data){
 return JU.Parser.parseFloatArrayBsData(JU.PT.getTokens(str), bs, data);
 }, "~S,JU.BS,~A");
+c$.parseStringInfestedIntArray = Clazz.defineMethod(c$, "parseStringInfestedIntArray", 
+function(str, dims){
+var floats =  Clazz.newFloatArray (dims.length, 0);
+var n = JU.Parser.parseStringInfestedFloatArray(str, null, floats);
+for (var i = dims.length; --i >= 0; ) {
+dims[i] = Clazz.floatToInt(floats[i]);
+}
+return n;
+}, "~S,~A");
 c$.parseFloatArrayBsData = Clazz.defineMethod(c$, "parseFloatArrayBsData", 
 function(tokens, bs, data){
 var len = data.length;
@@ -78,4 +87,4 @@ lines[nLines] = data.length;
 return lines;
 }, "~S,~S");
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

@@ -199,6 +199,13 @@ if (labelPos[i] != 0) return labelPos;
 }
 return null;
 }, "~A");
+c$.toFloatArray = Clazz.defineMethod(c$, "toFloatArray", 
+function(ds){
+var f =  Clazz.newFloatArray (ds.length, 0);
+for (var i = ds.length; --i >= 0; ) f[i] = ds[i];
+
+return f;
+}, "~A");
 c$.REP_LIST =  Clazz.newArray(-1, ["sticks", "spheres", "surface", "labels", "nb_spheres", "cartoon", "ribbon", "lines", "mesh", "dots", "dashes", "nonbonded", "cell", "cgo", "callback", "extent", "slice", "angles", "dihedrals", "ellipsoid", "volume"]);
 c$.FLAG_exfoliate = 0x01000000;
 c$.FLAG_ignore = 0x02000000;
@@ -217,4 +224,4 @@ c$.v176b =  Clazz.newIntArray(-1, [0, 32, 1, 0, 2, 4, 3, 8, 4, 12, 5, 16, 6, 26]
 c$.v177b =  Clazz.newIntArray(-1, [0, 24, 1, 0, 2, 4, 4, 8, 5, 12, 3, 20, 6, 23]);
 c$.v181b =  Clazz.newIntArray(-1, [0, 20, 1, 0, 2, 4, 4, 8, 5, 12, 3, 16, 6, 18]);
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

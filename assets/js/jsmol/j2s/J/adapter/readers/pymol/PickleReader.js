@@ -10,18 +10,18 @@ this.memo = null;
 this.logging = false;
 this.id = 0;
 this.markCount = 0;
-this.filePt = 0;
 this.emptyListPt = 0;
 this.thisSection = null;
 this.inMovie = false;
 this.inNames = false;
-this.thisName = null;
-this.lastMark = 0;
 this.retrieveCount = 0;
 this.writer = null;
 this.dumpFile = null;
 this.ipt = 0;
 this.aTemp = null;
+if (!Clazz.isClassDefined("J.adapter.readers.pymol.PickleReader.Mark")) {
+J.adapter.readers.pymol.PickleReader.$PickleReader$Mark$ ();
+}
 Clazz.instantialize(this, arguments);}, J.adapter.readers.pymol, "PickleReader", null);
 Clazz.prepareFields (c$, function(){
 this.stack =  new JU.Lst();
@@ -52,11 +52,11 @@ function(logging){
 this.logging = logging;
 var b;
 var i;
-var mark;
 var d;
 var o;
 var a;
 var map;
+var mark;
 var l;
 this.ipt = 0;
 var going = true;
@@ -72,16 +72,13 @@ o = this.pop();
 if (this.writer != null) this.dump("append", o);
 var lst = this.peek();
 lst.addLast(o);
-if (lst.size() < 10) this.dump("appended to " + lst);
+if (this.writer != null && lst.size() < 10) this.dump("appended to " + lst);
 break;
 case 101:
-l = this.getObjects(this.getMark());
+mark = this.getMark();
+l = this.getObjects(mark);
 if (this.inNames && this.markCount == 2) {
-var pt = this.binaryDoc.getPosition();
-var l2 =  new JU.Lst();
-l2.addLast(Integer.$valueOf(this.filePt));
-l2.addLast(Integer.$valueOf(pt - this.filePt));
-l.addLast(l2);
+this.addStartlen(l, mark);
 }(this.peek()).addAll(l);
 break;
 case 71:
@@ -122,10 +119,7 @@ case 85:
 i = this.binaryDoc.readByte() & 0xff;
 a =  Clazz.newByteArray (i, 0);
 this.binaryDoc.readByteArray(a, 0, i);
-if (this.inNames && this.markCount == 3 && this.lastMark == this.stack.size()) {
-this.thisName = this.bytesToString(a);
-this.filePt = this.emptyListPt;
-}this.push(a);
+this.push(a);
 break;
 case 84:
 i = this.binaryDoc.readIntLE();
@@ -227,12 +221,22 @@ map = this.stack.removeItemAt(0);
 if (map.size() == 0) for (i = this.stack.size(); --i >= 0; ) {
 o = this.stack.get(i--);
 a = this.stack.get(i);
-map.put(this.bytesToString(a), o);
+var key = this.bytesToString(a);
+map.put(key, o);
 }
 this.memo = null;
 if (this.writer != null) this.writer.close();
 return map;
 }, "~B");
+Clazz.defineMethod(c$, "addStartlen", 
+function(l, mark){
+var pt = this.binaryDoc.getPosition();
+var filePt = mark.filePt;
+var startLen =  new JU.Lst();
+startLen.addLast(Integer.$valueOf(filePt));
+startLen.addLast(Integer.$valueOf(pt - filePt));
+l.addLast(startLen);
+}, "JU.Lst,J.adapter.readers.pymol.PickleReader.Mark");
 Clazz.defineMethod(c$, "bytesToString", 
 function(o){
 try {
@@ -261,17 +265,17 @@ return o;
 }, "~N");
 Clazz.defineMethod(c$, "getObjects", 
 function(mark){
-var n = this.stack.size() - mark;
+var imark = mark.stackPt;
+var n = this.stack.size() - imark;
 var args =  new JU.Lst();
 args.ensureCapacity(n);
-for (var i = mark; i < this.stack.size(); ++i) {
-var oo = this.stack.get(i);
-args.addLast(oo);
+for (var i = imark; i < this.stack.size(); ++i) {
+args.addLast(this.stack.get(i));
 }
-for (var i = this.stack.size(); --i >= mark; ) this.stack.removeItemAt(i);
+for (var i = this.stack.size(); --i >= imark; ) this.stack.removeItemAt(i);
 
 return args;
-}, "~N");
+}, "J.adapter.readers.pymol.PickleReader.Mark");
 Clazz.defineMethod(c$, "readStringAsBytes", 
 function(){
 var n = 0;
@@ -289,7 +293,7 @@ return ret;
 Clazz.defineMethod(c$, "putMark", 
 function(i){
 if (this.logging) this.log("\n " + Integer.toHexString(this.binaryDoc.getPosition()) + " [");
-this.marks.addLast(Integer.$valueOf(this.lastMark = i));
+this.marks.addLast(Clazz.innerTypeInstance(J.adapter.readers.pymol.PickleReader.Mark, this, null, i, this.emptyListPt));
 this.markCount++;
 switch (this.markCount) {
 case 2:
@@ -305,7 +309,7 @@ break;
 }, "~N");
 Clazz.defineMethod(c$, "getMark", 
 function(){
-return this.marks.removeItemAt(--this.markCount).intValue();
+return this.marks.removeItemAt(--this.markCount);
 });
 Clazz.defineMethod(c$, "push", 
 function(o){
@@ -316,6 +320,7 @@ this.stack.addLast(o);
 }, "~O");
 Clazz.defineMethod(c$, "dump", 
 function(key, o){
+if (this.writer == null) return;
 var s = null;
 if (o == null) {
 s = "null";
@@ -336,6 +341,7 @@ this.dump(key + " " + s);
 }, "~S,~O");
 Clazz.defineMethod(c$, "dump", 
 function(string){
+if (this.writer == null) return;
 try {
 this.writer.write(this.binaryDoc.getPosition() + "\t");
 this.writer.write(string + "\n");
@@ -355,5 +361,23 @@ function(){
 if (this.writer != null) this.dump("pop");
 return this.stack.removeItemAt(this.stack.size() - 1);
 });
+c$.$PickleReader$Mark$ = function(){
+/*if4*/;(function(){
+var c$ = Clazz.decorateAsClass(function(){
+Clazz.prepareCallback(this, arguments);
+this.stackPt = 0;
+this.filePt = 0;
+Clazz.instantialize(this, arguments);}, J.adapter.readers.pymol.PickleReader, "Mark", null);
+Clazz.makeConstructor(c$, 
+function(mark, filePt){
+this.stackPt = mark;
+this.filePt = filePt;
+}, "~N,~N");
+Clazz.overrideMethod(c$, "toString", 
+function(){
+return "[Mark " + this.stackPt + " " + this.filePt + "]";
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+/*eoif4*/})();
+};
+});
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

@@ -65,7 +65,7 @@ Clazz_declarePackage("JV");
 (function(){
 var c$ = Clazz_declareType(JV, "JmolStateCreator", null);
 })();
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026
 Clazz_declarePackage("JV");
 Clazz_load(["JV.JmolStateCreator", "java.util.Hashtable"], "JV.StateCreator", ["java.util.Arrays", "$.Date", "JU.BS", "$.Lst", "$.P3", "$.PT", "$.SB", "J.c.PAL", "$.STR", "$.VDW", "JM.AtomCollection", "$.Bond", "$.BondSet", "JS.T", "J.shape.Shape", "JU.BSUtil", "$.C", "$.ColorEncoder", "$.Edge", "$.Escape", "$.Font", "$.Logger", "JV.GlobalSettings", "$.JC", "$.StateManager", "$.Viewer"], function(){
 var c$ = Clazz_decorateAsClass(function(){
@@ -203,8 +203,7 @@ loadUC = true;
 commands.append("  frame ").append(ms.getModelNumberDotted(i)).appendSB(sb).append(";\n");
 }haveModulation = new Boolean (haveModulation | (this.vwr.ms.getLastVibrationVector(i, 1275072532) >= 0)).valueOf();
 }
-if (loadUC) this.vwr.shm.loadShape(33);
-this.getShapeStatePriv(commands, isAll, 33);
+this.getUnitCellState(commands, isAll, loadUC);
 if (haveModulation) {
 var temp =  new java.util.Hashtable();
 var ivib;
@@ -255,7 +254,7 @@ if (needOrientations && m.orientation != null && !ms.isTrajectorySubFrame(i)) sb
 if (m.frameDelay != 0 && !ms.isTrajectorySubFrame(i)) sb.append("  frame delay ").appendF(m.frameDelay / 1000).append(";\n");
 if (m.simpleCage != null) {
 sb.append("  unitcell ").append(JU.Escape.eAP(m.simpleCage.getUnitCellVectors())).append(";\n");
-this.getShapeStatePriv(sb, isAll, 33);
+this.getUnitCellState(sb, isAll, true);
 }if (sb.length() > 0) commands.append("  frame " + ms.getModelNumberDotted(i) + ";\n").appendSB(sb);
 }
 commands.append("  set fontScaling " + this.vwr.getBoolean(603979847) + ";\n");
@@ -263,6 +262,11 @@ if (this.vwr.is2D()) {
 commands.append("  set mode2d TRUE;\n");
 }}if (sfunc != null) commands.append("\n}\n\n");
 return commands.toString();
+}, "JU.SB,~B,~B");
+Clazz_defineMethod(c$, "getUnitCellState", 
+function(commands, isAll, loadUC){
+if (loadUC) this.vwr.shm.loadShape(33);
+this.getShapeStatePriv(commands, isAll, 33);
 }, "JU.SB,~B,~B");
 Clazz_defineMethod(c$, "getWindowState", 
 function(sfunc, width, height){
@@ -278,7 +282,7 @@ this.app(str, "background " + JU.Escape.escapeColor(global.objColors[0]));
 for (var i = 1; i < 7; i++) if (global.objColors[i] != 0) this.app(str, JV.StateManager.getObjectNameFromId(i) + "Color = \"" + JU.Escape.escapeColor(global.objColors[i]) + '"');
 
 if (global.backgroundImageFileName != null) {
-this.app(str, "background IMAGE " + (global.backgroundImageFileName.startsWith(JV.JC.BASE64_TAG) ? "" : "/*file*/") + JU.PT.esc(global.backgroundImageFileName));
+this.app(str, "background IMAGE " + (global.backgroundImageFileName.startsWith(";base64,") ? "" : "/*file*/") + JU.PT.esc(global.backgroundImageFileName));
 }str.append(this.getLightingState(false));
 if (sfunc != null) str.append("}\n\n");
 return str.toString();
@@ -327,11 +331,11 @@ var ms = this.vwr.ms;
 var models = ms.am;
 var modelCount = ms.mc;
 for (var i = 0; i < modelCount; i++) {
-if (ms.isJmolDataFrameForModel(i) || ms.isTrajectorySubFrame(i)) continue;
+if (ms.isJmolDataFrame(i) || ms.isTrajectorySubFrame(i)) continue;
 var m = models[i];
 var pt = commands.indexOf(m.loadState);
-if (pt < 0 || pt != commands.lastIndexOf(m.loadState)) commands.append(models[i].loadState);
-if (models[i].isModelKit) {
+if (pt < 0 || pt != commands.lastIndexOf(m.loadState)) commands.append(m.loadState);
+if (m.isModelKit) {
 var bs = ms.getModelAtomBitSetIncludingDeleted(i, false);
 if (ms.tainted != null) {
 if (ms.tainted[2] != null) ms.tainted[2].andNot(bs);
@@ -409,7 +413,9 @@ var s = am.getModelSpecial(0);
 this.app(commands, s.equals("0") ? "frame *" : "model " + s);
 }this.app(commands, "animation " + (!am.animationOn ? "OFF" : am.currentDirection == 1 ? "PLAY" : "PLAYREV"));
 if (am.animationOn && am.animationPaused) this.app(commands, "animation PAUSE");
-if (sfunc != null) commands.append("}\n\n");
+if (am.splitFrame) {
+this.app(commands, "frame " + this.vwr.getModelNumberDotted(am.getSplitFrameModelIndex(0)) + " " + this.vwr.getModelNumberDotted(am.getSplitFrameModelIndex(1)) + " split");
+}if (sfunc != null) commands.append("}\n\n");
 return commands.toString();
 }, "JV.AnimationManager,JU.SB");
 Clazz_defineMethod(c$, "getParameterState", 
@@ -644,13 +650,13 @@ if (m.colix != 0) sb.append(" color ").append(JU.Escape.escapeColor(JU.C.getArgb
 if (m.text != null) {
 if (m.text.font != null) sb.append(" font ").append(m.text.font.getInfo());
 if (m.text.align != 0) sb.append(" align ").append(JV.JC.getHorizAlignmentName(m.text.align));
-if (m.text.pymolOffset != null) sb.append(" offset ").append(JU.Escape.eAF(m.text.pymolOffset));
+if (m.text.getPymolOffset() != null) sb.append(" offset ").append(JU.Escape.eAF(m.text.getPymolOffset()));
 }var tickInfo = m.tickInfo;
 if (tickInfo != null) JV.StateCreator.addTickInfo(sb, tickInfo, true);
 for (var j = 1; j <= count; j++) sb.append(" ").append(m.getLabel(j, true, true));
 
 if (isProperty) {
-sb.append(" " + m.property + " value " + (Double.isNaN(m.value) ? 0 : m.value)).append(" " + JU.PT.esc(m.getString()));
+sb.append(" " + m.property + " value " + (Float.isNaN(m.value) ? 0 : m.value)).append(" " + JU.PT.esc(m.getString()));
 } else if (count == 2) {
 var s = m.getDistanceFormatForState();
 if (s != null) sb.append(" ").append(JU.PT.esc(s));
@@ -687,6 +693,7 @@ Clazz_defineMethod(c$, "getShapeStatePriv",
 function(commands, isAll, iShape){
 var shapes = this.vwr.shm.shapes;
 if (shapes == null) return;
+var shape = null;
 var i;
 var imax;
 if (iShape == 2147483647) {
@@ -695,7 +702,7 @@ imax = 37;
 } else {
 imax = (i = iShape) + 1;
 }for (; i < imax; ++i) {
-var shape = shapes[i];
+shape = shapes[i];
 if (shape != null && (isAll || i >= 9 && i < 16)) {
 var cmd = this.getShapeState(shape);
 if (cmd != null && cmd.length > 1) commands.append(cmd);
@@ -744,11 +751,11 @@ case 34:
 s = this.getAxesState(shape);
 break;
 case 33:
-if (!this.vwr.ms.haveUnitCells) return "";
+var uc = this.vwr.getCurrentUnitCell();
+if (uc == null && !this.vwr.ms.haveUnitCells) return "";
 var st = s = this.getFontLineShapeState(shape);
 var iAtom = this.vwr.am.getUnitCellAtomIndex();
 if (iAtom >= 0) s += "  unitcell ({" + iAtom + "});\n";
-var uc = this.vwr.getCurrentUnitCell();
 if (uc != null) {
 s += uc.getUnitCellState();
 s += st;
@@ -809,18 +816,20 @@ for (var i = l.bsSizeSet.nextSetBit(0); i >= 0; i = l.bsSizeSet.nextSetBit(i + 1
 if (!bs.get(i)) continue;
 var t = l.getLabel(i);
 var cmd = "label ";
+var isPymolOffset = false;
 if (t == null) {
 cmd += JU.PT.esc(l.formats[i]);
 } else {
 cmd += JU.PT.esc(t.textUnformatted);
-if (t.pymolOffset != null) cmd += ";set labelOffset " + JU.Escape.eAF(t.pymolOffset);
+isPymolOffset = (t.getPymolOffset() != null);
+if (isPymolOffset) cmd += ";set labelOffset " + JU.Escape.eAF(t.getPymolOffset());
 }JU.BSUtil.setMapBitSet(this.temp, i, i, cmd);
 if (l.bsColixSet != null && l.bsColixSet.get(i)) JU.BSUtil.setMapBitSet(this.temp2, i, i, J.shape.Shape.getColorCommand("label", l.paletteIDs[i], l.colixes[i], l.translucentAllowed));
 if (l.bsBgColixSet != null && l.bsBgColixSet.get(i)) JU.BSUtil.setMapBitSet(this.temp2, i, i, "background label " + J.shape.Shape.encodeColor(l.bgcolixes[i]));
 var text = l.getLabel(i);
 var sppm = (text != null ? text.scalePixelsPerMicron : 0);
 if (sppm > 0) JU.BSUtil.setMapBitSet(this.temp2, i, i, "set labelScaleReference " + (10000 / sppm));
-if (l.offsets != null && l.offsets.length > i) {
+if (!isPymolOffset && l.offsets != null && l.offsets.length > i) {
 var offsetFull = l.offsets[i];
 JU.BSUtil.setMapBitSet(this.temp2, i, i, "set " + (JV.JC.isOffsetAbsolute(offsetFull) ? "labelOffsetAbsolute " : "labelOffset ") + JV.JC.getXOffset(offsetFull) + " " + JV.JC.getYOffset(offsetFull));
 var align = JV.JC.getHorizAlignmentName(offsetFull >> 2);
@@ -895,8 +904,11 @@ this.clearTemp();
 var type = JV.JC.shapeClassBases[shape.shapeID];
 var isVector = (shape.shapeID == 18);
 var mad;
-if (shape.bsSizeSet != null) for (var i = shape.bsSizeSet.nextSetBit(0); i >= 0; i = shape.bsSizeSet.nextSetBit(i + 1)) JU.BSUtil.setMapBitSet(this.temp, i, i, type + " " + ((mad = shape.mads[i]) < 0 ? (isVector && mad < -1 ? "" + -mad : "on") : JU.PT.escF(mad / 2000)));
-
+var bs = this.vwr.getAllAtoms();
+if (shape.bsSizeSet != null) for (var i = shape.bsSizeSet.nextSetBit(0); i >= 0; i = shape.bsSizeSet.nextSetBit(i + 1)) {
+if (!bs.get(i)) continue;
+JU.BSUtil.setMapBitSet(this.temp, i, i, type + " " + ((mad = shape.mads[i]) < 0 ? (isVector && mad < -1 ? "" + -mad : "on") : JU.PT.escF(mad / 2000)));
+}
 if (shape.bsColixSet != null) for (var i = shape.bsColixSet.nextSetBit(0); i >= 0; i = shape.bsColixSet.nextSetBit(i + 1)) JU.BSUtil.setMapBitSet(this.temp2, i, i, J.shape.Shape.getColorCommand(type, shape.paletteIDs[i], shape.colixes[i], shape.translucentAllowed));
 
 var s = this.getCommands(this.temp, this.temp2, "select");
@@ -937,8 +949,8 @@ if (t.script != null) sb.append("  ").append(echoCmd).append(" script ").append(
 if (t.modelIndex >= 0) sb.append("  ").append(echoCmd).append(" model ").append(this.vwr.getModelNumberDotted(t.modelIndex)).append(";\n");
 if (t.pointerPt != null) {
 sb.append("  ").append(echoCmd).append(" point ").append(Clazz_instanceOf(t.pointerPt,"JM.Atom") ? "({" + (t.pointerPt).i + "})" : JU.Escape.eP(t.pointerPt)).append(";\n");
-}if (t.pymolOffset != null) {
-sb.append("  ").append(echoCmd).append(" offset ").append(JU.Escape.escapeFloatA(t.pymolOffset, true)).append(";\n");
+}if (t.getPymolOffset() != null) {
+sb.append("  ").append(echoCmd).append(" offset ").append(JU.Escape.escapeFloatA(t.getPymolOffset(), true)).append(";\n");
 }t.appendFontCmd(sb);
 sb.append("; color echo");
 if (JU.C.isColixTranslucent(t.colix)) sb.append(" ").append(JU.C.getColixTranslucencyLabel(t.colix));
@@ -1046,7 +1058,7 @@ var isDefault = (type == 2);
 var atoms = this.vwr.ms.at;
 var tainted = this.vwr.ms.tainted;
 if (bs != null) for (var i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i + 1)) {
-if (JM.AtomCollection.isDeleted(atoms[i])) continue;
+if (i >= atoms.length || JM.AtomCollection.isDeleted(atoms[i])) continue;
 s.appendI(i + 1).append(" ").append(atoms[i].getElementSymbol()).append(" ").append(atoms[i].getInfo().$replace(' ', '_')).append(" ");
 switch (type) {
 case 18:
@@ -1076,10 +1088,17 @@ s.appendF(atoms[i].x).append(" ").appendF(atoms[i].y).append(" ").appendF(atoms[
 break;
 case 12:
 var v = atoms[i].getVibrationVector();
-if (v == null) s.append("0 0 0");
- else if (Float.isNaN(v.modScale)) s.appendF(v.x).append(" ").appendF(v.y).append(" ").appendF(v.z);
- else s.appendF(1.4E-45).append(" ").appendF(1.4E-45).append(" ").appendF(v.modScale);
-break;
+if (v == null) {
+s.append("0 0 0");
+} else if (Float.isNaN(v.modScale)) {
+switch (v.modDim) {
+case -3:
+continue;
+}
+s.appendF(v.x).append(" ").appendF(v.y).append(" ").appendD(v.z).append(" ").appendD(v.modDim).append(" ").appendF(v.magMoment);
+} else {
+s.appendF(1.4E-45).append(" ").appendD(1.4E-45).append(" ").appendD(v.modScale);
+}break;
 case 17:
 s.appendI(atoms[i].getAtomSite());
 break;
@@ -1208,7 +1227,7 @@ this.actionStates.removeItemAt(99);
 this.undoWorking = !clearRedo;
 }, "~N,~N,~B");
 });
-;//5.0.1-v7 Sun Jun 29 22:48:16 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026
 })(Clazz
 ,Clazz.getClassName
 ,Clazz.newLongArray

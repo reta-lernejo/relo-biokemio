@@ -63,7 +63,7 @@ var $t$;
 //var c$;
 Clazz_declarePackage("J.console");
 Clazz_declareInterface(J.console, "GenericTextArea");
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026
 Clazz_declarePackage("J.console");
 Clazz_load(["J.api.JmolAppConsoleInterface", "$.JmolCallbackListener", "java.util.Hashtable"], "J.console.GenericConsole", ["JU.PT", "J.c.CBK", "J.i18n.GT", "JS.T", "JV.Viewer"], function(){
 var c$ = Clazz_decorateAsClass(function(){
@@ -276,6 +276,7 @@ case J.c.CBK.ANIMFRAME:
 case J.c.CBK.APPLETREADY:
 case J.c.CBK.ATOMMOVED:
 case J.c.CBK.AUDIO:
+case J.c.CBK.CALCULATION:
 case J.c.CBK.CLICK:
 case J.c.CBK.DRAGDROP:
 case J.c.CBK.ERROR:
@@ -472,7 +473,7 @@ return sout;
 }, "~S");
 c$.labels = null;
 });
-;//5.0.1-v7 Mon Jun 09 19:40:05 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026
 Clazz_declarePackage("J.consolejs");
 Clazz_load(["J.console.GenericConsole"], "J.consolejs.AppletConsole", null, function(){
 var c$ = Clazz_decorateAsClass(function(){
@@ -837,7 +838,7 @@ return s;
 }
 ;
 }}});
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026
 })(Clazz
 ,Clazz.getClassName
 ,Clazz.newLongArray

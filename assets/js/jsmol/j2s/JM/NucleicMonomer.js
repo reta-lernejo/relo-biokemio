@@ -10,8 +10,9 @@ this.dssrBox = null;
 this.dssrBoxHeight = 0;
 this.dssrFrame = null;
 Clazz.instantialize(this, arguments);}, JM, "NucleicMonomer", JM.PhosphorusMonomer);
-Clazz.overrideConstructor(c$, 
+Clazz.makeConstructor(c$, 
 function(){
+Clazz.superConstructor (this, JM.NucleicMonomer, []);
 });
 c$.validateAndAllocate = Clazz.defineMethod(c$, "validateAndAllocate", 
 function(chain, group3, seqcode, firstAtomIndex, lastAtomIndex, specialAtomIndexes){
@@ -59,7 +60,7 @@ Clazz.defineMethod(c$, "isGuanine",
 function(){
 return JM.Monomer.have(this.offsets, 17);
 });
-Clazz.overrideMethod(c$, "getProteinStructureType", 
+Clazz.overrideMethod(c$, "getBioStructureType", 
 function(){
 return (this.hasRnaO2Prime ? J.c.STR.RNA : J.c.STR.DNA);
 });
@@ -347,7 +348,7 @@ if (this.group1 == '\0') this.group1 = g;
 }, "~S");
 Clazz.defineMethod(c$, "getBasePairs", 
 function(){
-if (this.bioPolymer != null && !(this.bioPolymer).isDssrSet) this.bioPolymer.model.ms.vwr.getAnnotationParser(true).getBasePairs(this.bioPolymer.model.ms.vwr, this.bioPolymer.model.modelIndex);
+if (this.bioPolymer != null && !(this.bioPolymer).isDssrSet) this.bioPolymer.model.ms.vwr.getAnnotationParser(1111490587).getBasePairs(this.bioPolymer.model.ms.vwr, this.bioPolymer.model.modelIndex);
 return this.bps;
 });
 Clazz.overrideMethod(c$, "getGroup1b", 
@@ -359,7 +360,7 @@ return (g1 == null ? Character.toLowerCase(g3.charAt(g3.length - 1)) : g1.charAt
 Clazz.defineMethod(c$, "getDSSRFrame", 
 function(vwr){
 if (this.dssrFrame != null) return this.dssrFrame;
-if (this.dssrNT != null) return this.dssrFrame = vwr.getAnnotationParser(true).getDSSRFrame(this.dssrNT);
+if (this.dssrNT != null) return this.dssrFrame = vwr.getAnnotationParser(1111490587).getDSSRFrame(this.dssrNT);
 var oxyz = this.dssrFrame =  new Array(4);
 for (var i = 4; --i >= 0; ) oxyz[i] =  new JU.P3();
 
@@ -398,4 +399,4 @@ c$.ring5OffsetIndexes =  Clazz.newByteArray(-1, [3, 9, 10, 11, 7]);
 c$.riboseOffsetIndexes =  Clazz.newByteArray(-1, [25, 26, 22, 27, 28, 21, 29, 19, 0]);
 c$.heavyAtomIndexes =  Clazz.newByteArray(-1, [3, 1, 4, 5, 6, 7, 11, 10, 9, 16, 14, 8, 12, 17, 13]);
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

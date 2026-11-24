@@ -165,7 +165,7 @@ this.$in = null;
 this.buf = null;
 });
 });
-;//5.0.1-v7 Mon May 12 23:42:45 CDT 2025
+;//5.0.1-v7 Fri Nov 21 04:39:22 CST 2025
 Clazz_load(["java.io.DataInput", "$.FilterInputStream"], "java.io.DataInputStream", ["java.io.PushbackInputStream"], function(){
 var c$ = Clazz_decorateAsClass(function(){
 this.bytearr = null;
@@ -378,7 +378,7 @@ throw  new java.io.UTFDataFormatException("malformed input around byte " + count
 return  String.instantialize(chararr, 0, chararr_count);
 }, "java.io.DataInput,~N");
 });
-;//5.0.1-v7 Mon May 12 23:42:45 CDT 2025
+;//5.0.1-v7 Fri Nov 21 04:39:22 CST 2025
 Clazz_declarePackage("JU");
 (function(){
 var c$ = Clazz_declareType(JU, "BC", null);
@@ -452,7 +452,7 @@ return f * JU.BC.fracIEEE[i + 140];
 }, "~N,~N");
 c$.fracIEEE = null;
 })();
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026
 Clazz_declarePackage("JU");
 Clazz_load(["javajs.api.GenericBinaryDocument", "JU.BC"], "JU.BinaryDocument", ["java.io.DataInputStream"], function(){
 var c$ = Clazz_decorateAsClass(function(){
@@ -678,7 +678,7 @@ function(b){
 this.isBigEndian = b;
 }, "~B");
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026
 })(Clazz
 ,Clazz.getClassName
 ,Clazz.newLongArray

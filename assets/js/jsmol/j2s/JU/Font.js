@@ -102,4 +102,4 @@ c$.font3ds =  new Array(8);
 c$.fontFaces =  Clazz.newArray(-1, ["SansSerif", "Serif", "Monospaced", ""]);
 c$.fontStyles =  Clazz.newArray(-1, ["Plain", "Bold", "Italic", "BoldItalic"]);
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

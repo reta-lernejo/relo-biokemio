@@ -1,5 +1,5 @@
 Clazz.declarePackage("JS");
-Clazz.load(["JS.ScriptTokenParser", "JU.Lst"], "JS.ScriptCompiler", ["java.util.Hashtable", "JU.AU", "$.BS", "$.PT", "$.SB", "J.api.Interface", "J.i18n.GT", "JM.BondSet", "$.Group", "JS.ContextToken", "$.SV", "$.ScriptContext", "$.ScriptError", "$.ScriptFlowContext", "$.ScriptFunction", "$.ScriptManager", "$.T", "JU.Edge", "$.Escape", "$.Logger", "JV.FileManager", "$.JC", "$.Viewer"], function(){
+Clazz.load(["JS.ScriptTokenParser", "JU.Lst"], "JS.ScriptCompiler", ["java.util.Hashtable", "JU.AU", "$.BS", "$.PT", "$.SB", "J.api.Interface", "J.i18n.GT", "JM.BondSet", "$.Group", "JS.ContextToken", "$.SV", "$.ScriptContext", "$.ScriptError", "$.ScriptFlowContext", "$.ScriptFunction", "$.ScriptManager", "$.T", "JU.Edge", "$.Escape", "$.Logger", "JV.FileManager", "$.Viewer"], function(){
 var c$ = Clazz.decorateAsClass(function(){
 this.filename = null;
 this.isSilent = false;
@@ -692,7 +692,7 @@ if (this.lookingAtString(!this.implicitString)) {
 if (this.cchToken < 0) return this.ERROR(4);
 var str = this.getUnescapedStringLiteral(this.lastToken != null && !this.iHaveQuotedString && this.lastToken.tok != 1073741984 && (this.tokCommand == 36867 && this.nTokens == 2 && this.lastToken.tok == 545259546 || this.tokCommand == 134223363 || this.tokCommand == 1610616835 || this.tokCommand == 134222850 || this.tokCommand == 4124));
 this.iHaveQuotedString = true;
-if ((this.tokCommand == 134223363 || this.tokCommand == 135174) && this.lastToken.tok == 134221834 || this.tokCommand == 134221834 && str.indexOf("@") < 0) {
+if (JS.ScriptCompiler.allowsData(this.tokCommand) && this.lastToken.tok == 134221834 || this.tokCommand == 134221834 && str.indexOf("@") < 0) {
 if (!this.getData(str)) {
 return this.ERROR(11, "data");
 }} else {
@@ -747,7 +747,7 @@ return 2;
 case 134222350:
 switch (this.lastToken.tok) {
 case 4120:
-case 1296041985:
+case 1296041986:
 case 1715472409:
 case 1073877010:
 if (this.nTokens == 2) this.iHaveQuotedString = true;
@@ -773,7 +773,7 @@ break out;
 case 134223363:
 var isAppend = (this.tokAt(1) == 1073741839);
 if (this.nTokens == 1 || isAppend && (this.nTokens == 2 || this.nTokens == 3 && this.tokAt(2) == 2)) {
-if (isAppend && this.nTokens == 2 && JU.PT.isDigit(this.charAt(this.ichToken))) break out;
+if (isAppend && this.nTokens == 2 && this.peekingAtLoneInteger()) break out;
 var isDataBase = JV.Viewer.isDatabaseCode(this.charAt(this.ichToken));
 if (this.lookingAtLoadFormat(isDataBase)) {
 var strFormat = this.script.substring(this.ichToken, this.ichToken + this.cchToken);
@@ -919,6 +919,17 @@ this.addTokenToPrefix(JS.T.o((Clazz.instanceOf(m,"JU.M4") ? 12 : 11), m));
 return 2;
 }}}return 0;
 });
+c$.allowsData = Clazz.defineMethod(c$, "allowsData", 
+function(tokCommand){
+switch (tokCommand) {
+case 134223363:
+case 135174:
+case 135180:
+return true;
+default:
+return false;
+}
+}, "~N");
 Clazz.defineMethod(c$, "addNumber", 
 function(tok, i, v){
 this.addTokenToPrefix(this.afterWhite == this.ichToken ? JS.SV.newSV(tok, i, v) : JS.T.tv(tok, i, v));
@@ -1121,7 +1132,8 @@ if (this.nTokens > 0 && !this.isContextVariable(name.toLowerCase())) return fals
 var t = this.setNewSetCommand(false, name);
 this.setCommand(JS.T.tokenSet);
 this.ltoken.add(0, this.tokenCommand);
-this.ltoken.set(1, t);
+if (this.nTokens == 0) this.ltoken.addLast(t);
+ else this.ltoken.set(1, t);
 return true;
 });
 Clazz.defineMethod(c$, "parseCommandParameter", 
@@ -1759,7 +1771,7 @@ function(isFileName){
 if (isFileName) {
 var s = this.script.substring(this.ichToken + 1, this.ichToken + this.cchToken - 1);
 if (s.indexOf("\\u") >= 0) s = JU.Escape.unescapeUnicode(s);
-if (s.indexOf(JV.JC.BASE64_TAG) != 0) return s;
+if (s.indexOf(";base64,") != 0) return s;
 }return JS.ScriptCompiler.unescapeString(this.script, this.ichToken + 1, this.cchToken - 2);
 }, "~B");
 c$.unescapeString = Clazz.defineMethod(c$, "unescapeString", 
@@ -1938,6 +1950,14 @@ if (ch != ' ' && ch != '*' && ch != '?' && !JU.PT.isLetter(ch)) return false;
 this.cchToken = ichT - this.ichToken;
 return true;
 });
+Clazz.defineMethod(c$, "peekingAtLoneInteger", 
+function(){
+var pt = this.cchToken;
+if (this.lookingAtInteger() == 2147483647) return false;
+var pt2 = this.ichToken + this.cchToken;
+this.cchToken = pt;
+return JU.PT.isWhitespace(this.charAt(pt2));
+});
 Clazz.defineMethod(c$, "lookingAtInteger", 
 function(){
 if (this.ichToken == this.cchScript) return 2147483647;
@@ -2108,4 +2128,4 @@ JU.Logger.error(this.errorMessage);
 }return false;
 });
 });
-;//5.0.1-v7 Mon Jun 09 20:29:14 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

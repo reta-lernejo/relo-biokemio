@@ -86,6 +86,7 @@ this.fixedLattice = null;
 this.baseColor = null;
 this.integration = NaN;
 this.sbOut = null;
+this.mustCacheForState = false;
 Clazz.instantialize(this, arguments);}, J.jvxl.data, "JvxlData", null);
 Clazz.prepareFields (c$, function(){
 this.jvxlExcluded =  new Array(4);
@@ -159,4 +160,4 @@ for (var i = 0, ipt = 0; i < vertexCount; i += vertexIncrement, ipt++) if (Float
 return String.copyValueOf(chars);
 }, "~S,~A,~N,~N,~S");
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

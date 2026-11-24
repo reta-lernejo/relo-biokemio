@@ -42,6 +42,11 @@ Clazz.defineEnumConstant(c$, "CARBOHYDRATE", 7, [6, 0xFFA6A6FA]);
 Clazz.defineEnumConstant(c$, "HELIX310", 8, [7, 0xFFA00080]);
 Clazz.defineEnumConstant(c$, "HELIXALPHA", 9, [8, 0xFFFF0080]);
 Clazz.defineEnumConstant(c$, "HELIXPI", 10, [9, 0xFF600080]);
-Clazz.defineEnumConstant(c$, "ANNOTATION", 11, [-2, 0]);
+Clazz.defineEnumConstant(c$, "DSSRINTERNALLOOP", 11, [10, 0xD0B0F0]);
+Clazz.defineEnumConstant(c$, "DSSRHAIRPINLOOP", 12, [11, 0x00A0F0]);
+Clazz.defineEnumConstant(c$, "DSSRBULGELOOP", 13, [12, 0x00F0F0]);
+Clazz.defineEnumConstant(c$, "DSSRJUNCTIONLOOP", 14, [13, 0xA0A0F0]);
+Clazz.defineEnumConstant(c$, "DSSRSTEM", 15, [14, 0xFFFF00]);
+Clazz.defineEnumConstant(c$, "ANNOTATION", 16, [-2, 0]);
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

@@ -1,5 +1,5 @@
 Clazz.declarePackage("J.rendercgo");
-Clazz.load(["J.renderspecial.DrawRenderer", "JU.P3"], "J.rendercgo.CGORenderer", ["J.shapecgo.CGOMesh", "JU.C", "$.Logger"], function(){
+Clazz.load(["J.renderspecial.DrawRenderer", "JU.P3"], "J.rendercgo.CGORenderer", ["JU.Lst", "J.shapecgo.CGOMesh", "JU.C", "$.Logger"], function(){
 var c$ = Clazz.decorateAsClass(function(){
 this.cgoMesh = null;
 this.cmds = null;
@@ -31,8 +31,11 @@ this.screenZ = 0;
 this.alpha = 0;
 this.nPts = 0;
 this.glMode = 0;
+this.needVertices = false;
+this.vertexList = null;
 this.pt = null;
 this.spt = null;
+this.lastPoint = null;
 Clazz.instantialize(this, arguments);}, J.rendercgo, "CGORenderer", J.renderspecial.DrawRenderer);
 Clazz.prepareFields (c$, function(){
 this.pt3 =  new JU.P3();
@@ -48,9 +51,12 @@ return this.needTranslucent;
 });
 Clazz.defineMethod(c$, "render2", 
 function(mesh){
+this.needVertices = (mesh.vs == null && this.vwr.getDrawHover());
+if (this.needVertices) this.vertexList =  new JU.Lst();
 this.diameter = this.cgoMesh.diameter;
 this.width = this.cgoMesh.width;
 this.cmds = this.cgoMesh.cmds;
+if (this.cmds == null || !this.cgoMesh.visible || this.cgoMesh.visibilityFlags == 0) return;
 if (!this.g3d.setC(this.cgoMesh.colix)) {
 this.needTranslucent = true;
 return;
@@ -59,7 +65,6 @@ this.glMode = -1;
 this.nPts = 0;
 this.ptNormal = 0;
 this.ptColor = 0;
-this.width = this.cgoMesh.meshWidth / 1000 * 50;
 this.screenZ = 2147483647;
 this.doColor = !mesh.useColix;
 this.g3d.addRenderer(1073742182);
@@ -182,7 +187,10 @@ break;
 }
 j += len;
 }
-}, "J.shape.Mesh");
+if (this.needVertices) {
+mesh.vs = this.vertexList.toArray( new Array(this.vertexList.size()));
+this.vertexList = null;
+}}, "J.shape.Mesh");
 Clazz.defineMethod(c$, "processVertex", 
 function(j){
 if (this.nPts++ == 0) this.getPoint(j, this.pt0, this.pt0i);
@@ -326,6 +334,10 @@ pti.y = (this.is2DPercent ? this.tm.percentToPixels('y', pt.y) : Clazz.floatToIn
 pti.z = this.screenZ;
 this.tm.unTransformPoint(pt, pt);
 return;
+}if (this.needVertices && !pt.equals(this.lastPoint)) {
+var v = JU.P3.newP(pt);
+this.vertexList.addLast(v);
+this.lastPoint = v;
 }this.tm.transformPtScr(pt, pti);
 }, "~N,JU.P3,JU.P3i");
 Clazz.defineMethod(c$, "fillTriangle", 
@@ -333,4 +345,4 @@ function(){
 this.g3d.fillTriangle3CNBits(this.pt0, this.colix0, this.normix0, this.pt1, this.colix1, this.normix1, this.pt2, this.colix2, this.normix2, true);
 });
 });
-;//5.0.1-v7 Mon Jun 09 19:40:05 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

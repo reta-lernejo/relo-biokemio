@@ -36,7 +36,7 @@ this.thisAtom =  new J.adapter.smarter.Atom();
 this.thisAtom.elementSymbol = this.atts.get("components");
 this.thisAtom.atomName = this.atts.get("id");
 this.thisAtom.atomSerial = ++this.iAtom;
-if (this.iChain >= 0) this.parent.setChainID(this.thisAtom, "" + String.fromCharCode((this.iChain - 1) % 26 + 65));
+if (this.iChain >= 0) this.parent.setChainID(this.thisAtom, "" + String.fromCharCode((this.iChain - 1) % 26 + 65), null);
 this.thisAtom.group3 = "UNK";
 if (this.iGroup == 0) this.iGroup = 1;
 this.thisAtom.sequenceNumber = this.iGroup;
@@ -68,4 +68,4 @@ return;
 }this.setKeepChars(false);
 }, "~S");
 });
-;//5.0.1-v7 Tue Jun 10 01:13:43 CEST 2025
+;//5.0.1-v7 Mon Oct 26 19:45:17 CDT 2026

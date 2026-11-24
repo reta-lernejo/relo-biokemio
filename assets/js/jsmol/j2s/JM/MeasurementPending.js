@@ -29,7 +29,13 @@ this.numSet = count;
 }, "~N");
 Clazz.defineMethod(c$, "addPoint", 
 function(atomIndex, ptClicked, doSet){
-this.haveModified = (atomIndex != this.lastIndex);
+if (atomIndex >= 0 && this.ms.vwr.am.splitFrame) {
+var mi = this.ms.at[atomIndex].mi;
+if (this.count > 0) {
+if (mi != this.modelIndex) return this.count;
+} else {
+this.modelIndex = mi;
+}}this.haveModified = (atomIndex != this.lastIndex);
 this.lastIndex = atomIndex;
 if (ptClicked == null) {
 if (this.getIndexOf(atomIndex) > 0) {
@@ -56,4 +62,4 @@ this.formatMeasurement(null);
 return this.count;
 }, "~N,JU.Point3fi,~B");
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

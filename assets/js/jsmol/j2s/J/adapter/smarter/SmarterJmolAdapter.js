@@ -119,21 +119,22 @@ if (htParams.containsKey("concatenate")) {
 var s = "";
 for (var i = 0; i < size; i++) {
 var name = names[i];
-var f = vwr.getFileAsString3(name, false, null);
-if (i > 0 && size <= 3 && f.startsWith("{")) {
-var type = (f.contains("version\":\"DSSR") ? "dssr" : f.contains("/outliers/") ? "validation" : "domains");
-var x = vwr.parseJSONMap(f);
-if (x != null) htParams.put(type, (type.equals("dssr") ? x : JS.SV.getVariableMap(x)));
+var fileData = vwr.getFileAsString3(name, false, null);
+if (i > 0 && size <= 3 && fileData.startsWith("{")) {
+var type = (fileData.contains("version\":\"DSSR") ? "dssr" : name.contains("/outliers/") ? "validation" : name.contains("/graphql") ? "qscore" : "domains");
+var x = vwr.parseJSONMap(fileData);
+if (x != null) htParams.put(type, (type.equals("dssr") || type.equals("qscore") ? x : JS.SV.getVariableMap(x)));
 continue;
-}if (name.indexOf("|") >= 0) name = JU.PT.rep(name, "_", "/");
+}if (fileData.startsWith("java.net.")) System.err.println(fileData + " reading " + name);
+if (name.indexOf("|") >= 0) name = JU.PT.rep(name, "_", "/");
 if (i == 1) {
 if (name.indexOf("/rna3dhub/") >= 0) {
-s += "\n_rna3d \n;" + f + "\n;\n";
+s += "\n_rna3d \n;" + fileData + "\n;\n";
 continue;
 }if (name.indexOf("/dssr/") >= 0) {
-s += "\n_dssr \n;" + f + "\n;\n";
+s += "\n_dssr \n;" + fileData + "\n;\n";
 continue;
-}}s += f;
+}}s += fileData;
 if (!s.endsWith("\n")) s += "\n";
 }
 size = 1;
@@ -311,4 +312,4 @@ throw e;
 }, "~O,java.util.Map");
 c$.PATH_SEPARATOR = System.getProperty("path.separator", "/");
 });
-;//5.0.1-v7 Tue Jun 10 01:13:43 CEST 2025
+;//5.0.1-v7 Mon Oct 26 19:45:17 CDT 2026

@@ -108,4 +108,4 @@ this.shiftC = ((this.periodicity & 0x4) == 0);
 this.shifting = (this.shiftA || this.shiftB || this.shiftC);
 });
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

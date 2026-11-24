@@ -6,6 +6,7 @@ this.cgoMesh = null;
 this.useColix = false;
 this.newScale = 0;
 this.indicatedModelIndex = -2147483648;
+this.indicatedWidth = 0;
 Clazz.instantialize(this, arguments);}, J.shapecgo, "CGO", J.shape.MeshCollection);
 Clazz.prepareFields (c$, function(){
 this.cmeshes =  new Array(4);
@@ -19,6 +20,7 @@ this.htObjects =  new java.util.Hashtable();
 Clazz.defineMethod(c$, "initCGO", 
 function(){
 this.indicatedModelIndex = -2147483648;
+this.indicatedWidth = 0;
 });
 Clazz.overrideMethod(c$, "allocMesh", 
 function(thisID, m){
@@ -37,18 +39,30 @@ if ("init" === propertyName) {
 this.initCGO();
 this.setPropertySuper("init", value, bs);
 return;
+}if ("cacheAll" === propertyName) {
+for (var i = this.meshCount; --i >= 0; ) {
+if (this.meshes[i] != null) {
+(this.meshes[i]).doCache = true;
+}}
+return;
+}if ("cache" === propertyName) {
+if (this.cgoMesh != null) this.cgoMesh.doCache = true;
+return;
 }if ("setCGO" === propertyName) {
 var map = value;
-var list = map.get("info");
+var list = map.get("cgoMeshInfo");
 this.setProperty("init", null, null);
 var n = list.size() - 1;
 this.setProperty("thisID", list.get(n), null);
 propertyName = "set";
 this.setProperty("set", list, null);
-this.cgoMesh.meshWidth = (map.get("mesh_width")).floatValue();
+this.cgoMesh.width = (map.get("cgoMeshWidth")).floatValue() / 20;
 return;
 }if ("modelIndex" === propertyName) {
 this.indicatedModelIndex = Math.max((value).intValue(), -1);
+return;
+}if ("width" === propertyName) {
+this.indicatedWidth = (value).floatValue();
 return;
 }if ("set" === propertyName) {
 if (this.cgoMesh == null) {
@@ -57,6 +71,7 @@ this.cgoMesh.colix = this.colix;
 this.cgoMesh.color = this.color;
 this.cgoMesh.useColix = this.useColix;
 }this.cgoMesh.modelIndex = (this.indicatedModelIndex == -2147483648 ? this.vwr.am.cmi : this.indicatedModelIndex);
+if (this.indicatedWidth != 0) this.cgoMesh.width = this.indicatedWidth;
 this.cgoMesh.isValid = this.setCGO(value);
 if (this.cgoMesh.isValid) {
 this.scale(this.cgoMesh, this.newScale);
@@ -99,7 +114,7 @@ function(i){
 if (this.meshes[i] === this.currentMesh) this.currentMesh = this.cgoMesh = null;
 this.meshes = this.cmeshes = JU.AU.deleteElements(this.meshes, i, 1);
 }, "~N");
-Clazz.defineMethod(c$, "setPropertySuper", 
+Clazz.overrideMethod(c$, "setPropertySuper", 
 function(propertyName, value, bs){
 this.currentMesh = this.cgoMesh;
 this.setPropMC(propertyName, value, bs);
@@ -139,9 +154,9 @@ var modelCount = this.ms.mc;
 for (var i = 0; i < this.meshCount; i++) {
 var mesh = this.cmeshes[i];
 if (mesh == null || mesh.cmds == null || mesh.modelIndex >= modelCount) continue;
-if (sb.length() == 0) {
+if (mesh.doCache) {
 sb.append("\n");
-J.shape.Shape.appendCmd(sb, this.myType + " delete");
+J.shape.Shape.appendCmd(sb, this.myType + " ID " + JU.PT.esc(mesh.thisID) + " delete");
 }sb.append(this.getCommand2(mesh, modelCount));
 if (!mesh.visible) sb.append(" " + this.myType + " ID " + JU.PT.esc(mesh.thisID) + " off;\n");
 }
@@ -165,13 +180,20 @@ var cmesh = mesh;
 var str =  new JU.SB();
 var iModel = mesh.modelIndex;
 str.append("  CGO ID ").append(JU.PT.esc(mesh.thisID));
+if (cmesh.doCache) {
 if (iModel >= -1 && modelCount > 1) str.append(" modelIndex " + iModel);
-str.append(" [");
+if (cmesh.width > 0) str.append(" width " + cmesh.width);
 var n = cmesh.cmds.size();
+if (cmesh.cmdsAllNumbers) {
+cmesh.encodeCommands(str);
+} else {
+str.append(" [");
 for (var i = 0; i < n; i++) str.append(" " + cmesh.cmds.get(i));
 
 str.append(" ];\n");
-J.shape.Shape.appendCmd(str, cmesh.getState("cgo"));
+}} else {
+str.append(";\n");
+}J.shape.Shape.appendCmd(str, cmesh.getState("cgo"));
 if (cmesh.useColix) J.shape.Shape.appendCmd(str, J.shape.Shape.getColorCommandUnk("cgo", cmesh.colix, this.translucentAllowed));
 return str.toString();
 }, "J.shape.Mesh,~N");
@@ -182,5 +204,40 @@ var m = this.cmeshes[i];
 if (m != null) m.setVisibilityFlags(m.isValid && m.visible && (m.modelIndex < 0 || bsModels.get(m.modelIndex)) ? this.vf : 0);
 }
 }, "JU.BS");
+Clazz.overrideMethod(c$, "checkObjectHovered", 
+function(x, y, bsVisible){
+if (!this.vwr.getDrawHover()) return false;
+var s = this.findValue(x, y, false, bsVisible);
+if (s == null) return false;
+this.vwr.hoverOnPt(x, y, s, this.pickedMesh.thisID, this.pickedPt);
+return true;
+}, "~N,~N,JU.BS");
+Clazz.defineMethod(c$, "findValue", 
+function(x, y, isPicking, bsVisible){
+var dmin2 = 100;
+if (this.vwr.gdata.isAntialiased()) {
+x <<= 1;
+y <<= 1;
+dmin2 <<= 1;
+}var pickedVertex = -1;
+var m = null;
+for (var i = 0; i < this.meshCount; i++) {
+m = this.cmeshes[i];
+if (!this.isPickable(m, bsVisible)) continue;
+if (m.vs != null) {
+var vertices = m.vs;
+for (var k = m.vs.length; --k >= 0; ) {
+var v = vertices[k];
+var d2 = this.coordinateInRange(x, y, v, dmin2, this.ptXY);
+if (d2 >= 0) {
+dmin2 = d2;
+pickedVertex = k;
+this.pickedMesh = m;
+this.pickedPt = v;
+}}
+}if (pickedVertex != -1) break;
+}
+return (pickedVertex == -1 ? null : m.thisID);
+}, "~N,~N,~B,JU.BS");
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

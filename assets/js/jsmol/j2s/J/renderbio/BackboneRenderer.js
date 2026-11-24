@@ -6,7 +6,7 @@ Clazz.instantialize(this, arguments);}, J.renderbio, "BackboneRenderer", J.rende
 Clazz.overrideMethod(c$, "renderBioShape", 
 function(bioShape){
 var checkPass2 = (!this.isExport && !this.vwr.gdata.isPass2);
-this.isDataFrame = this.ms.isJmolDataFrameForModel(bioShape.modelIndex);
+this.isDataFrame = this.ms.isJmolDataFrame(bioShape.modelIndex);
 var n = this.monomerCount;
 var atoms = this.ms.at;
 for (var i = this.bsVisible.nextSetBit(0); i >= 0; i = this.bsVisible.nextSetBit(i + 1)) {
@@ -27,4 +27,4 @@ this.setStrutPoint(atomB, null);
 }}}}
 }, "J.shapebio.BioShape");
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

@@ -279,6 +279,7 @@ var contourColixes = this.imesh.jvxlData.contourColixes;
 this.hasColorRange = !colorSolid && !this.isBicolorMap;
 var diam = this.getDiameter();
 var i0 = 0;
+var checkTranslucent = this.mesh.hasTranslucentVertices;
 for (var i = this.mesh.pc; --i >= i0; ) {
 var polygon = polygonIndexes[i];
 if (polygon == null || this.selectedPolyOnly && !this.bsPolygons.get(i)) continue;
@@ -306,7 +307,10 @@ colixA = colixB = colixC = colix;
 colixA = vertexColixes[iA];
 colixB = vertexColixes[iB];
 colixC = vertexColixes[iC];
-if (this.isBicolorMap) {
+if (checkTranslucent) {
+var ok = (this.g3d.setC(colixA) ? 1 : 0) + (this.g3d.setC(colixB) ? 2 : 0);
+if (ok == 0 || ok != 3 && !this.g3d.setC(colixC)) continue;
+}if (this.isBicolorMap) {
 if (colixA != colixB || colixB != colixC) continue;
 if (this.isGhostPass) {
 colixA = colixB = colixC = JU.C.copyColixTranslucency(this.mesh.slabColix, colixA);
@@ -378,4 +382,4 @@ this.g3d.drawLineAB(this.pt1f, this.pt2f);
 }}
 });
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

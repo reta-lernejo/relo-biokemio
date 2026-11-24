@@ -31,7 +31,6 @@ Clazz.overrideMethod(c$, "popHoldRepaint",
 function(andRepaint, why){
 if (why != null && why.startsWith("CLEAR HOLD")) {
 this.holdRepaint = 0;
-andRepaint = true;
 }--this.holdRepaint;
 if (this.holdRepaint <= 0) {
 this.holdRepaint = 0;
@@ -41,11 +40,11 @@ this.repaintNow(why);
 }}}, "~B,~S");
 Clazz.overrideMethod(c$, "requestRepaintAndWait", 
 function(why){
-var jmol = null;
+var jsmol = null;
 if (JV.Viewer.isJS && !JV.Viewer.isSwingJS) {
 {
-jmol = (self.Jmol && Jmol.repaint ? Jmol : null)
-}}if (jmol == null) {
+jsmol = (self.Jmol && Jmol.repaint ? Jmol : null)
+}}if (jsmol == null) {
 try {
 this.repaintNow(why);
 if (!JV.Viewer.isJS) this.wait(this.vwr.g.repaintWaitMs);
@@ -60,7 +59,7 @@ throw e;
 }
 }
 } else {
-jmol.repaint(this.vwr.html5Applet, false);
+jsmol.repaint(this.vwr.html5Applet, false);
 this.repaintDone();
 }}, "~S");
 Clazz.overrideMethod(c$, "repaintIfReady", 
@@ -185,4 +184,4 @@ throw e;
 return msg;
 }, "JU.GData,JM.ModelSet,java.util.Map");
 });
-;//5.0.1-v7 Mon Jun 09 20:29:14 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

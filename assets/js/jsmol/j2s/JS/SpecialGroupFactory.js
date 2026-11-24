@@ -34,4 +34,4 @@ function(vwr, sym, name, type){
 return this.createSpecialGroup(null, sym, JS.Symmetry.getSpecialSettingInfo(vwr, name, type), type);
 }, "JV.Viewer,JS.Symmetry,~S,~N");
 });
-;//5.0.1-v7 Sun Jun 29 22:49:36 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

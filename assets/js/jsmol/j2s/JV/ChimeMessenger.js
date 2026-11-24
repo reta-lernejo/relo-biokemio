@@ -78,7 +78,7 @@ if (isHetero) ngHetero++;
 }if (a.mi == 0) {
 if ((id = g.getStrucNo()) != lastid && id != 0) {
 lastid = id;
-switch (g.getProteinStructureType()) {
+switch (g.getBioStructureType()) {
 case J.c.STR.HELIX:
 nH++;
 break;
@@ -102,4 +102,4 @@ sb.append("\nNumber of Strands ... " + nS);
 sb.append("\nNumber of Turns ..... " + nT);
 }}, "JU.SB");
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

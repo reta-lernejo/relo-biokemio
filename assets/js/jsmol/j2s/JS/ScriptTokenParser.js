@@ -1,5 +1,5 @@
 Clazz.declarePackage("JS");
-Clazz.load(null, "JS.ScriptTokenParser", ["JU.Lst", "$.P3", "$.PT", "J.i18n.GT", "JS.T", "JU.Edge", "$.Logger", "$.SimpleUnitCell"], function(){
+Clazz.load(null, "JS.ScriptTokenParser", ["JU.Lst", "$.P3", "$.PT", "J.i18n.GT", "JS.SV", "$.T", "JU.Edge", "$.Logger", "$.SimpleUnitCell"], function(){
 var c$ = Clazz.decorateAsClass(function(){
 this.vwr = null;
 this.htUserFunctions = null;
@@ -360,11 +360,41 @@ if (this.isError()) return false;
 if (JS.T.tokAttr(tok, 1077936128)) {
 var itemp = this.itokenInfix;
 var isOK = this.clauseComparator(true);
-if (isOK || this.itokenInfix != itemp) return isOK;
-if (tok == 1237320707) {
+if (isOK || this.itokenInfix >= 0 && this.itokenInfix != itemp) return isOK;
+if (this.itokenInfix < 0) {
+this.itokenInfix = -this.itokenInfix;
+}if (tok == 1237320707) {
 return this.clauseSubstructure();
 }}return this.addNextToken();
 }
+});
+Clazz.defineMethod(c$, "getPropertyDotted", 
+function(){
+var t = this.tokenNext();
+if (!this.tokPeekIs(1073742336) && !this.tokPeekIs(268437504)) return t;
+var s = "";
+while (this.tokPeekIs(1073742336) || this.tokPeekIs(268437504)) {
+if (this.tokPeekIs(268437504)) {
+this.getToken();
+s += this.theToken.value;
+while (!this.tokPeekIs(0) && !this.tokPeekIs(268437505)) {
+this.getToken();
+s += this.theToken.value;
+}
+if (!this.tokPeekIs(0)) s += this.getToken().value.toString();
+}while (this.tokPeekIs(1073742336)) {
+this.getToken();
+s += ".";
+if (!this.tokPeekIs(0)) s += this.getToken().value.toString();
+}
+}
+var v = (t.tok == 1715472409 ? t : null);
+if (v == null) {
+var val = "property_" + t.value.toString().toLowerCase();
+v = JS.SV.newV(1715472409, val);
+v.myName = val;
+}v.myName += s;
+return v;
 });
 Clazz.defineMethod(c$, "checkForCoordinate", 
 function(isImplicitExpression){
@@ -527,11 +557,14 @@ case 134219777:
 case 1094713362:
 case 1086324744:
 case 2097184:
-case 1094713366:
+case 1094713369:
 case 1639976963:
 case 4:
 case 1648363544:
 key = this.theValue;
+break;
+case 1145047055:
+key = "vxyz";
 break;
 default:
 key = (this.theValue).toLowerCase();
@@ -553,6 +586,8 @@ if (tok == 1073742335 || tok == 1073742334) {
 this.addTokenToPostfixToken(this.getToken());
 if (!this.addNextTokenIf(268436992)) break;
 tok = this.tokPeek();
+} else if (tok == 2 || tok == 3) {
+allowComma = false;
 }break;
 }
 if (key == null) {
@@ -569,9 +604,14 @@ this.getToken();
 this.addTokenToPostfix(4, "$" + this.theValue);
 done = true;
 break;
+case 1814695966:
+this.getToken();
+this.addTokenToPostfix(4, JS.T.nameOf(tok));
+if (this.tokPeek() == 268435969) {
+done = true;
+}break;
 case 1086324742:
 case 1648363544:
-case 1814695966:
 this.getToken();
 this.addTokenToPostfix(4, JS.T.nameOf(tok));
 break;
@@ -669,14 +709,19 @@ return true;
 });
 Clazz.defineMethod(c$, "clauseComparator", 
 function(isOptional){
-var tokenAtomProperty = this.tokenNext();
+var ipt0 = this.itokenInfix;
+var tokenAtomProperty = this.getPropertyDotted();
+var ipt1 = this.itokenInfix - 1;
 var tokenComparator = this.tokenNext();
 if (!JS.ScriptTokenParser.tokenAttr(tokenComparator, 268435712)) {
 if (!isOptional) return this.errorStr(15, "== != < > <= >=");
 if (tokenComparator != null) this.returnToken();
+if (ipt1 == ipt0) {
 this.returnToken();
 return false;
-}if (JS.ScriptTokenParser.tokenAttr(tokenAtomProperty, 1086324736) && tokenComparator.tok != 268440324 && tokenComparator.tok != 268440326 && tokenComparator.tok != 268440325) return this.errorStr(15, "== !=");
+}this.itokenInfix = -ipt1;
+return false;
+}if (JS.ScriptTokenParser.tokenAttr(tokenAtomProperty, 1086324736) && tokenComparator.tok != 268440324 && tokenComparator.tok != 268440326 && tokenComparator.tok != 268440327 && tokenComparator.tok != 268440325) return this.errorStr(15, "== !=");
 if (this.tokPeek() == 268437504) {
 this.getToken();
 this.addTokenToPostfixToken(JS.T.tokenLeftParen);
@@ -1092,4 +1137,4 @@ this.errorMessageUntranslated = strUntranslated;
 return false;
 }, "~S,~S");
 });
-;//5.0.1-v7 Mon Jun 09 19:40:05 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

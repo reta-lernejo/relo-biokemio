@@ -46,7 +46,7 @@ Clazz.defineMethod(c$, "getColixBondPalette",
 function(bond, pid){
 var argb = 0;
 switch (pid) {
-case 19:
+case 20:
 return this.ce.getColorIndexFromPalette(bond.getEnergy(), -2.5, -0.5, 7, false);
 }
 return (argb == 0 ? 10 : JU.C.getColix(argb));
@@ -61,7 +61,7 @@ var modelIndex;
 var lo;
 var hi;
 switch (pid) {
-case 84:
+case 85:
 return (this.colorData == null || atom.i >= this.colorData.length || Float.isNaN(this.colorData[atom.i]) ? 12 : this.ce.getColorIndex(this.colorData[atom.i]));
 case 0:
 case 1:
@@ -91,46 +91,46 @@ hi = this.vwr.ms.getBfactor100Hi();
 lo = 0;
 hi = 10000;
 }return this.ce.getColorIndexFromPalette(atom.getBfactor100(), lo, hi, 7, false);
-case 86:
+case 87:
 return this.ce.getColorIndexFromPalette(atom.group.getGroupParameter(1111490574), -1, 1, 7, false);
 case 70:
 hi = this.vwr.ms.getSurfaceDistanceMax();
 return this.ce.getColorIndexFromPalette(atom.getSurfaceDistance100(), 0, hi, 7, false);
-case 24:
+case 25:
 id = atom.group.groupID;
 if (id >= 42) id = 24 + "PGCATU".indexOf(Character.toUpperCase(atom.group.group1)) - 1;
 return this.ce.getColorIndexFromPalette(id, 0, 0, 17, false);
-case 8:
-return this.ce.getColorIndexFromPalette(atom.group.groupID, 0, 0, 5, false);
 case 9:
+return this.ce.getColorIndexFromPalette(atom.group.groupID, 0, 0, 5, false);
+case 10:
 return this.ce.getColorIndexFromPalette(atom.group.groupID, 0, 0, 4, false);
-case 75:
+case 76:
 return this.ce.getColorIndexFromPalette(atom.group.selectedIndex, 0, atom.group.chain.selectedGroupCount - 1, 1, false);
-case 87:
+case 88:
 var m = this.vwr.ms.am[atom.mi];
 return this.ce.getColorIndexFromPalette(atom.group.getBioPolymerIndexInModel(), 0, (m.isBioModel ? (m).getBioPolymerCount() : 0) - 1, 1, false);
-case 76:
-return this.ce.getColorIndexFromPalette(atom.group.getSelectedMonomerIndex(), 0, atom.group.getSelectedMonomerCount() - 1, 1, false);
 case 77:
+return this.ce.getColorIndexFromPalette(atom.group.getSelectedMonomerIndex(), 0, atom.group.getSelectedMonomerCount() - 1, 1, false);
+case 78:
 return this.ce.getColorIndexFromPalette(modelSet.getMoleculeIndex(atom.i, true), 0, modelSet.getMoleculeCountInModel(atom.mi) - 1, 0, false);
-case 14:
-modelIndex = atom.mi;
-return this.ce.getColorIndexFromPalette(modelSet.getAltLocIndexInModel(modelIndex, atom.altloc), 0, modelSet.getAltLocCountInModel(modelIndex), 0, false);
 case 15:
 modelIndex = atom.mi;
-return this.ce.getColorIndexFromPalette(modelSet.getInsertionCodeIndexInModel(modelIndex, atom.group.getInsertionCode()), 0, modelSet.getInsertionCountInModel(modelIndex), 0, false);
+return this.ce.getColorIndexFromPalette(modelSet.getAltLocIndexInModel(modelIndex, atom.altloc), 0, modelSet.getAltLocCountInModel(modelIndex), 0, false);
 case 16:
+modelIndex = atom.mi;
+return this.ce.getColorIndexFromPalette(modelSet.getInsertionCodeIndexInModel(modelIndex, atom.group.getInsertionCode()), 0, modelSet.getInsertionCountInModel(modelIndex), 0, false);
+case 17:
 id = atom.getAtomicAndIsotopeNumber();
 argb = this.getJmolOrRasmolArgb(id, 1073741991);
 break;
-case 17:
+case 18:
 id = atom.getAtomicAndIsotopeNumber();
 argb = this.getJmolOrRasmolArgb(id, 1073742116);
 break;
 case 7:
-argb = atom.group.getProteinStructureSubType().getColor();
+argb = atom.group.getBioStructureSubType(1111490651).getColor();
 break;
-case 10:
+case 11:
 var chain = atom.getChainID();
 if (JU.ColorEncoder.argbsChainAtom == null) {
 JU.ColorEncoder.argbsChainAtom = this.getArgbs(1153433601);
@@ -204,7 +204,7 @@ var isAll = (bs == null);
 var d;
 var i0 = (isAll ? data.length - 1 : bs.nextSetBit(0));
 for (var i = i0; i >= 0; i = (isAll ? i - 1 : bs.nextSetBit(i + 1))) {
-if (Float.isNaN(d = data[i])) continue;
+if (i >= data.length || Float.isNaN(d = data[i])) continue;
 this.ce.hi = Math.max(this.ce.hi, d);
 this.ce.lo = Math.min(this.ce.lo, d);
 }
@@ -237,4 +237,4 @@ c.currentPalette = c.createColorScheme(colorScheme, false, true);
 return (c.currentPalette == 2147483647 ? null : c);
 }, "~S");
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

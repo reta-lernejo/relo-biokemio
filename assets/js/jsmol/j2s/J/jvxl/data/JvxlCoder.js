@@ -1,8 +1,20 @@
 Clazz.declarePackage("J.jvxl.data");
 Clazz.load(null, "J.jvxl.data.JvxlCoder", ["JU.BS", "$.Lst", "$.P3", "$.PT", "$.SB", "J.api.Interface", "J.jvxl.data.VolumeData", "JU.BSUtil", "$.C", "$.Escape", "$.Logger", "JV.Viewer"], function(){
 var c$ = Clazz.declareType(J.jvxl.data, "JvxlCoder", null);
+/*LV!1824 unnec constructor*/Clazz.defineMethod(c$, "jvxlEncodeBitSet90_35", 
+function(bs){
+var sb =  new JU.SB();
+sb.append(";base90+35,");
+J.jvxl.data.JvxlCoder.jvxlEncodeBitSetBuffer(bs, -1, sb);
+return sb.toString();
+}, "JU.BS");
+Clazz.defineMethod(c$, "jvxlDecodeBitSet90_35", 
+function(data){
+return J.jvxl.data.JvxlCoder.jvxlDecodeBitPtSetRange(data, 12, 35, 90);
+}, "~S");
 c$.jvxlGetFile = Clazz.defineMethod(c$, "jvxlGetFile", 
 function(jvxlData, meshData, title, msg, includeHeader, nSurfaces, state, comment){
+if (state != null && state.indexOf("<jvxl") >= 0) state = "";
 J.jvxl.data.JvxlCoder.checkHaveXMLUtil();
 var data =  new JU.SB();
 if ("TRAILERONLY".equals(msg)) {
@@ -43,11 +55,12 @@ J.jvxl.data.JvxlCoder.appendXmlEdgeData(sb, jvxlData);
 J.jvxl.data.JvxlCoder.appendXmlColorData(sb, jvxlData.jvxlColorData, true, jvxlData.isJvxlPrecisionColor, jvxlData.valueMappedToRed, jvxlData.valueMappedToBlue);
 } else {
 J.jvxl.data.JvxlCoder.appendXmlColorData(sb, jvxlData.jvxlColorData, true, jvxlData.isJvxlPrecisionColor, jvxlData.valueMappedToRed, jvxlData.valueMappedToBlue);
-}J.jvxl.data.JvxlCoder.appendEncodedBitSetTag(sb, "jvxlInvalidatedVertexData", jvxlData.jvxlExcluded[1], -1, null);
+}if (!vertexDataOnly) {
+J.jvxl.data.JvxlCoder.appendEncodedBitSetTag(sb, "jvxlInvalidatedVertexData", jvxlData.jvxlExcluded[1], -1, null);
 if (jvxlData.excludedVertexCount > 0) {
 J.jvxl.data.JvxlCoder.appendEncodedBitSetTag(sb, "jvxlExcludedVertexData", jvxlData.jvxlExcluded[0], jvxlData.excludedVertexCount, null);
 J.jvxl.data.JvxlCoder.appendEncodedBitSetTag(sb, "jvxlExcludedPlaneData", jvxlData.jvxlExcluded[2], -1, null);
-}J.jvxl.data.JvxlCoder.appendEncodedBitSetTag(sb, "jvxlExcludedTriangleData", jvxlData.jvxlExcluded[3], jvxlData.excludedTriangleCount, null);
+}}J.jvxl.data.JvxlCoder.appendEncodedBitSetTag(sb, "jvxlExcludedTriangleData", jvxlData.jvxlExcluded[3], jvxlData.excludedTriangleCount, null);
 JU.XmlUtil.closeTag(sb, "jvxlSurfaceData");
 var len = sb.length();
 data.appendSB(sb);
@@ -79,7 +92,8 @@ if (count == 0) return;
 var sb1 =  new JU.SB();
 sb1.append("\n ");
 J.jvxl.data.JvxlCoder.jvxlEncodeBitSetBuffer(bs, -1, sb1);
-JU.XmlUtil.appendTagObj(sb, name,  Clazz.newArray(-1, [attribs, "bsEncoding", "base90+35", "count", "" + count, "len", "" + bs.length()]), J.jvxl.data.JvxlCoder.jvxlCompressString(sb1.toString(), true));
+var data = J.jvxl.data.JvxlCoder.jvxlCompressString(sb1.toString(), true);
+JU.XmlUtil.appendTagObj(sb, name,  Clazz.newArray(-1, [attribs, "bsEncoding", "base90+35", "count", "" + count, "len", "" + bs.length()]), data);
 }, "JU.SB,~S,JU.BS,~N,~A");
 c$.jvxlSetCompressionRatio = Clazz.defineMethod(c$, "jvxlSetCompressionRatio", 
 function(data, jvxlData, len){
@@ -99,6 +113,8 @@ if (state.indexOf("** XML ** ") >= 0) {
 state = JU.PT.split(state, "** XML **")[1].trim();
 JU.XmlUtil.appendTag(data, "jvxlIsosurfaceState", "\n" + state + "\n");
 } else {
+var pt = state.indexOf("color isosurface [{");
+if (pt >= 0) state = state.substring(0, pt);
 JU.XmlUtil.appendCdata(data, "jvxlIsosurfaceState", null, "\n" + state);
 }}}, "JU.SB,~S,~S");
 c$.appendXmlColorData = Clazz.defineMethod(c$, "appendXmlColorData", 
@@ -165,6 +181,7 @@ J.jvxl.data.JvxlCoder.addAttrib(attribs, "\n  plane", JU.Escape.eP4(jvxlData.jvx
 J.jvxl.data.JvxlCoder.addAttrib(attribs, "\n  translucency", "" + jvxlData.translucency);
 if (jvxlData.meshColor != null) J.jvxl.data.JvxlCoder.addAttrib(attribs, "\n  meshColor", jvxlData.meshColor);
 if (jvxlData.colorScheme != null) J.jvxl.data.JvxlCoder.addAttrib(attribs, "\n  colorScheme", jvxlData.colorScheme);
+var colorInherited = "inherit".equals(jvxlData.colorScheme);
 if (jvxlData.rendering != null) J.jvxl.data.JvxlCoder.addAttrib(attribs, "\n  rendering", jvxlData.rendering);
 if (jvxlData.thisSet != null) {
 var s = J.jvxl.data.JvxlCoder.subsetString(jvxlData.thisSet);
@@ -176,7 +193,7 @@ if (jvxlData.nVertexColors > 0) J.jvxl.data.JvxlCoder.addAttrib(attribs, "\n  nV
 var min = (jvxlData.mappedDataMin == 3.4028235E38 ? 0 : jvxlData.mappedDataMin);
 var blue = (jvxlData.isColorReversed ? jvxlData.valueMappedToRed : jvxlData.valueMappedToBlue);
 var red = (jvxlData.isColorReversed ? jvxlData.valueMappedToBlue : jvxlData.valueMappedToRed);
-if (jvxlData.jvxlColorData != null && jvxlData.jvxlColorData.length > 0 && !jvxlData.isBicolorMap) {
+if (jvxlData.jvxlColorData != null && jvxlData.jvxlColorData.length > 0 && !jvxlData.isBicolorMap && !colorInherited) {
 J.jvxl.data.JvxlCoder.addAttrib(attribs, "\n  dataMinimum", "" + min);
 J.jvxl.data.JvxlCoder.addAttrib(attribs, "\n  dataMaximum", "" + jvxlData.mappedDataMax);
 J.jvxl.data.JvxlCoder.addAttrib(attribs, "\n  valueMappedToRed", "" + red);
@@ -195,7 +212,6 @@ if (jvxlData.vertexDataOnly) J.jvxl.data.JvxlCoder.addAttrib(attribs, "\n  note"
  else if (jvxlData.isXLowToHigh) J.jvxl.data.JvxlCoder.addAttrib(attribs, "\n  note", "progressive JVXL+ -- X values read from low(0) to high(" + (jvxlData.nPointsX - 1) + ")");
 J.jvxl.data.JvxlCoder.addAttrib(attribs, "\n  xyzMin", JU.Escape.eP(jvxlData.boundingBox[0]));
 J.jvxl.data.JvxlCoder.addAttrib(attribs, "\n  xyzMax", JU.Escape.eP(jvxlData.boundingBox[1]));
-J.jvxl.data.JvxlCoder.addAttrib(attribs, "\n  approximateCompressionRatio", "not calculated");
 J.jvxl.data.JvxlCoder.addAttrib(attribs, "\n  jmolVersion", jvxlData.version);
 var info =  new JU.SB();
 JU.XmlUtil.openTagAttr(info, "jvxlSurfaceInfo", attribs.toArray( new Array(attribs.size())));
@@ -291,18 +307,13 @@ function(jvxlData, vertexValues){
 if (vertexValues == null) {
 jvxlData.jvxlColorData = "";
 return;
-}var writePrecisionColor = jvxlData.isJvxlPrecisionColor;
-var doTruncate = jvxlData.isTruncated;
-var colorFractionBase = jvxlData.colorFractionBase;
+}var colorFractionBase = jvxlData.colorFractionBase;
 var colorFractionRange = jvxlData.colorFractionRange;
-var valueBlue = jvxlData.valueMappedToBlue;
-var valueRed = jvxlData.valueMappedToRed;
 var vertexCount = (jvxlData.saveVertexCount > 0 ? jvxlData.saveVertexCount : jvxlData.vertexCount);
 if (vertexCount > vertexValues.length) System.out.println("JVXLCODER ERROR");
 var isPrecisionColor = jvxlData.isJvxlPrecisionColor;
 var min = (isPrecisionColor ? jvxlData.mappedDataMin : jvxlData.valueMappedToRed);
 var max = (isPrecisionColor ? jvxlData.mappedDataMax : jvxlData.valueMappedToBlue);
-if (vertexValues.length < vertexCount) System.out.println("JVXLCOLOR OHOHO");
 jvxlData.jvxlColorData = J.jvxl.data.JvxlCoder.jvxlEncodeColorData(vertexValues, min, max, colorFractionBase, colorFractionRange, jvxlData.isTruncated, isPrecisionColor);
 }, "J.jvxl.data.JvxlData,~A");
 c$.jvxlEncodeColorData = Clazz.defineMethod(c$, "jvxlEncodeColorData", 
@@ -491,12 +502,6 @@ isset = !isset;
 sb.appendC(' ').appendI(dataCount).appendC('\n');
 return n;
 }, "JU.BS,~N,JU.SB");
-c$.jvxlEncodeBitSet = Clazz.defineMethod(c$, "jvxlEncodeBitSet", 
-function(bs){
-var sb =  new JU.SB();
-J.jvxl.data.JvxlCoder.jvxlEncodeBitSetBuffer(bs, -1, sb);
-return sb.toString();
-}, "JU.BS");
 c$.jvxlEncodeBitSetBuffer = Clazz.defineMethod(c$, "jvxlEncodeBitSetBuffer", 
 function(bs, nPoints, sb){
 var dataCount = 0;
@@ -534,18 +539,53 @@ if (!isInRange) sb.append(" ");
 }, "JU.SB,~N,~N,~N");
 c$.jvxlDecodeBitSetRange = Clazz.defineMethod(c$, "jvxlDecodeBitSetRange", 
 function(data, base, range){
+return J.jvxl.data.JvxlCoder.jvxlDecodeBitPtSetRange(data, 0, base, range);
+}, "~S,~N,~N");
+c$.jvxlDecodeBitSet = Clazz.defineMethod(c$, "jvxlDecodeBitSet", 
+function(data){
+var ptr = -1;
+if (data.startsWith("-")) {
+if (data.indexOf("~") >= 0) {
+data = J.jvxl.data.JvxlCoder.jvxlDecompressString(data.substring(1));
+ptr = 0;
+} else {
+ptr = 1;
+}}if (ptr >= 0) return J.jvxl.data.JvxlCoder.jvxlDecodeBitPtSetRange(data, ptr, 35, 90);
+var bs =  new JU.BS();
+var dataCount = 0;
+var lastCount = 0;
+var nPrev = 0;
+ptr = 0;
+var isset = false;
+var next =  Clazz.newIntArray (1, 0);
+while (true) {
+dataCount = (nPrev++ < 0 ? dataCount : JU.PT.parseIntNext(data, next));
+if (dataCount == -2147483648) break;
+if (dataCount < 0) {
+nPrev = dataCount;
+dataCount = lastCount;
+continue;
+}if (isset) bs.setBits(ptr, ptr + dataCount);
+ptr += dataCount;
+lastCount = dataCount;
+isset = !isset;
+}
+return bs;
+}, "~S");
+c$.jvxlDecodeBitPtSetRange = Clazz.defineMethod(c$, "jvxlDecodeBitPtSetRange", 
+function(data, pt, base, range){
 var bs =  new JU.BS();
 var dataCount = 0;
 var ptr = 0;
 var isset = false;
-var next =  Clazz.newIntArray (1, 0);
+var next =  Clazz.newIntArray(-1, [pt]);
 while ((dataCount = J.jvxl.data.JvxlCoder.jvxlParseEncodedInt(data, base, range, next)) != -2147483648) {
 if (isset) bs.setBits(ptr, ptr + dataCount);
 ptr += dataCount;
 isset = !isset;
 }
 return bs;
-}, "~S,~N,~N");
+}, "~S,~N,~N,~N");
 c$.jvxlParseEncodedInt = Clazz.defineMethod(c$, "jvxlParseEncodedInt", 
 function(str, offset, base, next){
 var digitSeen = false;
@@ -572,30 +612,6 @@ if (!digitSeen) value = -2147483648;
 next[0] = ich;
 return value;
 }, "~S,~N,~N,~A");
-c$.jvxlDecodeBitSet = Clazz.defineMethod(c$, "jvxlDecodeBitSet", 
-function(data){
-if (data.startsWith("-")) return J.jvxl.data.JvxlCoder.jvxlDecodeBitSetRange(J.jvxl.data.JvxlCoder.jvxlDecompressString(data.substring(1)), 35, 90);
-var bs =  new JU.BS();
-var dataCount = 0;
-var lastCount = 0;
-var nPrev = 0;
-var ptr = 0;
-var isset = false;
-var next =  Clazz.newIntArray (1, 0);
-while (true) {
-dataCount = (nPrev++ < 0 ? dataCount : JU.PT.parseIntNext(data, next));
-if (dataCount == -2147483648) break;
-if (dataCount < 0) {
-nPrev = dataCount;
-dataCount = lastCount;
-continue;
-}if (isset) bs.setBits(ptr, ptr + dataCount);
-ptr += dataCount;
-lastCount = dataCount;
-isset = !isset;
-}
-return bs;
-}, "~S");
 c$.jvxlCompressString = Clazz.defineMethod(c$, "jvxlCompressString", 
 function(data, escapeXml){
 if (data.indexOf("~") >= 0) return data;
@@ -695,4 +711,4 @@ if (sb.length() == 0) sb.append("Line 1\nLine 2\n");
 }, "J.jvxl.data.VolumeData,JU.SB");
 c$.haveXMLUtil = false;
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

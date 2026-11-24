@@ -1,5 +1,5 @@
 Clazz.declarePackage("J.adapter.readers.more");
-Clazz.load(["J.adapter.readers.more.ForceFieldReader"], "J.adapter.readers.more.MdTopReader", ["JU.Lst", "J.adapter.smarter.Atom", "$.Bond", "JU.Logger"], function(){
+Clazz.load(["J.adapter.readers.more.ForceFieldReader"], "J.adapter.readers.more.MdTopReader", ["JU.Lst", "J.adapter.smarter.Atom", "$.Bond", "$.Resolver", "JU.Logger"], function(){
 var c$ = Clazz.decorateAsClass(function(){
 this.nAtoms = 0;
 this.ac = 0;
@@ -68,7 +68,7 @@ for (var i = 0; i < this.nAtoms; i++) this.asc.addAtom(atoms2[i]);
 
 }JU.Logger.info("Total number of atoms used=" + this.nAtoms);
 this.setModelPDB(true);
-this.htParams.put("defaultType", "mdcrd");
+J.adapter.smarter.Resolver.setDefaultType("mdcrd", this.htParams);
 });
 Clazz.defineMethod(c$, "createBonds", 
 function(bonds){
@@ -153,4 +153,4 @@ Clazz.defineMethod(c$, "getMasses",
 function(){
 });
 });
-;//5.0.1-v7 Tue Jun 10 01:13:43 CEST 2025
+;//5.0.1-v7 Mon Oct 26 19:45:17 CDT 2026

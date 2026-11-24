@@ -559,4 +559,4 @@ this.ms.addModulation(null, key, this.setRigidBodyPhase(key,  Clazz.newDoubleArr
 }, "~S,~N,~N");
 c$.XYZ =  Clazz.newArray(-1, ["x", "y", "z"]);
 });
-;//5.0.1-v7 Sun Jun 29 22:49:36 CDT 2025
+;//5.0.1-v7 Mon Oct 26 19:45:17 CDT 2026

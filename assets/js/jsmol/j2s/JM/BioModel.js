@@ -6,10 +6,11 @@ this.bioPolymerCount = 0;
 this.bioPolymers = null;
 this.isMutated = false;
 this.defaultStructure = null;
+this.haveDSSR = false;
 Clazz.instantialize(this, arguments);}, JM, "BioModel", JM.Model);
-Clazz.defineMethod(c$, "setBioModel", 
+Clazz.makeConstructor(c$, 
 function(modelSet, modelIndex, trajectoryBaseIndex, jmolData, properties, auxiliaryInfo){
-this.setupArrays();
+Clazz.superConstructor(this, JM.BioModel);
 this.vwr = modelSet.vwr;
 this.set(modelSet, modelIndex, trajectoryBaseIndex, jmolData, properties, auxiliaryInfo);
 this.isBioModel = true;
@@ -17,8 +18,7 @@ this.vwr.getJBR().getBioModelSet(modelSet);
 this.clearBioPolymers();
 modelSet.am[modelIndex] = this;
 this.pdbID = auxiliaryInfo.get("name");
-return this;
-}, "JM.ModelSet,~N,~N,~S,java.util.Properties,java.util.Map");
+}, "JM.ModelSet,~N,~N,java.util.Map,java.util.Properties,java.util.Map");
 Clazz.defineMethod(c$, "addBioPolymer", 
 function(polymer){
 if (this.bioPolymers.length == 0) this.clearBioPolymers();
@@ -49,7 +49,7 @@ if (this.bioPolymers[i].isNucleic()) haveNucl = true;
 }
 var s = "";
 if (haveProt) s += (J.api.Interface.getOption("dssx.DSSP", this.vwr, "ms")).calculateDssp(this.bioPolymers, this.bioPolymerCount, vHBonds, doReport, dsspIgnoreHydrogen, setStructure, version);
-if (haveNucl && this.auxiliaryInfo.containsKey("dssr") && vHBonds != null) s += this.vwr.getAnnotationParser(true).getHBonds(this.ms, this.modelIndex, vHBonds, doReport);
+if (haveNucl && this.haveDSSR && vHBonds != null) s += this.vwr.getAnnotationParser(1111490587).getHBonds(this.ms, this.modelIndex, vHBonds, doReport);
 return s;
 }, "JU.Lst,~B,~B,~B,~N");
 Clazz.defineMethod(c$, "calculateStructures", 
@@ -97,7 +97,7 @@ return this.bioPolymerCount;
 });
 Clazz.defineMethod(c$, "getCachedAnnotationMap", 
 function(key, ann){
-var cache = (this.dssrCache == null && ann != null ? this.dssrCache =  new java.util.Hashtable() : this.dssrCache);
+var cache = (this.annotationCache == null && ann != null ? this.annotationCache =  new java.util.Hashtable() : this.annotationCache);
 if (cache == null) return null;
 var annotv = cache.get(key);
 if (annotv == null && ann != null) {
@@ -293,9 +293,5 @@ if (bond != null && (bond.order & 28672) != 0 && am[bond.atom1.mi].trajectoryBas
 if (bsDelete.nextSetBit(0) >= 0) this.ms.deleteBonds(bsDelete, false);
 this.getRasmolHydrogenBonds(bs, bs, null, false, 2147483647, false, null, dsspVersion);
 }, "JU.BS,~N");
-Clazz.defineMethod(c$, "getAtomicDSSRData", 
-function(dssrData, dataType){
-if (this.auxiliaryInfo.containsKey("dssr")) this.vwr.getAnnotationParser(true).getAtomicDSSRData(this.ms, this.modelIndex, dssrData, dataType);
-}, "~A,~S");
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

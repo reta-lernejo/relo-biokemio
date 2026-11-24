@@ -1,6 +1,6 @@
-Jmol.___JmolDate="$Date: 2025-06-10 09:44:12 -0500 (Tue, 10 Jun 2025) $"
+Jmol.___JmolDate="$Date: 2026-10-26 17:32:23 -0500 (Mon, 26 Oct 2026) $"
 Jmol.___fullJmolProperties="src/org/jmol/viewer/Jmol.properties"
-Jmol.___JmolVersion="16.3.29" // (legacy) also 16.3.30 (swingJS) 
+Jmol.___JmolVersion="16.5.7" // (legacy) also 16.5.8 (swingJS)
 // JSmolJavaExt.js
  
 // contains class declarations for 
@@ -16,6 +16,8 @@ Jmol.___JmolVersion="16.3.29" // (legacy) also 16.3.30 (swingJS)
 // (local scope) Clazz_xxx, allowing them to be further compressed using
 // Google Closure Compiler in that same ANT task.
 
+// BH 2026.06.16 fixing sp.$replace; x.replace(y,"...$$...") use of $$ needs escaping
+// BH 2025.11.10 removing override of String.prototype.concat
 // BH 2023.07.08 NaN.0 fix
 // BH 10/16/2017 6:51:20 AM fixing range error for MSIE in prepareCallback setting arguments.length < 0
 // BH 10/13/2017 7:03:28 AM fix for String.initialize(bytes) applying bytes as arguments
@@ -1033,7 +1035,14 @@ sp.$replace=function(c1,c2){
 	} else {    
 		c1=c1.replace(/([\\\$\.\*\+\|\?\^\{\}\(\)\[\]])/g,function($0,$1){return"\\"+$1;});
 	}
-	return this.replace(new RegExp(c1,"gm"),c2);
+	var pt = c2.indexOf("$");
+	var is$ = (pt >= 0 && pt < c2.length - 1);
+	if (is$)
+		c2 = c2.split("$").join("\uFFFD");
+	var ret = this.replace(new RegExp(c1,"gm"),c2);
+	if (is$)
+		ret = ret.split("\uFFFD").join("$");
+	return ret;	
 };
 sp.$generateExpFunction=function(str){
 var arr=[];
@@ -1395,13 +1404,13 @@ for(var i=0;i<srcEnd-srcBegin;i++){
 dst[dstBegin+i]=this.charAt(srcBegin+i);
 }
 };
-sp.$concat=sp.concat;
-sp.concat=function(s){
-if(s==null){
-throw new NullPointerException();
-}
-return this.$concat(s);
-};
+//sp.$concat=sp.concat;
+//sp.concat=function(s){
+//if(s==null){
+//throw new NullPointerException();
+//}
+//return this.$concat(s);
+//};
 
 sp.$lastIndexOf=sp.lastIndexOf;
 sp.lastIndexOf=function(s,last){

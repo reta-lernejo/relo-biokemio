@@ -89,7 +89,7 @@ if (atom.sequenceNumber < this.lastSequenceNumber) {
 if (this.chainID == 90) this.chainID = 96;
 this.chainID++;
 }this.lastSequenceNumber = atom.sequenceNumber;
-this.setChainID(atom, "" + String.fromCharCode(this.chainID));
+this.setChainID(atom, "" + String.fromCharCode(this.chainID), null);
 }if (tokens.length > 7) atom.group3 = tokens[7];
 if (tokens.length > 8) {
 atom.partialCharge = this.parseFloatStr(tokens[8]);
@@ -168,4 +168,4 @@ for (var i = 0; i < this.ac; ++i) this.setAtomCoord(atoms[this.nAtoms + i]);
 
 });
 });
-;//5.0.1-v7 Tue Jun 10 01:13:43 CEST 2025
+;//5.0.1-v7 Mon Oct 26 19:45:17 CDT 2026

@@ -95,6 +95,10 @@ if (colix == 3) return JU.C.getArgb(this.contrastColix);
 if (colix < 0) colix = this.changeableColixMap[colix & 2047];
 return (this.inGreyscaleMode ? JU.C.getArgbGreyscale(colix) : JU.C.getArgb(colix));
 }, "~N");
+Clazz.defineMethod(c$, "fixChangeableColix", 
+function(colix){
+return (colix >= 0 ? colix : (this.changeableColixMap[colix & 2047] | colix & 30720));
+}, "~N");
 Clazz.defineMethod(c$, "getShades", 
 function(colix){
 if (colix < 0) colix = this.changeableColixMap[colix & 2047];
@@ -472,6 +476,14 @@ Clazz.overrideMethod(c$, "drawLinePixels",
 function(sA, sB, z, zslab){
 return;
 }, "JU.P3i,JU.P3i,~N,~N");
+c$.getSlabObjectType = Clazz.defineMethod(c$, "getSlabObjectType", 
+function(tok, data, isCap, colorData){
+return  Clazz.newArray(-1, [Integer.$valueOf(tok), data, Boolean.$valueOf(isCap), colorData]);
+}, "~N,~O,~B,~O");
+c$.getSlabWithinRange = Clazz.defineMethod(c$, "getSlabWithinRange", 
+function(min, max){
+return  Clazz.newArray(-1, [Integer.$valueOf(1073742114),  Clazz.newArray(-1, [Float.$valueOf(min), Float.$valueOf(max)]), Boolean.FALSE, null]);
+}, "~N,~N");
 c$.normixCount = JU.Normix.getNormixCount();
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

@@ -100,4 +100,4 @@ n = (J.adapter.smarter.Atom.isValidSym2(c1, c2) || c1 == 'C' && c2 == 'L' ? 2 : 
 return name.substring(0, n);
 }, "~S");
 });
-;//5.0.1-v7 Tue Jun 10 01:13:43 CEST 2025
+;//5.0.1-v7 Mon Oct 26 19:45:17 CDT 2026

@@ -1,7 +1,7 @@
 Clazz.declarePackage("J.jvxl.readers");
 Clazz.load(["J.jvxl.readers.VolumeFileReader"], "J.jvxl.readers.JvxlXmlReader", ["java.util.Hashtable", "JU.AU", "$.BS", "$.CU", "$.Lst", "$.P3", "$.P4", "$.PT", "$.SB", "J.jvxl.data.JvxlCoder", "$.MeshData", "J.jvxl.readers.XmlReader", "J.shapesurface.IsosurfaceMesh", "JU.C", "$.ColorEncoder", "$.Escape", "$.Logger"], function(){
 var c$ = Clazz.decorateAsClass(function(){
-this.JVXL_VERSION = "2.3";
+this.JVXL_VERSION = "2.4";
 this.surfaceDataCount = 0;
 this.edgeDataCount = 0;
 this.colorDataCount = 0;
@@ -66,18 +66,8 @@ if (this.xr.isNext("jvxlExcludedPlaneData")) this.jvxlData.jvxlExcluded[2] = J.j
 }if (this.excludedTriangleCount > 0) this.jvxlData.jvxlExcluded[3] = J.jvxl.data.JvxlCoder.jvxlDecodeBitSet(this.xr.getXmlData("jvxlExcludedTriangleData", null, false, false));
 if (this.invalidatedVertexCount > 0) this.jvxlData.jvxlExcluded[1] = J.jvxl.data.JvxlCoder.jvxlDecodeBitSet(this.xr.getXmlData("jvxlInvalidatedVertexData", null, false, false));
 if (this.haveContourData) this.jvxlDecodeContourData(this.jvxlData, this.xr.getXmlData("jvxlContourData", null, false, false));
-if (this.jvxlDataIsColorMapped && this.jvxlData.nVertexColors > 0) {
-this.jvxlData.vertexColorMap =  new java.util.Hashtable();
-var vdata = this.xr.getXmlData("jvxlVertexColorData", null, true, false);
-var baseColor = J.jvxl.readers.XmlReader.getXmlAttrib(vdata, "baseColor");
-this.jvxlData.baseColor = (baseColor.length > 0 ? baseColor : null);
-for (var i = 0; i < this.jvxlData.nVertexColors; i++) {
-var s = this.xr.getXmlData("jvxlColorMap", vdata, true, false);
-var color = J.jvxl.readers.XmlReader.getXmlAttrib(s, "color");
-var bs = J.jvxl.data.JvxlCoder.jvxlDecodeBitSet(this.xr.getXmlData("jvxlColorMap", s, false, false));
-this.jvxlData.vertexColorMap.put(color, bs);
-}
-}} catch (e) {
+this.getVertexColorData();
+} catch (e) {
 if (Clazz.exceptionOf(e, Exception)){
 JU.Logger.error(e.toString());
 return false;
@@ -87,9 +77,28 @@ throw e;
 }
 return true;
 }, "~B");
+Clazz.defineMethod(c$, "getVertexColorData", 
+function(){
+if (this.jvxlDataIsColorMapped && this.jvxlData.nVertexColors > 0) {
+var vdata = this.xr.getXmlData("jvxlVertexColorData", null, true, false);
+if (vdata == null) {
+this.jvxlData.nVertexColors = 0;
+this.jvxlDataIsColorMapped = false;
+return;
+}this.jvxlData.vertexColorMap =  new java.util.Hashtable();
+var baseColor = J.jvxl.readers.XmlReader.getXmlAttrib(vdata, "baseColor");
+this.jvxlData.baseColor = (baseColor.length > 0 ? baseColor : null);
+var ptr =  Clazz.newIntArray (1, 0);
+for (var i = 0; i < this.jvxlData.nVertexColors; i++) {
+var s = this.xr.getXmlDataLF("jvxlColorMap", vdata, true, false, false, ptr);
+var color = J.jvxl.readers.XmlReader.getXmlAttrib(s, "color");
+var bs = J.jvxl.data.JvxlCoder.jvxlDecodeBitSet(this.xr.getXmlData("jvxlColorMap", s, false, false));
+this.jvxlData.vertexColorMap.put(color, bs);
+}
+}});
 Clazz.overrideMethod(c$, "readParameters", 
 function(){
-var s = this.xr.getXmlDataLF("jvxlFileTitle", null, false, false, true);
+var s = this.xr.getXmlDataLF("jvxlFileTitle", null, false, false, true, null);
 this.jvxlFileHeaderBuffer = JU.SB.newS(s == null ? "" : s);
 this.xr.toTag("jvxlVolumeData");
 var data = this.tempDataXml = this.xr.getXmlData("jvxlVolumeData", null, true, false);
@@ -234,6 +243,7 @@ s = J.jvxl.readers.XmlReader.getXmlAttrib(data, "rendering");
 if (s.length > 0) this.jvxlData.rendering = s;
 this.jvxlData.colorScheme = J.jvxl.readers.XmlReader.getXmlAttrib(data, "colorScheme");
 if (this.jvxlData.colorScheme.length == 0) this.jvxlData.colorScheme = (this.jvxlDataIsColorMapped ? "roygb" : null);
+var colorInherited = "inherit".equals(this.jvxlData.colorScheme);
 if (this.jvxlData.thisSet == null) {
 var n = this.parseIntStr(J.jvxl.readers.XmlReader.getXmlAttrib(data, "set"));
 if (n > 0) {
@@ -252,6 +262,7 @@ this.jvxlData.isSlabbable = (J.jvxl.readers.XmlReader.getXmlAttrib(data, "slabba
 this.jvxlData.diameter = this.parseIntStr(J.jvxl.readers.XmlReader.getXmlAttrib(data, "diameter"));
 if (this.jvxlData.diameter == -2147483648) this.jvxlData.diameter = 0;
 if (this.jvxlDataIs2dContour) this.params.isContoured = true;
+if (!colorInherited) {
 if (this.params.colorBySign) this.params.isBicolorMap = true;
 var insideOut = J.jvxl.readers.XmlReader.getXmlAttrib(data, "insideOut").equals("true");
 var dataMin = NaN;
@@ -267,7 +278,7 @@ if (Float.isNaN(dataMin)) {
 dataMin = red = -1.0;
 dataMax = blue = 1;
 }}this.jvxlSetColorRanges(dataMin, dataMax, red, blue, insideOut);
-});
+}});
 Clazz.defineMethod(c$, "jvxlSetColorRanges", 
 function(dataMin, dataMax, red, blue, insideOut){
 if (this.jvxlDataIsColorMapped) {
@@ -442,8 +453,9 @@ this.jvxlData.translucency = 0.5;
 this.params.colorEncoder.setColorScheme(null, false);
 this.params.colorEncoder.setRange(this.params.valueMappedToRed, this.params.valueMappedToBlue, this.params.isColorReversed);
 JU.Logger.info("JVXL reading color data mapped min/max: " + this.params.mappedDataMin + "/" + this.params.mappedDataMax + " for " + vertexCount + " vertices." + " using encoding keys " + this.colorFractionBase + " " + this.colorFractionRange);
+if (!"inherit".equals(this.jvxlData.colorScheme)) {
 JU.Logger.info("mapping red-->blue for " + this.params.valueMappedToRed + " to " + this.params.valueMappedToBlue + " colorPrecision:" + this.jvxlData.isJvxlPrecisionColor);
-var getValues = (Float.isNaN(this.valueMin));
+}var getValues = (Float.isNaN(this.valueMin));
 if (getValues) this.setValueMinMax();
 var contourPlaneMinimumValue = 3.4028235E38;
 var contourPlaneMaximumValue = -3.4028235E38;
@@ -487,6 +499,7 @@ case 91:
 n = JU.CU.getArgbFromString(c);
 break;
 case 48:
+if (c.length == 1) break;
 n = JU.PT.parseIntRadix(c.substring(2), 16);
 break;
 default:
@@ -515,6 +528,7 @@ cData = this.getData(cData, "jvxlColorData");
 this.jvxlColorDataRead = (this.jvxlColorEncodingRead.equals("none") ? cData : J.jvxl.data.JvxlCoder.jvxlDecompressString(cData));
 this.jvxlDataIsColorMapped = ((this.params.colorRgb == -2147483648 || this.params.colorRgb == 2147483647) && this.jvxlColorDataRead.length > 0);
 if (this.haveContourData) this.jvxlDecodeContourData(this.jvxlData, this.xr.getXmlData("jvxlContourData", null, false, false));
+this.getVertexColorData();
 });
 Clazz.defineMethod(c$, "getData", 
 function(sdata, name){
@@ -697,4 +711,4 @@ this.meshData =  new J.jvxl.data.MeshData();
 }this.updateTriangles();
 }});
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

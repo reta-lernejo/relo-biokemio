@@ -52,6 +52,8 @@ return false;
 Clazz.defineMethod(c$, "isCategoryOfInterest", 
 function(catName){
 switch (catName) {
+case "_citation":
+case "_exptl":
 case "_entry":
 case "_atom_site":
 case "_atom_type":
@@ -78,7 +80,7 @@ switch (catName) {
 case "_entry":
 return this.processEntry();
 case "_atom_site":
-return this.processAtomSiteLoopBlock(false);
+return this.processAtomSiteLoopBlock();
 case "_atom_type":
 return this.processAtomTypeLoopBlock();
 case "_atom_sites":
@@ -97,6 +99,8 @@ case "_struct_conf":
 case "_struct_sheet_range":
 case "_chem_comp_bond":
 case "_struct_conn":
+case "_citation":
+case "_exptl":
 this.key0 = catName + ".";
 return this.processSubclassLoopBlock();
 }
@@ -157,4 +161,4 @@ return this.bcifParser.dfield;
 }, "~N");
 c$.temp = null;
 });
-;//5.0.1-v7 Wed Jun 11 07:46:27 CDT 2025
+;//5.0.1-v7 Mon Oct 26 19:45:17 CDT 2026

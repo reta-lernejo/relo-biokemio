@@ -136,7 +136,7 @@ this.vwr.freeTempEnum(this.structureTypes);
 Clazz.defineMethod(c$, "initializePolymer", 
 function(bioShape){
 var bsDeleted = this.vwr.slm.bsDeleted;
-if (this.ms.isJmolDataFrameForModel(bioShape.modelIndex)) {
+if (this.ms.isJmolDataFrame(bioShape.modelIndex)) {
 this.controlPoints = bioShape.bioPolymer.getControlPoints(true, 0, false);
 } else {
 this.controlPoints = bioShape.bioPolymer.getControlPoints(this.isTraceAlpha, this.sheetSmoothing, this.invalidateSheets);
@@ -171,7 +171,7 @@ return true;
 Clazz.defineMethod(c$, "setStructureTypes", 
 function(){
 var types = this.structureTypes = this.vwr.allocTempEnum(this.monomerCount + 1);
-for (var i = this.monomerCount; --i >= 0; ) if ((types[i] = this.monomers[i].getProteinStructureType()) === J.c.STR.TURN) types[i] = J.c.STR.NONE;
+for (var i = this.monomerCount; --i >= 0; ) if ((types[i] = this.monomers[i].getBioStructureType()) === J.c.STR.TURN) types[i] = J.c.STR.NONE;
 
 types[this.monomerCount] = types[this.monomerCount - 1];
 });
@@ -352,4 +352,4 @@ p.sY = newPt.sY;
 p.sZ = newPt.sZ;
 }, "JM.Atom,JU.Point3fi");
 });
-;//5.0.1-v7 Mon Jun 09 20:29:14 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

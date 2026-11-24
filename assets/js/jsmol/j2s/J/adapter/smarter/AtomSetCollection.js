@@ -41,6 +41,7 @@ this.atomSymbolicMap = null;
 this.haveUnitCell = false;
 this.vibScale = 0;
 this.firstAtomToBond = -1;
+this.isConSurf = null;
 Clazz.instantialize(this, arguments);}, J.adapter.smarter, "AtomSetCollection", null);
 Clazz.prepareFields (c$, function(){
 this.atomSetInfo =  new java.util.Hashtable();
@@ -92,7 +93,7 @@ this.setInfo(JV.JC.getBoolName(globalIndex), Boolean.TRUE);
 }, "~N");
 Clazz.defineMethod(c$, "getGlobalBoolean", 
 function(globalIndex){
-return (this.atomSetInfo.get(JV.JC.getBoolName(globalIndex)) === Boolean.TRUE);
+return (this.getInfo(JV.JC.getBoolName(globalIndex)) === Boolean.TRUE);
 }, "~N");
 Clazz.defineMethod(c$, "appendAtomSetCollectionList", 
 function(list){
@@ -528,22 +529,26 @@ function(){
 if (this.xtalSymmetry == null) this.xtalSymmetry = (J.api.Interface.getOption("adapter.smarter.XtalSymmetry", this.reader.vwr, "file")).set(this.reader);
 return this.xtalSymmetry;
 });
+Clazz.defineMethod(c$, "newFileSymmetry", 
+function(){
+return this.getXSymmetry().newFileSymmetry();
+});
 Clazz.defineMethod(c$, "getSymmetry", 
 function(){
-return this.getXSymmetry().getSymmetry();
+return this.getXSymmetry().getFileSymmetry();
 });
 Clazz.defineMethod(c$, "setSymmetryFromAuditBlock", 
 function(symmetry){
 return (symmetry == null ? null : this.getXSymmetry().setSymmetryFromAuditBlock(symmetry));
 }, "J.adapter.smarter.XtalSymmetry.FileSymmetry");
-Clazz.defineMethod(c$, "newFileSymmetry", 
-function(){
-return this.getXSymmetry().newFileSymmetry();
-});
 Clazz.defineMethod(c$, "setTensors", 
 function(){
-if (this.haveAnisou) this.getXSymmetry().setTensors();
+if (this.haveAnisou) this.getXSymmetry().setTensors(this.isConSurf !== Boolean.TRUE);
 });
+Clazz.defineMethod(c$, "getInfo", 
+function(key){
+return this.atomSetInfo.get(key);
+}, "~S");
 Clazz.defineMethod(c$, "setInfo", 
 function(key, value){
 if (value == null) this.atomSetInfo.remove(key);
@@ -551,8 +556,8 @@ if (value == null) this.atomSetInfo.remove(key);
 }, "~S,~O");
 Clazz.defineMethod(c$, "setAtomSetCollectionPartialCharges", 
 function(auxKey){
-if (!this.atomSetInfo.containsKey(auxKey)) return false;
 var atomData = this.atomSetInfo.get(auxKey);
+if (atomData == null) return false;
 var n = atomData.size();
 for (var i = this.ac; --i >= 0; ) this.atoms[i].partialCharge = atomData.get(i % n).floatValue();
 
@@ -877,4 +882,4 @@ this.bsAtoms.clear(b.atomIndex1);
 }}
 });
 });
-;//5.0.1-v7 Wed Jun 11 09:30:30 CDT 2025
+;//5.0.1-v7 Mon Oct 26 19:45:17 CDT 2026

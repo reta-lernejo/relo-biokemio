@@ -1,5 +1,5 @@
 Clazz.declarePackage("JV");
-Clazz.load(null, "JV.ShapeManager", ["JU.BS", "$.P3", "J.api.Interface", "J.c.PAL", "$.VDW", "JM.Atom", "JU.BSUtil", "JV.JC"], function(){
+Clazz.load(null, "JV.ShapeManager", ["JU.BS", "$.P3", "J.api.Interface", "J.c.PAL", "$.VDW", "J.shape.Shape", "JU.BSUtil", "$.C", "JV.JC"], function(){
 var c$ = Clazz.decorateAsClass(function(){
 this.ms = null;
 this.shapes = null;
@@ -240,10 +240,10 @@ this.shapes[5].setProperty("label:" + strLabel, Integer.$valueOf(i), null);
 if (this.vwr.getModelkitPropertySafely(null) === Boolean.TRUE) this.notifyAtoms("atomslabeled",  Clazz.newArray(-1, [null, JU.BSUtil.newAndSetBit(this.vwr.ms.at[i].mi)]));
 }}, "~S,~N");
 Clazz.defineMethod(c$, "setModelVisibility", 
-function(){
+function(bs){
 var shapes = this.shapes;
 if (shapes == null || shapes[0] == null) return;
-var bs = this.vwr.getVisibleFramesBitSet();
+if (bs == null) bs = this.vwr.getVisibleFramesBitSet();
 if (shapes[8] != null) shapes[8].setProperty("highlight", null, null);
 for (var i = 8; i < 33; i++) if (shapes[i] != null) shapes[i].setModelVisibilityFlags(bs);
 
@@ -264,7 +264,7 @@ if (atom.madAtom != 0) f |= 16;
 atom.setShapeVisibility(f, true);
 }}}
 }this.setShapeVis();
-});
+}, "JU.BS");
 Clazz.defineMethod(c$, "setShapeVis", 
 function(){
 for (var i = 0; i < 37; ++i) {
@@ -280,7 +280,7 @@ if (finalizeParams) vwr.finalizeTransformParameters();
 if (bsTranslateSelected != null) {
 var ptCenter = this.ms.getAtomSetCenter(bsTranslateSelected);
 var pt =  new JU.P3();
-tm.transformPt3f(ptCenter, pt);
+tm.transformPt3fSafe(ptCenter, pt);
 pt.add(tm.ptOffset);
 tm.unTransformPoint(pt, pt);
 pt.sub(ptCenter);
@@ -294,24 +294,25 @@ var vibsOn = (vibrationVectors != null && tm.vibrationOn);
 var checkOccupancy = (this.ms.bsModulated != null && this.ms.occupancies != null);
 var atoms = this.ms.at;
 var occ;
+var occMax = vwr.getInt(553648159);
 var haveMods = false;
 var bsSlabbed = this.bsSlabbedInternal;
 bsSlabbed.clearAll();
 for (var i = bsOK.nextSetBit(0); i >= 0; i = bsOK.nextSetBit(i + 1)) {
 var atom = atoms[i];
-var screen = (vibsOn && atom.hasVibration() ? tm.transformPtVib(atom, vibrationVectors[i]) : tm.transformPt(atom));
+var screen = (vibsOn && atom.hasVibration() ? tm.transformPtVibSafe(atom, vibrationVectors[i]) : tm.transformPtSafe(atom));
 if (screen.z == 1 && tm.internalSlab && tm.xyzIsSlabbedInternal(atom)) {
 bsSlabbed.set(i);
 }atom.sX = screen.x;
 atom.sY = screen.y;
 atom.sZ = screen.z;
 var d = Math.abs(atom.madAtom);
-if (d == JM.Atom.MAD_GLOBAL) d = Clazz.floatToInt(vwr.getFloat(1153433601) * 2000);
-atom.sD = Clazz.floatToShort(vwr.tm.scaleToScreen(screen.z, d));
+if (d == 32200) d = Clazz.floatToInt(vwr.getFloat(1153433601) * 2000);
+atom.sD = Clazz.floatToInt(vwr.tm.scaleToScreen(screen.z, d));
 if (checkOccupancy && vibrationVectors[i] != null && (occ = vibrationVectors[i].getOccupancy100(vibsOn)) != -2147483648) {
 haveMods = true;
 atom.setShapeVisibility(2, false);
-if (occ >= 0 && occ < 50) atom.setShapeVisibility(24, false);
+if (occ >= 0 && occ < occMax) atom.setShapeVisibility(24, false);
  else atom.setShapeVisibility(8 | (atom.madAtom > 0 ? 16 : 0), true);
 this.ms.occupancies[atom.i] = Math.abs(occ);
 }}
@@ -371,8 +372,7 @@ this.ms = modelSet;
 }, "JM.ModelSet");
 Clazz.defineMethod(c$, "checkInheritedShapes", 
 function(){
-if (this.shapes[24] == null) return;
-this.setShapePropertyBs(24, "remapInherited", null, null);
+if (this.shapes[24] != null) this.setShapePropertyBs(24, "remapInherited", null, null);
 });
 Clazz.defineMethod(c$, "restrictSelected", 
 function(isBond, doInvert){
@@ -401,7 +401,13 @@ this.setLabel(null, bs);
 if (!isBond) this.vwr.setBooleanProperty("bondModeOr", bondmode);
 this.vwr.selectStatus(bsSelected, false, 0, true, false);
 }, "~B,~B");
-c$.hoverable =  Clazz.newIntArray(-1, [31, 20, 25, 24, 22, 36]);
+Clazz.defineMethod(c$, "getAtomColorRGBShaded", 
+function(colixes, atom){
+var colix = J.shape.Shape.getColix(colixes, atom.i, atom);
+if (colix < 0) colix = this.vwr.gdata.fixChangeableColix(colix);
+return JU.C.getColixShadedRGB(colix);
+}, "~A,JM.Atom");
+c$.hoverable =  Clazz.newIntArray(-1, [31, 20, 25, 24, 22, 23, 36]);
 c$.clickableMax = JV.ShapeManager.hoverable.length - 1;
 });
-;//5.0.1-v7 Wed Jun 11 15:08:00 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

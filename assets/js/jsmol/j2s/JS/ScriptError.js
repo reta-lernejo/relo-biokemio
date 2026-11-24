@@ -3,6 +3,7 @@ Clazz.load(["J.api.JmolScriptEvaluator"], "JS.ScriptError", ["JU.PT", "J.i18n.GT
 var c$ = Clazz.decorateAsClass(function(){
 this.vwr = null;
 this.chk = false;
+this.fromMenu = false;
 this.ignoreError = false;
 this.$error = false;
 this.errorMessage = null;
@@ -70,6 +71,7 @@ function(message, strUntranslated){
 if (this.ignoreError) throw  new NullPointerException();
 if (strUntranslated == null) strUntranslated = message;
 if (!this.chk) {
+if (this.fromMenu) this.vwr.alert("Script Error: " + message);
 this.setCursorWait(false);
 this.vwr.setBooleanProperty("refreshing", true);
 this.vwr.setStringProperty("_errormessage", strUntranslated);
@@ -159,6 +161,7 @@ msg = J.i18n.GT.$("integer out of range ({0} - {1})");
 break;
 case 22:
 msg = J.i18n.GT.$("invalid argument");
+if (more != null) msg += ": " + more;
 break;
 case 23:
 msg = J.i18n.GT.$("invalid parameter order");
@@ -294,4 +297,4 @@ if (this.errorMessage == null) this.errorMessage = J.i18n.GT.$("script ERROR: ")
 this.errorMessage += err;
 }, "~S");
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

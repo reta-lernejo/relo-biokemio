@@ -14,6 +14,7 @@ this.trajectorySteps = null;
 this.domains = null;
 this.validation = null;
 this.dssr = null;
+this.qscore = null;
 this.isConcatenated = false;
 this.addedData = null;
 this.addedDataKey = null;
@@ -40,9 +41,6 @@ this.applySymmetryToBonds = false;
 this.doCheckUnitCell = false;
 this.getHeader = false;
 this.isSequential = false;
-this.optimize2D = false;
-this.noHydrogens = false;
-this.noMinimize = false;
 this.is2D = false;
 this.isMolecular = false;
 this.templateAtomCount = 0;
@@ -87,6 +85,12 @@ this.moreUnitCellInfo = null;
 this.paramsLattice = null;
 this.paramsCentroid = false;
 this.paramsPacked = false;
+this.exptMethod = null;
+this.citationDOI = null;
+this.citationTitle = null;
+this.dataDOI = null;
+this.isFinalized = false;
+this.isSUPERCELL = false;
 this.fileScaling = null;
 this.fileOffset = null;
 this.fileOffsetFractional = null;
@@ -95,9 +99,6 @@ this.fileName = null;
 this.baseAtomIndex = 0;
 this.baseBondIndex = 0;
 this.stateScriptVersionInt = 2147483647;
-this.isFinalized = false;
-this.noPack = false;
-this.isSUPERCELL = false;
 this.precision = 0;
 this.haveModel = false;
 this.previousSpaceGroup = null;
@@ -123,24 +124,28 @@ this.filterEveryNth = false;
 this.filterSymop = null;
 this.filterN = 0;
 this.nFiltered = 0;
-this.doSetOrientation = false;
+this.addVibrations = true;
+this.doReadMolecularOrbitals = true;
+this.doSetOrientation = true;
+this.allow_a_len_1 = false;
 this.doCentralize = false;
-this.addVibrations = false;
-this.useAltNames = false;
 this.ignoreStructure = false;
 this.isDSSP1 = false;
-this.allowPDBFilter = false;
-this.doReadMolecularOrbitals = false;
+this.noHydrogens = false;
+this.noMinimize = false;
+this.noPack = false;
+this.openVarna = false;
 this.reverseModels = false;
-this.nameRequired = null;
+this.slabXY = false;
+this.useAltNames = false;
+this.optimize2D = false;
+this.polymerX = false;
+this.filteredPrecision = false;
+this.allowPDBFilter = false;
+this.modelNameRequired = null;
 this.doCentroidUnitCell = false;
 this.centroidPacked = false;
 this.strSupercell = null;
-this.allow_a_len_1 = false;
-this.slabXY = false;
-this.polymerX = false;
-this.fixUnitCell = false;
-this.filteredPrecision = false;
 this.filter1 = null;
 this.filter2 = null;
 this.filter1Cased = null;
@@ -277,9 +282,22 @@ this.asc.setCurrentModelInfo("auxFiles", this.htParams.get("auxFiles"));
 this.asc.finalizeStructures();
 if (this.doCentralize) this.asc.centralize();
 if (this.fillRange != null) this.asc.setInfo("boundbox", this.fillRange);
+if (this.filterN > 0) this.asc.setNoAutoBond();
 var info = this.asc.getAtomSetAuxiliaryInfo(0);
 if (info != null) {
-if (this.domains != null) {
+if (this.exptMethod != null) {
+info.put("experimentalMethod", this.exptMethod);
+this.appendLoadNote("_M.experimentalMethod is " + this.exptMethod);
+}if (this.citationTitle != null) {
+info.put("pubTitle", this.citationTitle);
+this.appendLoadNote("_M.pubTitle is " + this.citationTitle);
+}if (this.citationDOI != null) {
+info.put("pubDOI", this.citationDOI);
+this.appendLoadNote("_M.pubDOI is " + this.citationDOI);
+}if (this.dataDOI != null) {
+info.put("dataDOI", this.dataDOI);
+this.appendLoadNote("_M.dataDOI is " + this.dataDOI);
+}if (this.domains != null) {
 this.asc.setGlobalBoolean(5);
 var s = (this.domains).getMapKeys(2, true);
 var pt = s.indexOf("{ ", 2);
@@ -293,6 +311,9 @@ for (var i = this.asc.atomSetCount; --i >= 0; ) {
 info = this.asc.getAtomSetAuxiliaryInfo(i);
 info.put("domains", this.domains);
 }
+}if (this.qscore != null && this.asc.atomSetCount == 1) {
+info = this.asc.getAtomSetAuxiliaryInfo(0);
+info.put("qscore", this.qscore);
 }if (this.validation != null) {
 for (var i = this.asc.atomSetCount; --i >= 0; ) {
 info = this.asc.getAtomSetAuxiliaryInfo(i);
@@ -300,10 +321,11 @@ info.put("validation", this.validation);
 }
 }if (this.dssr != null) {
 info.put("dssrJSON", Boolean.TRUE);
-for (var i = this.asc.atomSetCount; --i >= 0; ) {
-info = this.asc.getAtomSetAuxiliaryInfo(i);
 info.put("dssr", this.dssr);
-}
+if (this.openVarna) this.vwr.plugin("VARNA", "show", "dssr");
+this.addJmolScript("set cartoonblocks;cartoons only;color structure");
+} else if (this.openVarna) {
+this.addJmolScript("calculate structure dssr;set cartoonblocks;cartoons only;color structure");
 }}}if (!this.floatifyJavaDouble) this.asc.setInfo("highPrecision", Boolean.TRUE);
 this.setLoadNote();
 });
@@ -327,8 +349,9 @@ this.asc.setCurrentModelInfo(JV.JC.getBoolName(4), isPDB ? Boolean.TRUE : null);
 }, "~B");
 Clazz.defineMethod(c$, "finish", 
 function(){
-if (false != this.highprecision0) this.vwr.setBooleanPropertyTok("doubleprecision", 603979831, this.highprecision0);
-var s = this.htParams.get("loadState");
+if (false != this.highprecision0) {
+this.vwr.setBooleanPropertyTok("doubleprecision", 603979831, this.highprecision0);
+}var s = this.htParams.get("loadState");
 this.asc.setInfo("loadState", s == null ? "" : s);
 s = this.htParams.get("smilesString");
 if (s != null) this.asc.setInfo("smilesString", s);
@@ -346,7 +369,7 @@ this.asc.setModelInfoForSet("fileType", fileType, i);
 }
 this.asc.freeze(this.reverseModels);
 if (this.asc.errorMessage != null) return this.asc.errorMessage + "\nfor file " + this.filePath + "\ntype " + name;
-if (!this.merging && (this.asc.bsAtoms == null ? this.asc.ac == 0 : this.asc.bsAtoms.nextSetBit(0) < 0) && fileType.indexOf("DataOnly") < 0 && this.asc.atomSetInfo.get("dataOnly") == null) return "No atoms found\nfor file " + this.filePath + "\ntype " + name;
+if (!this.merging && (this.asc.bsAtoms == null ? this.asc.ac == 0 : this.asc.bsAtoms.nextSetBit(0) < 0) && fileType.indexOf("DataOnly") < 0 && this.asc.getInfo("dataOnly") == null) return "No atoms found\nfor file " + this.filePath + "\ntype " + name;
 this.fixBaseIndices();
 return this.asc;
 });
@@ -382,7 +405,6 @@ this.setFilter(null);
 this.fillRange = this.htParams.get("fillRange");
 this.paramsLattice = this.htParams.get("lattice");
 var o = this.htParams.get("supercell");
-this.noPack = this.checkFilterKey("NOPACK");
 if (this.strSupercell != null && !this.noPack) {
 this.forcePacked = true;
 }if (Clazz.instanceOf(o,"JU.P3")) {
@@ -445,6 +467,7 @@ if (this.merging && !this.iHaveUnitCell) this.setFractionalCoordinates(false);
 }this.domains = this.htParams.get("domains");
 this.validation = this.htParams.get("validation");
 this.dssr = this.htParams.get("dssr");
+this.qscore = this.htParams.get("qscore");
 this.isConcatenated = this.htParams.containsKey("concatenate");
 });
 Clazz.defineMethod(c$, "parsePrecision", 
@@ -454,7 +477,7 @@ var pt = s.indexOf('.') + 1;
 if (pt >= 0) {
 var n = s.indexOf('(');
 if (n < 0) {
-this.precision = Math.max(this.precision, s.length - pt);
+this.precision = Math.max(this.precision, s.length - 1 - pt);
 } else {
 if (this.precision == 0) this.precision = n;
 this.precision = Math.min(this.precision, n - 1 - pt);
@@ -521,7 +544,7 @@ if (!this.doApplySymmetry) this.latticeCells =  Clazz.newIntArray (3, 0);
 });
 Clazz.defineMethod(c$, "doGetModel", 
 function(modelNumber, title){
-if (title != null && this.nameRequired != null && this.nameRequired.length > 0 && title.toUpperCase().indexOf(this.nameRequired) < 0) return false;
+if (title != null && this.modelNameRequired != null && this.modelNameRequired.length > 0 && title.toUpperCase().indexOf(this.modelNameRequired) < 0) return false;
 var isOK = (this.bsModels == null ? this.desiredModelNumber < 1 || modelNumber == this.desiredModelNumber : modelNumber > this.lastModelNumber ? false : modelNumber > 0 && this.bsModels.get(modelNumber - 1) || this.haveModel && this.firstLastStep != null && this.firstLastStep[1] < 0 && (this.firstLastStep[2] < 2 || (modelNumber - 1 - this.firstLastStep[0]) % this.firstLastStep[2] == 0));
 if (isOK && this.desiredModelNumber == 0) this.discardPreviousAtoms();
 this.haveModel = new Boolean (this.haveModel | isOK).valueOf();
@@ -715,25 +738,20 @@ this.filterCased = null;
 }if (this.filterCased == null) this.filterCased = (filter0 == null ? null : filter0 + ";");
 if (filter0 != null) filter0 = filter0.toUpperCase();
 this.filter = filter0;
-this.doSetOrientation = !this.checkFilterKey("NOORIENT");
-this.doCentralize = (!this.checkFilterKey("NOCENTER") && this.checkFilterKey("CENTER"));
-this.addVibrations = !this.checkFilterKey("NOVIB");
-this.ignoreStructure = this.checkFilterKey("DSSP");
-this.isDSSP1 = this.checkFilterKey("DSSP1");
-this.doReadMolecularOrbitals = !this.checkFilterKey("NOMO");
-this.useAltNames = this.checkFilterKey("ALTNAME");
-this.reverseModels = this.checkFilterKey("REVERSEMODELS");
-this.allow_a_len_1 = this.checkFilterKey("TOPOS");
-this.slabXY = this.checkFilterKey("SLABXY");
-this.polymerX = !this.slabXY && this.checkFilterKey("POLYMERX");
-this.noHydrogens = this.checkFilterKey("NOH");
-this.noMinimize = this.checkFilterKey("NOMIN");
-this.optimize2D = this.checkFilterKey("2D") && !this.noHydrogens && !this.noMinimize;
 if (this.filter == null) return;
-this.fixUnitCell = this.checkFilterKey("FIXUNITCELL");
-if (this.checkFilterKey("LOWPRECISION")) {
-this.setLowPrecision();
-}if (this.checkFilterKey("HETATM")) {
+this.checkFilterKeys();
+this.filterSymmetry();
+this.filterModelName();
+this.filterAtoms();
+var s = this.getFilter("FILESCALING=");
+if (s != null) {
+var fs = this.parseFloatStr(s);
+this.fileScaling = JU.P3.new3(fs, fs, fs);
+this.fileOffset =  new JU.P3();
+}}, "~S");
+Clazz.defineMethod(c$, "filterAtoms", 
+function(){
+if (this.checkFilterKey("HETATM")) {
 this.filterHetero = true;
 this.filter = JU.PT.rep(this.filter, "HETATM", "HETATM-Y");
 this.filterCased = JU.PT.rep(this.filterCased, "HETATM", "HETATM-Y");
@@ -741,15 +759,8 @@ this.filterCased = JU.PT.rep(this.filterCased, "HETATM", "HETATM-Y");
 this.filterHetero = true;
 this.filter = JU.PT.rep(this.filter, "ATOM", "HETATM-N");
 this.filterCased = JU.PT.rep(this.filterCased, "ATOM", "HETATM-N");
-}if (this.checkFilterKey("CELL=")) this.strSupercell = this.filter.substring(this.filter.indexOf("CELL=") + 5).toLowerCase();
-this.nameRequired = JU.PT.getQuotedAttribute(this.filter, "NAME");
-if (this.nameRequired != null) {
-if (this.nameRequired.startsWith("'")) this.nameRequired = JU.PT.split(this.nameRequired, "'")[1];
- else if (this.nameRequired.startsWith("\"")) this.nameRequired = JU.PT.split(this.nameRequired, "\"")[1];
-this.filter = JU.PT.rep(this.filter, this.nameRequired, "");
-filter0 = this.filter = JU.PT.rep(this.filter, "NAME=", "");
 }this.filterAtomName = this.checkFilterKey("*.") || this.checkFilterKey("!.");
-if (this.filter.startsWith("_") || this.filter.startsWith("!_") || this.filter.indexOf(";_") >= 0) this.filterElement = this.checkFilterKey("_");
+if (this.filter.startsWith("_") || this.filter.startsWith("!_") || this.filter.indexOf(";_") >= 0 || this.filter.indexOf(";!_") >= 0) this.filterElement = this.checkFilterKey("_");
 this.filterGroup3 = this.checkFilterKey("[");
 this.filterChain = this.checkFilterKey(":");
 this.filterAltLoc = this.checkFilterKey("%");
@@ -762,18 +773,6 @@ this.haveAtomFilter = this.filterAtomName || this.filterAtomType || this.filterE
 if (this.bsFilter == null) {
 this.bsFilter =  new JU.BS();
 this.htParams.put("bsFilter", this.bsFilter);
-this.filter = (";" + this.filter + ";").$replace(',', ';');
-var p = this.getFilter("PRECISION=");
-if (p != null) {
-var prec = JU.PT.parseInt(p);
-if (prec > 0 && prec <= 16) {
-this.precision = 1000 + prec;
-this.filteredPrecision = true;
-}}var s = this.getFilter("LATTICESCALING=");
-if (s != null && this.unitCellParams.length > 25) this.unitCellParams[25] = this.latticeScaling = this.parseFloatStr(s);
-s = this.getFilter("SYMOP=");
-if (s != null) this.filterSymop = " " + s + " ";
-JU.Logger.info("filtering with " + this.filter);
 if (this.haveAtomFilter) {
 var ipt;
 this.filter1Cased = this.filterCased;
@@ -783,7 +782,57 @@ this.filter1Cased = this.filter.substring(0, ipt).trim() + ";";
 this.filter2Cased = ";" + this.filter.substring(ipt).trim();
 }this.filter1 = this.filter1Cased.toUpperCase();
 this.filter2 = (this.filter2Cased.length == 0 ? null : this.filter2Cased.toUpperCase());
-}}}, "~S");
+}}});
+Clazz.defineMethod(c$, "filterModelName", 
+function(){
+this.modelNameRequired = JU.PT.getQuotedAttribute(this.filter, "NAME");
+if (this.modelNameRequired == null) return;
+if (this.modelNameRequired.length == 0) {
+this.modelNameRequired = this.getFilter("NAME=");
+if (this.modelNameRequired.startsWith("'")) this.modelNameRequired = JU.PT.split(this.modelNameRequired, "'")[1];
+}this.filter = JU.PT.rep(this.filter, this.modelNameRequired, "");
+this.filter = JU.PT.rep(this.filter, "NAME=", "");
+this.filter = JU.PT.rep(this.filter, "\"\"", "");
+this.filter = JU.PT.rep(this.filter, "''", "");
+});
+Clazz.defineMethod(c$, "filterSymmetry", 
+function(){
+if (this.checkFilterKey("CELL=")) this.strSupercell = this.filter.substring(this.filter.indexOf("CELL=") + 5).toLowerCase();
+this.filter = ";" + this.filter + ";";
+JU.Logger.info("filtering with " + this.filter);
+var s = this.getFilter("SYMOP=");
+if (s != null) this.filterSymop = " " + s.$replace(',', ' ') + " ";
+this.filter = this.filter.$replace(',', ';');
+var p = this.getFilter("PRECISION=");
+if (p != null) {
+var prec = JU.PT.parseInt(p);
+if (prec > 0 && prec <= 16) {
+this.precision = 1000 + prec;
+this.filteredPrecision = true;
+}}s = this.getFilter("LATTICESCALING=");
+if (s != null && this.unitCellParams.length > 25) this.unitCellParams[25] = this.latticeScaling = this.parseFloatStr(s);
+});
+Clazz.defineMethod(c$, "checkFilterKeys", 
+function(){
+this.addVibrations = !this.checkFilterKey("NOVIB");
+this.doReadMolecularOrbitals = !this.checkFilterKey("NOMO");
+this.doSetOrientation = !this.checkFilterKey("NOORIENT");
+this.allow_a_len_1 = this.checkFilterKey("TOPOS");
+this.doCentralize = (this.checkFilterKey("CENTER") && !this.checkFilterKey("NOCENTER"));
+this.ignoreStructure = this.checkFilterKey("DSSP");
+this.isDSSP1 = this.checkFilterKey("DSSP1");
+this.noHydrogens = this.checkFilterKey("NOH");
+this.noMinimize = this.checkFilterKey("NOMIN");
+this.noPack = this.checkFilterKey("NOPACK");
+this.openVarna = this.checkFilterKey("VARNA");
+this.reverseModels = this.checkFilterKey("REVERSEMODELS");
+this.slabXY = this.checkFilterKey("SLABXY");
+this.useAltNames = this.checkFilterKey("ALTNAME");
+this.optimize2D = this.checkFilterKey("2D") && !this.noHydrogens && !this.noMinimize;
+this.polymerX = this.checkFilterKey("POLYMERX") && !this.slabXY;
+if (this.checkFilterKey("LOWPRECISION")) {
+this.setLowPrecision();
+}});
 Clazz.defineMethod(c$, "getFilterWithCase", 
 function(key){
 var pt = (this.filterCased == null ? -1 : this.filterCased.toUpperCase().indexOf(key.toUpperCase()));
@@ -817,7 +866,7 @@ return isOK;
 Clazz.defineMethod(c$, "checkFilter", 
 function(atom, f, fCased){
 if (atom.isHetero && this.filterAllHetero) return true;
-return (!this.filterGroup3 || atom.group3 == null || !this.filterReject(f, "[", atom.group3.toUpperCase() + "]")) && (!this.filterAtomName || this.allowAtomName(atom.atomName, f)) && (this.filterAtomTypeStr == null || atom.atomName == null || atom.atomName.toUpperCase().indexOf("\0" + this.filterAtomTypeStr) >= 0) && (!this.filterElement || atom.elementSymbol == null || !this.filterReject(f, "_", atom.elementSymbol.toUpperCase() + ";")) && (!this.filterChain || atom.chainID == 0 || !this.filterReject(fCased, ":", "" + this.vwr.getChainIDStr(atom.chainID))) && (!this.filterAltLoc || atom.altLoc == '\0' || !this.filterReject(f, "%", "" + atom.altLoc)) && (!this.filterHetero || !this.allowPDBFilter || !this.filterReject(f, "HETATM", atom.isHetero ? "-Y" : "-N"));
+return (!this.filterGroup3 || atom.group3 == null || !this.filterReject(f, "[", atom.group3.toUpperCase() + "]")) && (!this.filterAtomName || this.allowAtomName(atom.atomName, f)) && (this.filterAtomTypeStr == null || atom.atomName == null || atom.atomName.toUpperCase().indexOf("\0" + this.filterAtomTypeStr) >= 0) && (!this.filterElement || atom.elementSymbol == null || !this.filterReject(f, "_", atom.elementSymbol.toUpperCase() + ";")) && (!this.filterChain || atom.getChainID() == 0 || !this.filterReject(fCased, ":", "" + this.vwr.getChainIDStr(atom.getChainID()))) && (!this.filterAltLoc || atom.altLoc == '\0' || !this.filterReject(f, "%", "" + atom.altLoc)) && (!this.filterHetero || !this.allowPDBFilter || !this.filterReject(f, "HETATM", atom.isHetero ? "-Y" : "-N"));
 }, "J.adapter.smarter.Atom,~S,~S");
 Clazz.defineMethod(c$, "rejectAtomName", 
 function(name){
@@ -1292,9 +1341,11 @@ Clazz.defineMethod(c$, "finalizeModelSet",
 function(){
 });
 Clazz.defineMethod(c$, "setChainID", 
-function(atom, label){
-atom.chainID = this.vwr.getChainID(label, true);
-}, "J.adapter.smarter.Atom,~S");
+function(atom, label, componentId){
+var chainID = this.vwr.getChainID(label, true);
+if (componentId != null && !componentId.equals(label)) chainID |= (this.vwr.getChainID(componentId, true) << 16);
+atom.setChainID(chainID);
+}, "J.adapter.smarter.Atom,~S,~S");
 Clazz.overrideMethod(c$, "readNextLine", 
 function(){
 if (this.rd() != null && this.line.indexOf("#jmolscript:") >= 0) this.checkCurrentLineForScript();
@@ -1318,6 +1369,13 @@ if (!this.doApplySymmetry) {
 this.doApplySymmetry = true;
 this.latticeCells[0] = this.latticeCells[1] = this.latticeCells[2] = 1;
 }}, "~B");
+Clazz.defineMethod(c$, "setPDBID", 
+function(pdbID, pdbID12){
+if (pdbID != null) {
+this.asc.setCurrentModelInfo("pdbID", pdbID.toUpperCase());
+if (pdbID12 == null) pdbID12 = "pdb_0000" + pdbID.toLowerCase();
+}if (pdbID12 != null) this.asc.setCurrentModelInfo("pdbID12", pdbID12);
+}, "~S,~S");
 Clazz.defineMethod(c$, "fixFloatA", 
 function(pts){
 if (this.floatifyJavaDouble) for (var i = pts.length; --i >= 0; ) if (!Float.isNaN(pts[i])) pts[i] = JU.PT.fixFloat(pts[i], 100000.0);
@@ -1333,4 +1391,4 @@ function(pt, prec){
 if (this.floatifyJavaDouble) JU.PT.fixPtFloats(pt, prec);
 }, "JU.P3,~N");
 });
-;//5.0.1-v7 Sun Jun 29 22:49:36 CDT 2025
+;//5.0.1-v7 Mon Oct 26 19:45:17 CDT 2026

@@ -69,7 +69,7 @@ var n = this.checkColixLength(colix, bs.length());
 for (var i = bs.nextSetBit(0); i >= 0 && i < n; i = bs.nextSetBit(i + 1)) this.setColixAndPalette(colix, pid, i);
 
 return;
-}if ("params" === propertyName) {
+}if ("pymolparams" === propertyName) {
 this.isActive = true;
 var data = value;
 var colixes = data[0];
@@ -88,6 +88,7 @@ if (f > 0.01) colix = JU.C.getColixTranslucent3(colix, true, f);
 this.setColixAndPalette(colix, J.c.PAL.UNKNOWN.id, i);
 if (sizes == null) continue;
 var isVisible = ((rd.value = sizes[pt]) > 0);
+if (rd.value == 0 && this.bsSizeSet.get(i)) continue;
 this.setSizeRD2(i, rd, isVisible);
 }
 return;
@@ -145,4 +146,4 @@ function(){
 return null;
 });
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

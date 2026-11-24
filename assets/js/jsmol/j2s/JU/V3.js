@@ -26,4 +26,4 @@ var cross = Math.sqrt(xx * xx + yy * yy + zz * zz);
 return Math.abs(Math.atan2(cross, this.dot(v1)));
 }, "JU.V3");
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

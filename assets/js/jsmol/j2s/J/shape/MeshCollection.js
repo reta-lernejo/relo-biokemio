@@ -1,5 +1,5 @@
 Clazz.declarePackage("J.shape");
-Clazz.load(["J.shape.Shape"], "J.shape.MeshCollection", ["java.util.Hashtable", "JU.AU", "$.Lst", "$.P3", "$.PT", "$.SB", "JS.T", "J.shape.Mesh", "JU.C", "$.Escape", "$.Logger", "JV.StateManager"], function(){
+Clazz.load(["J.shape.Shape", "JU.P3i"], "J.shape.MeshCollection", ["java.util.Hashtable", "JU.AU", "$.Lst", "$.P3", "$.PT", "$.SB", "JS.T", "J.shape.Mesh", "JU.C", "$.Escape", "$.Logger"], function(){
 var c$ = Clazz.decorateAsClass(function(){
 this.jvxlData = null;
 this.meshCount = 0;
@@ -24,9 +24,12 @@ this.pickedPt = null;
 this.connections = null;
 this.htObjects = null;
 this.color = 0;
+this.ptXY = null;
+this.keyXy = null;
 Clazz.instantialize(this, arguments);}, J.shape, "MeshCollection", J.shape.Shape);
 Clazz.prepareFields (c$, function(){
 this.meshes =  new Array(4);
+this.ptXY =  new JU.P3i();
 });
 Clazz.defineMethod(c$, "setMesh", 
 function(thisID){
@@ -101,9 +104,6 @@ this.currentMesh.symopColixes =  Clazz.newShortArray (n, 0);
 for (var i = n; --i >= 0; ) this.currentMesh.symopColixes[i] = JU.C.getColix(this.vwr.cm.ce.getArgbMinMax(i + 1, 1, n));
 
 }return;
-}if ("variables" === propertyName) {
-if (this.currentMesh != null && this.currentMesh.scriptCommand != null && !this.currentMesh.scriptCommand.startsWith("{")) this.currentMesh.scriptCommand = "{\n" + JV.StateManager.getVariableList(value, 0, false, false) + "\n" + this.currentMesh.scriptCommand;
-return;
 }if ("thisID" === propertyName) {
 var id = value;
 this.setMesh(id);
@@ -475,5 +475,52 @@ map.put("vertex", Integer.$valueOf(this.pickedVertex + 1));
 map.put("type", this.myType);
 }return map;
 }, "JU.T3,~N");
+Clazz.overrideMethod(c$, "checkObjectClicked", 
+function(x, y, action, bsVisible, drawPicking){
+if (!drawPicking) return null;
+if (!this.vwr.isBound(action, 18)) return null;
+var dmin2 = 100;
+if (this.vwr.gdata.isAntialiased()) {
+x <<= 1;
+y <<= 1;
+dmin2 <<= 1;
+}var imesh = -1;
+var maxz = -2147483648;
+var minz = 2147483647;
+for (var i = 0; i < this.meshCount; i++) {
+var m = this.meshes[i];
+if (!this.isPickable(m, bsVisible)) continue;
+var centers = m.vs;
+if (centers == null) continue;
+for (var j = centers.length; --j >= 0; ) {
+var v = centers[j];
+if (v == null) continue;
+var d2 = this.coordinateInRange(x, y, v, dmin2, this.ptXY);
+if (d2 >= 0) {
+if (this.ptXY.z < minz) {
+imesh = i;
+minz = this.ptXY.z;
+}if (this.ptXY.z > maxz) {
+maxz = this.ptXY.z;
+}}}
+}
+if (imesh < 0) return null;
+this.pickedMesh = this.meshes[imesh];
+this.setPropertySuper("thisID", this.pickedMesh.thisID, null);
+var ptRet =  new JU.P3();
+ptRet.setT(this.pickedMesh.vs[this.pickedVertex]);
+this.pickedModel = this.pickedMesh.modelIndex;
+var map = this.getPickedPoint(ptRet, this.pickedModel);
+this.setStatusPicked(-4, ptRet, map);
+return map;
+}, "~N,~N,~N,JU.BS,~B");
+Clazz.defineMethod(c$, "setPropertySuper", 
+function(propertyName, value, bs){
+this.setPropMC(propertyName, value, bs);
+}, "~S,~O,JU.BS");
+Clazz.defineMethod(c$, "isPickable", 
+function(m, bsVisible){
+return m.visibilityFlags != 0 && (m.modelIndex < 0 || bsVisible.get(m.modelIndex)) && !JU.C.isColixTranslucent(m.colix);
+}, "J.shape.Mesh,JU.BS");
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

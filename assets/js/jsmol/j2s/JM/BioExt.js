@@ -468,7 +468,7 @@ if (haveHelixType) {
 helixType = helixType.toLowerCase();
 isTurn = (helixType.startsWith("turn"));
 phipsi = this.getPhiPsiForHelixType(helixType);
-if (phipsi == null) return false;
+if (phipsi == null) return "could not get phi/psi angles for " + helixType;
 }var bs0 = vwr.getAllAtoms();
 var nseq = sequence.length;
 var nres = (haveHelixType && phipsi.length == 2 ? nseq : Math.max((haveHelixType ? 2 : 0) + Clazz.doubleToInt(phipsi.length / 2), nseq));
@@ -481,20 +481,19 @@ bs = JU.BSUtil.andNot(vwr.getAllAtoms(), bs0);
 }var isFile = (group == null);
 if (isFile) group = sequence[0];
 var groups = vwr.ms.getGroups();
-var isOK = false;
+var errs = "";
 for (var i = 0, pt = 0; i < groups.length; i++) {
 var g = (groups[i].isProtein() ? groups[i] : null);
 if (g == null || !g.isSelected(bs)) continue;
 if (!isFile) {
 group = sequence[pt++ % sequence.length];
 if (group.equals("UNK") || isCreate && (group.equals("ALA") || group.equals("GLY"))) {
-isOK = true;
 continue;
 }group = "==" + group;
-}if (JM.BioExt.mutateAtom(vwr, g.firstAtomIndex, group, addH)) {
-isOK = true;
-}}
-return isOK;
+}var err = JM.BioExt.mutateAtom(vwr, g.firstAtomIndex, group, addH);
+if (err != null) errs += "Group " + (i + 1) + " " + err + "\n";
+}
+return (errs.length == 0 ? null : errs);
 }, "JV.Viewer,JU.BS,~S,~A,~S,~A");
 c$.createHelix = Clazz.defineMethod(c$, "createHelix", 
 function(vwr, nRes, gly, phipsi, isTurn){
@@ -525,10 +524,10 @@ function(vwr, iatom, fileName, addH){
 var ms = vwr.ms;
 var iModel = ms.at[iatom].mi;
 var m = ms.am[iModel];
-if (ms.isTrajectory(iModel)) return false;
+if (ms.isTrajectory(iModel)) return "Cannot mutate a trajectory!";
 var info = vwr.fm.getFileInfo();
 var g = ms.at[iatom].group;
-if (!(Clazz.instanceOf(g,"JM.AminoMonomer"))) return false;
+if (!(Clazz.instanceOf(g,"JM.AminoMonomer"))) return "Group is not a protein!";
 (m).isMutated = true;
 var res0 = g;
 var ac = ms.ac;
@@ -550,7 +549,7 @@ throw e;
 }
 }
 ms = vwr.ms;
-if (ms.ac == ac) return false;
+if (ms.ac == ac) return "no changes";
 m = ms.am[iModel];
 var sb = m.loadScript;
 var s = JU.PT.rep(sb.toString(), "load mutate ", "mutate ({" + iatom + "})");
@@ -559,19 +558,18 @@ sb.append(s);
 var bs = vwr.getModelUndeletedAtomsBitSet(iModel);
 var ia = bs.length() - 1;
 if (ms.at[ia] == null) {
-System.out.println("BioExt fail ");
-return false;
+return "mutation failed";
 }g = ms.at[ia].group;
 if (g !== ms.at[ac + 1].group || !(Clazz.instanceOf(g,"JM.AminoMonomer"))) {
 var bsAtoms =  new JU.BS();
 g.setAtomBits(bsAtoms);
 vwr.deleteAtoms(bsAtoms, false);
-return false;
+return "group was not an amino acid";
 }var res1 = g;
 JM.BioExt.getMutationBackbone(res1, backbone);
 JM.BioExt.replaceMutatedMonomer(vwr, res0, res1, addH);
 vwr.fm.setFileInfo(info);
-return true;
+return null;
 }, "JV.Viewer,~N,~S,~B");
 c$.replaceMutatedMonomer = Clazz.defineMethod(c$, "replaceMutatedMonomer", 
 function(vwr, res0, res1, addH){
@@ -729,4 +727,4 @@ c$.alphaTypes =  Clazz.newArray(-1, ["alpha",  Clazz.newFloatArray(-1, [-65, -40
 c$.mutateScript = "try{\n  var a0 = {*}\n  var res0 = $RES0\n  load mutate $FNAME\n  var res1 = {!a0};var r1 = res1[1];var r0 = res1[0]\n  if ({r1 & within(group, r0)}){\n    var haveHs = ({_H & connected(res0)} != 0)\n    var rh = {_H} & res1;\n    if (!haveHs) {delete rh; res1 = res1 & !rh}\n    var sm = \'[*.N][*.CA][*.C][*.O]\'\n    var keyatoms = res1.find(sm)\n    var x = compare(res1,res0,sm,\'BONDS\')\n    if(x){\n      var allN = {*.N};var allCA = {*.cA};var allC = {*.C}; var allO = {*.O}; var allH = {*.H}\n      print \'mutating \' + res0[1].label(\'%n%r\') + \' to \' + $FNAME.trim(\'=\')\n      rotate branch @x\n;      compare @res1 @res0 SMARTS \'[*.N][*.CA][*.C]\' rotate translate 0\n      var c = {!res0 & connected(res0)}\n      var N2 = {allN & c}\n      var C0 = {allC & c}\n      {allN & res1}.xyz = {allN & res0}.xyz\n      {allCA & res1}.xyz = {allCA & res0}.xyz\n      {allC & res1}.xyz = {allC & res0}.xyz\n      if (N2) {allO & res1}.xyz = {allO & res0}.xyz\n      var NH = {_H & res0 && connected(allN)}\n      var angleH = ({*.H and res0} ? angle({allC and res0},{allCA and res0},{allN and res0},NH) : 1000)\n      delete res0\n      if (N2) {\n        delete (*.OXT,*.HXT) and res1\n        connect {N2} {keyatoms & *.C}\n      } else {\n        delete (*.HXT) and res1\n        {*.OXT & res1}.formalCharge = -1\n      }\n      var N1 = {allN & res1}\n      var H1 = {allH and res1}\n      var NH = {H1 & connected(N1)}\n      if (C0) {\n        switch (0 + NH) {\n        case 0:\n          break\n        case 1:\n          delete H1\n          break\n        default:\n          var CA1 = {allCA & res1}\n          x = angle({allC and res1},CA1,N1,NH)\n          rotate branch @CA1 @N1 @{angleH-x}\n          delete *.H2 and res1\n          delete *.H3 and res1\n          break\n        }\n        connect {C0} {keyatoms & allN}\n      }\n    }\n  }\n}catch(e){print e}\n";
 c$.pdbRecords =  Clazz.newArray(-1, ["ATOM  ", "MODEL ", "HETATM"]);
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

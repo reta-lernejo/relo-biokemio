@@ -36,6 +36,7 @@ data = "MODEL" + s.substring(s.length - 9) + "\n" + data + "ENDMDL\n";
 data = vwr.getFileAsString3(name + data, false, null);
 var x = vwr.parseJSONMap(data);
 if (x != null) {
+info.put("dssrJSON", Boolean.TRUE);
 info.put("dssr", x);
 this.setGroup1(vwr.ms, modelIndex);
 this.fixDSSRJSONMap(x);
@@ -128,7 +129,7 @@ var m = atom.group;
 return m;
 }, "JM.Atom");
 Clazz.overrideMethod(c$, "getAtomBits", 
-function(vwr, key, dbObj, annotationCache, type, modelIndex, bsModel){
+function(vwr, key, dbObj, annotationCache, type, modelIndex, bsModelAtoms){
 if (dbObj == null) return  new JU.BS();
 var doCache = !key.contains("NOCACHE");
 if (!doCache) {
@@ -176,7 +177,7 @@ dbObj = vwr.extractProperty(dbObj, key, -1);
 if (n <= 0) n += (dbObj).size();
 dbObj = (dbObj).get(n - 1);
 }bs.or(vwr.ms.getAtoms(1086324744, dbObj.toString()));
-bs.and(bsModel);
+bs.and(bsModelAtoms);
 } catch (e) {
 System.out.println(e.toString() + " in AnnotationParser");
 bs.clearAll();
@@ -224,6 +225,7 @@ if (info == null || (list = info.get("nts")) == null) return;
 var m = ms.am[modelIndex];
 var bsAtoms = m.bsAtoms;
 var atoms = ms.at;
+ms.bioModelset.setHaveDSSR(m.haveDSSR = true);
 var bs =  new JU.BS();
 for (var i = list.size(); --i >= 0; ) {
 var map = list.get(i);
@@ -237,24 +239,6 @@ atoms[pt].group.dssrNT = map;
 bs.clearAll();
 }
 }, "JM.ModelSet,~N");
-Clazz.overrideMethod(c$, "getAtomicDSSRData", 
-function(ms, modelIndex, dssrData, dataType){
-var info = ms.getInfo(modelIndex, "dssr");
-var list;
-if (info == null || (list = info.get(dataType)) == null) return;
-var bsAtoms = ms.am[modelIndex].bsAtoms;
-try {
-var bs =  new JU.BS();
-for (var i = list.size(); --i >= 0; ) {
-var map = list.get(i);
-bs.clearAll();
-ms.getSequenceBits(map.toString(), bsAtoms, bs);
-for (var j = bs.nextSetBit(0); j >= 0; j = bs.nextSetBit(j + 1)) dssrData[j] = i;
-
-}
-} catch (e) {
-}
-}, "JM.ModelSet,~N,~A,~S");
 Clazz.overrideMethod(c$, "getDSSRFrame", 
 function(nt){
 var frame = nt.get("frame");
@@ -275,5 +259,66 @@ pt.x = xyz.get(0).floatValue();
 pt.y = xyz.get(1).floatValue();
 pt.z = xyz.get(2).floatValue();
 }, "java.util.Map,~S,JU.P3");
+Clazz.overrideMethod(c$, "getAtomicDSSRData", 
+function(ms, modelIndex, dataList){
+try {
+var info = ms.getInfo(modelIndex, "dssr");
+if (info == null) return;
+var list = null;
+var parts = dataList.parts;
+var n = parts.length - 1;
+var pt = -1;
+for (var i = 1; i <= n && info != null; i++) {
+var o = info.get(parts[i]);
+if (Clazz.instanceOf(o,"JU.Lst")) {
+list = o;
+pt = i + 1;
+break;
+}info = (Clazz.instanceOf(o,"java.util.Map") ? o : null);
+}
+if ((pt <= n - 1 || pt > n + 1) && info == null || list.isEmpty()) return;
+var nAtoms = ms.ac;
+var atomIndexToData =  Clazz.newIntArray (nAtoms, 0);
+var bsAtoms = ms.am[modelIndex].bsAtoms;
+var bs =  new JU.BS();
+var bsAll =  new JU.BS();
+for (var i = list.size(); --i >= 0; ) {
+var map = list.get(i);
+bs.clearAll();
+ms.getSequenceBits(map.toString(), bsAtoms, bs);
+for (var j = bs.nextSetBit(0); j >= 0; j = bs.nextSetBit(j + 1)) atomIndexToData[j] = i;
+
+bsAll.or(bs);
+}
+var floatData = dataList.floatData;
+var stringData = dataList.stringData;
+if (pt > n) {
+System.out.println("DSSR1 " + bsAll);
+floatData = dataList.setFloats(nAtoms);
+for (var i = bsAll.nextSetBit(0); i >= 0; i = bsAll.nextSetBit(i + 1)) {
+floatData[i] = atomIndexToData[i];
+}
+} else {
+var map = list.get(0);
+var key = dataList.key = parts[pt];
+var o = map.get(key);
+if ((typeof(o)=='string')) {
+stringData = dataList.setStringData(nAtoms);
+for (var i = bsAll.nextSetBit(0); i >= 0; i = bsAll.nextSetBit(i + 1)) {
+stringData[i] = list.get(atomIndexToData[i]).get(key).toString();
+}
+} else {
+floatData = dataList.setFloats(nAtoms);
+for (var i = bsAll.nextSetBit(0); i >= 0; i = bsAll.nextSetBit(i + 1)) {
+o = list.get(atomIndexToData[i]).get(key);
+floatData[i] = (Clazz.instanceOf(o, Number) ? (o).floatValue() : NaN);
+}
+}}} catch (e) {
+e.printStackTrace();
+}
+}, "JM.ModelSet,~N,JM.ModelSet.DataList");
+Clazz.overrideMethod(c$, "fixAtoms", 
+function(modelIndex, dbObj, bsAddedMask, type, margin){
+}, "~N,JS.SV,JU.BS,~N,~N");
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

@@ -129,13 +129,5 @@ return;
 var iFree = JU.TempArray.findShorter(tempEnum.length, this.lengthsFreeEnum);
 if (iFree >= 0) this.freeEnum[iFree] = tempEnum;
 }, "~A");
-c$.getSlabWithinRange = Clazz.defineMethod(c$, "getSlabWithinRange", 
-function(min, max){
-return  Clazz.newArray(-1, [Integer.$valueOf(1073742114),  Clazz.newArray(-1, [Float.$valueOf(min), Float.$valueOf(max)]), Boolean.FALSE, null]);
-}, "~N,~N");
-c$.getSlabObjectType = Clazz.defineMethod(c$, "getSlabObjectType", 
-function(tok, data, isCap, colorData){
-return  Clazz.newArray(-1, [Integer.$valueOf(tok), data, Boolean.$valueOf(isCap), colorData]);
-}, "~N,~O,~B,~O");
 });
-;//5.0.1-v7 Mon Jun 09 19:40:05 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

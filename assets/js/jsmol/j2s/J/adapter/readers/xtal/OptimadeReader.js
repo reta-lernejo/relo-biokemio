@@ -12,9 +12,8 @@ Clazz.instantialize(this, arguments);}, J.adapter.readers.xtal, "OptimadeReader"
 Clazz.prepareFields (c$, function(){
 this.xyz =  Clazz.newFloatArray (3, 0);
 });
-Clazz.defineMethod(c$, "initializeReader", 
+Clazz.overrideMethod(c$, "initializeReader", 
 function(){
-Clazz.superCall(this, J.adapter.readers.xtal.OptimadeReader, "initializeReader", []);
 this.noSlab = this.checkFilterKey("NOSLAB");
 try {
 var strJSON = this.htParams.get("fileData");
@@ -178,4 +177,4 @@ a[i] = list.get(i).floatValue();
 return true;
 }, "java.util.List,~A");
 });
-;//5.0.1-v7 Tue Jun 10 01:13:43 CEST 2025
+;//5.0.1-v7 Mon Oct 26 19:45:17 CDT 2026

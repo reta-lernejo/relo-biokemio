@@ -29,7 +29,7 @@ this.frameTimeMillis = 0;
 this.doEndMove = false;
 this.fStep = 0;
 this.transformManager = null;
-this.floatSecondsTotal = 0;
+this.secondsTotal = 0;
 this.totalSteps = 0;
 this.iStep = 0;
 this.timePerStep = 0;
@@ -84,13 +84,13 @@ this.dTrans = options[1];
 var f = options[2];
 this.dZoom = f[0];
 this.dSlab = f[1];
-this.floatSecondsTotal = f[2];
+this.secondsTotal = f[2];
 var fps = Clazz.floatToInt(f[3]);
 this.slab = this.transformManager.getSlabPercentSetting();
 this.transX = this.transformManager.getTranslationXPercent();
 this.transY = this.transformManager.getTranslationYPercent();
 this.timePerStep = Clazz.doubleToInt(1000 / fps);
-this.totalSteps = Clazz.floatToInt(fps * this.floatSecondsTotal);
+this.totalSteps = Clazz.floatToInt(fps * this.secondsTotal);
 if (this.totalSteps <= 0) this.totalSteps = 1;
 var radiansPerDegreePerStep = (1 / 57.29577951308232 / this.totalSteps);
 this.radiansXStep = radiansPerDegreePerStep * this.dRot.x;
@@ -106,7 +106,7 @@ this.center = options[0];
 this.matrixEnd.setM3(options[1]);
 var f = options[3];
 this.ptMoveToCenter = (this.center == null ? this.transformManager.fixedRotationCenter : this.center);
-this.floatSecondsTotal = f[0];
+this.secondsTotal = f[0];
 this.zoom = this.newSlider(this.transformManager.zmPct, f[1]);
 this.xTrans = this.newSlider(this.transformManager.getTranslationXPercent(), f[2]);
 this.yTrans = this.newSlider(this.transformManager.getTranslationYPercent(), f[3]);
@@ -125,7 +125,7 @@ this.matrixStartInv.invertM(this.matrixStart);
 this.matrixStep.mul2(this.matrixEnd, this.matrixStartInv);
 this.aaTotal.setM(this.matrixStep);
 this.fps = 30;
-this.totalSteps = Clazz.floatToInt(this.floatSecondsTotal * this.fps);
+this.totalSteps = Clazz.floatToInt(this.secondsTotal * this.fps);
 this.frameTimeMillis = Clazz.doubleToInt(1000 / this.fps);
 this.targetTime = System.currentTimeMillis();
 this.aaStepCenter.sub2(this.ptMoveToCenter, this.transformManager.fixedRotationCenter);
@@ -144,7 +144,7 @@ Clazz.defineMethod(c$, "run1Move",
 function(mode){
 while (true) switch (mode) {
 case -1:
-if (this.floatSecondsTotal > 0) this.vwr.setInMotion(true);
+if (this.secondsTotal > 0) this.vwr.setInMotion(true);
 mode = 0;
 break;
 case 0:
@@ -175,7 +175,7 @@ this.sleepTime = timeAllowed - timeSpent;
 if (!this.runSleep(this.sleepTime, 0)) return;
 }break;
 case -2:
-if (this.floatSecondsTotal > 0) this.vwr.setInMotion(false);
+if (this.secondsTotal > 0) this.vwr.setInMotion(false);
 this.resumeEval();
 return;
 }
@@ -212,7 +212,7 @@ break;
 case -2:
 if (this.totalSteps <= 0 || this.doEndMove && !this.stopped) this.doFinalTransform();
 if (this.totalSteps > 0) this.vwr.setInMotion(false);
-this.vwr.moveUpdate(this.floatSecondsTotal);
+this.vwr.moveUpdate(this.secondsTotal);
 if (this.transformManager.movetoThread != null && !this.stopped) {
 this.transformManager.movetoThread = null;
 this.vwr.finalizeTransformParameters();
@@ -275,4 +275,4 @@ return (fStep < 0 ? this.value : this.start + fStep * this.delta);
 /*eoif4*/})();
 };
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

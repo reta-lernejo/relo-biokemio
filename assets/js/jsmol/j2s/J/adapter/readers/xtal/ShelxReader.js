@@ -221,7 +221,7 @@ function(){
 if (this.isCentroSymmetric && !this.ignoreFileSymmetryOperators) {
 if (!this.haveXYZ) {
 this.setSymmetryOperator("x,y,z");
-}this.asc.getXSymmetry().getSymmetry().addInversion();
+}this.asc.getXSymmetry().getFileSymmetry().addInversion();
 this.isCentroSymmetric = false;
 this.haveXYZ = false;
 }this.applySymTrajASCR();
@@ -233,4 +233,4 @@ this.asc.xtalSymmetry.setPartProperty();
 });
 c$.supportedRecordTypes =  Clazz.newArray(-1, ["TITL", "CELL", "SPGR", "SFAC", "LATT", "SYMM", "NOTE", "ATOM", "PART", "END"]);
 });
-;//5.0.1-v7 Wed Jun 11 09:30:30 CDT 2025
+;//5.0.1-v7 Mon Oct 26 19:45:17 CDT 2026

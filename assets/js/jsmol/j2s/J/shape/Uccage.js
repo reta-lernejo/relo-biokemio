@@ -12,4 +12,4 @@ this.font3d = this.vwr.gdata.getFont3D(16);
 this.myType = "unitcell";
 });
 });
-;//5.0.1-v7 Mon Jun 02 10:11:19 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

@@ -1,5 +1,5 @@
 Clazz.declarePackage("JS");
-Clazz.load(["javajs.api.JSONEncodable", "JS.T", "JU.P3"], "JS.SV", ["java.util.Arrays", "$.Collections", "$.Hashtable", "JU.AU", "$.BArray", "$.BS", "$.Base64", "$.Lst", "$.Measure", "$.PT", "$.SB", "JM.BondSet", "JU.BSUtil", "$.Escape", "JV.JC", "$.Viewer"], function(){
+Clazz.load(["javajs.api.JSONEncodable", "JS.T", "JU.P3"], "JS.SV", ["java.util.Arrays", "$.Collections", "$.Hashtable", "JU.AU", "$.BArray", "$.BS", "$.Base64", "$.Lst", "$.Measure", "$.PT", "$.SB", "J.api.Interface", "JM.BondSet", "JU.BSUtil", "$.Escape", "JV.Viewer"], function(){
 var c$ = Clazz.decorateAsClass(function(){
 this.index = 2147483647;
 this.myName = null;
@@ -857,6 +857,18 @@ default:
 return JS.SV.sValue(this);
 }
 });
+c$.getJvxlCoder = Clazz.defineMethod(c$, "getJvxlCoder", 
+function(){
+return (JS.SV.jvxlCoder == null ? (JS.SV.jvxlCoder = J.api.Interface.getInterface("J.jvxl.data.JvxlCoder", null, "script")) : JS.SV.jvxlCoder);
+});
+c$.encodeBitSet90_35 = Clazz.defineMethod(c$, "encodeBitSet90_35", 
+function(bs){
+return JS.SV.getJvxlCoder().jvxlEncodeBitSet90_35(bs);
+}, "JU.BS");
+c$.decodeBase90_35 = Clazz.defineMethod(c$, "decodeBase90_35", 
+function(s){
+return JS.SV.getJvxlCoder().jvxlDecodeBitSet90_35(s);
+}, "~S");
 c$.unescapePointOrBitsetAsVariable = Clazz.defineMethod(c$, "unescapePointOrBitsetAsVariable", 
 function(o){
 if (o == null) return o;
@@ -881,8 +893,10 @@ break;
 }
 } else if ((typeof(o)=='string')) {
 s = o;
-}if (s != null && s.length == 0) return s;
-if (v == null) v = JU.Escape.uABsM(s);
+}if (s != null) {
+if (s.length == 0) return s;
+if (s.startsWith(";base90+35,")) return JS.SV.decodeBase90_35(s);
+}if (v == null) v = JU.Escape.uABsM(s);
 if (Clazz.instanceOf(v,"JU.P3")) return (JS.SV.newV(8, v));
 if (Clazz.instanceOf(v,"JU.P4")) return JS.SV.newV(9, v);
 if (Clazz.instanceOf(v,"JU.BS")) {
@@ -931,7 +945,7 @@ return JU.PT.sprintf(strFormat, "IFDspq", of);
 }, "~S,JS.SV,~A,~A,~A,~A,~B,~B,~B");
 c$.getFormatType = Clazz.defineMethod(c$, "getFormatType", 
 function(format){
-return (format.indexOf(";") >= 0 ? -1 : ";json;base64;bytearray;array;xyz;abc;uvw;".indexOf(";" + format.toLowerCase() + ";"));
+return (format.indexOf(";") >= 0 ? -1 : ";json;base64;base90+35;bytearray;array;string;bitset;xyz;abc;uvw;rxyz;".indexOf(";" + format.toLowerCase() + ";"));
 }, "~S");
 c$.format = Clazz.defineMethod(c$, "format", 
 function(args, pt){
@@ -969,8 +983,9 @@ var o = sv.toJSON();
 sv.myName = name;
 return o;
 case 5:
-case 12:
 case 22:
+case 32:
+case 38:
 var bytes;
 switch (sv.tok) {
 case 15:
@@ -978,7 +993,7 @@ bytes = JU.AU.arrayCopyByte((sv.value).data, -1);
 break;
 case 7:
 var l = sv.getList();
-if (pt == 22) {
+if (pt == 32) {
 var l1 =  new JU.Lst();
 for (var i = l.size(); --i >= 0; ) l1.addLast(l.get(i));
 
@@ -989,23 +1004,32 @@ for (var i = bytes.length; --i >= 0; ) bytes[i] = l.get(i).asInt();
 break;
 default:
 var s = sv.asString();
-if (s.startsWith(JV.JC.BASE64_TAG)) {
+if (s.startsWith(";base64,")) {
 if (pt == 5) return s;
 bytes = JU.Base64.decodeBase64(s);
 } else {
-bytes = s.getBytes();
+if (pt >= 38) {
+return s;
+}bytes = s.getBytes();
 }}
-switch (pt) {
-case 12:
-return  new JU.BArray(bytes);
-case 5:
-return JV.JC.BASE64_TAG + JU.Base64.getBase64(bytes).toString();
-case 22:
-return JS.SV.getVariable(bytes);
-}
+return JS.SV.fromBytes(bytes, pt);
 }
 return null;
 }, "JS.SV,~N");
+c$.fromBytes = Clazz.defineMethod(c$, "fromBytes", 
+function(bytes, pt){
+switch (pt) {
+case 22:
+return  new JU.BArray(bytes);
+case 5:
+return ";base64," + JU.Base64.getBase64(bytes).toString();
+case 32:
+return JS.SV.getVariable(bytes);
+case 38:
+return  String.instantialize(bytes);
+}
+return null;
+}, "~A,~N");
 c$.getBitSet = Clazz.defineMethod(c$, "getBitSet", 
 function(x, allowNull){
 switch (x.tok) {
@@ -1060,11 +1084,17 @@ return (x1.value).equals(x2.value);
 case 12:
 return (x1.value).equals(x2.value);
 }
+} else if (x1.tok == 10 && x2.tok == 4 && (x2.value).startsWith(";base90+35,")) {
+return (x1.value.equals(JS.SV.decodeBase90_35(x2.value)));
 }return (x1.isNaN() ? x2.isNaN() : Math.abs(JS.SV.fValue(x1) - JS.SV.fValue(x2)) < 0.000001);
 }, "JS.SV,JS.SV");
 c$.isLike = Clazz.defineMethod(c$, "isLike", 
 function(x1, x2){
 return (x1 != null && x2 != null && x1.tok == 4 && x2.tok == 4 && JU.PT.isLike(x1.value, x2.value));
+}, "JS.SV,JS.SV");
+c$.contains = Clazz.defineMethod(c$, "contains", 
+function(x1, x2){
+return (x1 != null && x2 != null && x1.tok == 4 && x2.tok == 4 && (x1.value).contains(x2.value));
 }, "JS.SV,JS.SV");
 Clazz.defineMethod(c$, "sortOrReverse", 
 function(arrayPt){
@@ -1242,7 +1272,11 @@ Clazz.defineMethod(c$, "mapValue",
 function(key){
 switch (this.tok) {
 case 6:
-return (this.value).get(key);
+var sv = (this.value).get(key);
+if (sv == null && key.equals("length") && (this.value).containsKey("_DATA_")) {
+sv = (this.value).get("_DATA_");
+return JS.SV.newI((sv.value).data.length);
+}return sv;
 case 14:
 var sc = (this.value);
 return (key.equals("_path") ? JS.SV.newS(sc.contextPath) : sc.getVariable(key));
@@ -1359,12 +1393,18 @@ if ((lst = this.getList()) != null && (n = lst.size()) > 0) lst.get(n - 1).getKe
 }return;
 }for (var e, $e = map.entrySet().iterator (); $e.hasNext()&& ((e = $e.next ()) || true);) {
 var k = e.getKey();
-if (isAll && (k.length == 0 || !JU.PT.isLetter(k.charAt(0)))) {
-if (prefix.endsWith(".")) prefix = prefix.substring(0, prefix.length - 1);
+if (isAll) {
+var hasDot = prefix.endsWith(".");
+if (k.length == 0 || !JU.PT.isLetter(k.charAt(0))) {
+if (hasDot) prefix = prefix.substring(0, prefix.length - 1);
 k = "[" + JU.PT.esc(k) + "]";
+} else if (!hasDot && prefix.length > 0) {
+prefix += ".";
 }keys.addLast(prefix + k);
-if (isAll) e.getValue().getKeyList(true, keys, prefix + k + ".");
-}
+e.getValue().getKeyList(true, keys, prefix + k + ".");
+} else {
+keys.addLast(prefix + k);
+}}
 }, "~B,JU.Lst,~S");
 c$.deepCopy = Clazz.defineMethod(c$, "deepCopy", 
 function(v, isHash, isDeep){
@@ -1415,7 +1455,7 @@ return "{" + (Clazz.instanceOf(property,"JS.SV") ? JU.PT.esc(key) + " : " + JS.S
 }, "~S,~O");
 Clazz.defineMethod(c$, "isNaN", 
 function(){
-return (this.value === "NaN" || this === JS.SV.vNaN);
+return (this === JS.SV.vNaN || "NaN".equals(this.value));
 });
 c$.$SV$Sort$ = function(){
 /*if4*/;(function(){
@@ -1465,5 +1505,6 @@ c$.vT = JS.SV.newSV(1073742335, 1, "true");
 c$.vF = JS.SV.newSV(1073742334, 0, "false");
 c$.vNaN = JS.SV.newSV(3, 2147483647, Float.$valueOf(NaN));
 c$.pt0 =  new JU.P3();
+c$.jvxlCoder = null;
 });
-;//5.0.1-v7 Mon Jun 09 19:40:05 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

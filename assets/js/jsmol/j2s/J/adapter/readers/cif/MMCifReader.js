@@ -16,13 +16,16 @@ this.thisChain = -1;
 this.modelIndex = 0;
 this.chainSum = null;
 this.chainAtomCount = null;
-this.carbohydrateGroups = null;
-this.isLigandBondBug = false;
-this.mident = null;
-this.requiresSorting = false;
+this.doSetBonds = false;
+this.doSetAllBonds = false;
 this.structConnMap = null;
 this.structConnList = "";
-this.doSetBonds = false;
+this.carbohydrateGroups = null;
+this.isLigandBondBug = false;
+this.assemblyID = null;
+this.mident = null;
+this.requiresSorting = false;
+this.sgName0 = null;
 this.modelStrings = "";
 this.done = false;
 Clazz.instantialize(this, arguments);}, J.adapter.readers.cif, "MMCifReader", J.adapter.readers.cif.CifReader);
@@ -37,12 +40,20 @@ this.filteredPrecision = true;
 if (this.isDSSP1) this.asc.setInfo("isDSSP1", Boolean.TRUE);
 if (this.htParams.containsKey("isMutate")) this.asc.setInfo("isMutate", Boolean.TRUE);
 this.doSetBonds = this.checkFilterKey("ADDBONDS");
-this.byChain = this.checkFilterKey("BYCHAIN");
+this.doSetAllBonds = this.checkFilterKey("ALLBONDS");
+if (this.doSetAllBonds) {
+this.asc.setInfo("mmCIFallBonds", Boolean.TRUE);
+}this.byChain = this.checkFilterKey("BYCHAIN");
 if (this.checkFilterKey("BIOMOLECULE")) this.filter = JU.PT.rep(this.filter, "BIOMOLECULE", "ASSEMBLY");
 this.isBiomolecule = this.checkFilterKey("ASSEMBLY");
 if (this.isBiomolecule) {
+this.assemblyID = (this.getFilter("ASSEMBLY").$replace('=', ' ') + " 1");
+this.assemblyID = JU.PT.split(JU.PT.rep(this.assemblyID, "  ", " "), " ")[1];
 this.filter = this.filter.$replace(':', ' ');
 this.bySymop = this.checkFilterKey("BYSYMOP");
+this.dssr = null;
+this.validation = null;
+this.domains = null;
 }this.isCourseGrained = this.byChain || this.bySymop;
 if (this.isCourseGrained) {
 this.chainAtomMap =  new java.util.Hashtable();
@@ -51,13 +62,27 @@ this.chainAtomCounts =  new java.util.Hashtable();
 });
 Clazz.overrideMethod(c$, "processSubclassEntry", 
 function(){
-if (this.key0.startsWith("_pdbx_struct_assembly_gen.") || this.key0.startsWith("_struct_conn.") || this.key0.startsWith("_struct_ref_seq_dif.") || this.key0.startsWith("_struct_conf.") || this.key0.startsWith("_struct_sheet_range.")) this.processSubclassLoopBlock();
- else if (this.key.equals("_rna3d")) {
+if (this.key0.startsWith("_pdbx_struct_assembly_gen.") || this.key0.startsWith("_struct_conn.") || this.key0.startsWith("_struct_ref_seq_dif.") || this.key0.startsWith("_struct_conf.") || this.key0.startsWith("_struct_sheet_range.") || this.key0.startsWith("_citation.") || this.key0.startsWith("_exptl.")) {
+this.processSubclassLoopBlock();
+} else if (this.key.equals("_rna3d")) {
 this.addedData = this.field;
 this.addedDataKey = this.key;
 } else if (this.key.equals("_dssr")) {
 this.dssr = this.vwr.parseJSONMap(this.reader.readLine());
 this.reader.readLine();
+}if (this.key0.startsWith("_database_2.")) {
+if (this.key.endsWith("_pdbx_doi")) {
+this.setDataDOI(this.field);
+}if (this.key.endsWith("_pdbx_database_accession")) {
+this.setPDBID12(this.field);
+}}if (this.key0.startsWith("_citation.")) {
+if (this.key.endsWith("_doi")) {
+this.setPubDOI(this.field);
+}if (this.key.endsWith("_title")) {
+this.setPubTitle(this.field);
+}}if (this.isBiomolecule) {
+this.addedData = null;
+this.dssr = null;
 }});
 Clazz.overrideMethod(c$, "processSubclassLoopBlock", 
 function(){
@@ -65,15 +90,20 @@ if (this.key0.startsWith("_struct_ncs_oper.")) return this.processStructOperList
 if (this.key0.startsWith("_pdbx_struct_oper_list.")) return this.processStructOperListBlock(false);
 if (this.key0.startsWith("_pdbx_struct_assembly_gen.")) return this.processAssemblyGenBlock();
 if (this.key0.startsWith("_struct_ref_seq_dif.")) return this.processSequence();
+if (this.key0.startsWith("_exptl.")) return this.processExperimentListBlock();
 if (this.isCourseGrained) return false;
 if (this.key0.startsWith("_struct_site_gen.")) return this.processStructSiteBlock();
 if (this.key0.startsWith("_chem_comp.")) return this.processChemCompLoopBlock();
 if (this.key0.startsWith("_struct_conf.")) return this.processStructConfLoopBlock();
 if (this.key0.startsWith("_struct_sheet_range.")) return this.processStructSheetRangeLoopBlock();
-if (this.isLigandBondBug) return false;
+if (!this.isLigandBondBug) {
 if (this.key0.startsWith("_chem_comp_bond.")) return this.processCompBondLoopBlock();
 if (this.key0.startsWith("_struct_conn.")) return this.processStructConnLoopBlock();
-return false;
+}if (this.key0.startsWith("_database_2.")) return this.processDatabase2LoopBlock();
+if (this.key0.startsWith("_citation.")) {
+this.processCitationListBlock();
+return true;
+}return false;
 });
 Clazz.defineMethod(c$, "sortAssemblyModels", 
 function(){
@@ -104,46 +134,96 @@ this.asc.atoms = newAtoms;
 this.asc.bsAtoms = bsAtomsNew;
 if (++lastSet < this.asc.atomSetCount) this.asc.atomSetCount = lastSet;
 });
+Clazz.defineMethod(c$, "applySymmetryAndSetTrajectory", 
+function(){
+if (this.isBiomolecule) {
+this.applyBiomoleculeSymmetry();
+} else {
+Clazz.superCall(this, J.adapter.readers.cif.MMCifReader, "applySymmetryAndSetTrajectory", []);
+}});
+Clazz.defineMethod(c$, "applyBiomoleculeSymmetry", 
+function(){
+if (this.vBiomolecules != null && this.vBiomolecules.size() > 0) {
+if (this.sgName0 == null) this.sgName0 = this.sgName;
+var modelBiomolecules = this.updateBiomolecule(this.vBiomolecules);
+this.asc.setCurrentModelInfo("biomolecules", modelBiomolecules);
+this.setBiomolecules(modelBiomolecules);
+if (this.thisBiomolecule != null) {
+if (this.iHaveFractionalCoordinates) this.fractionalizeCoordinates(false);
+var bs = JU.BSUtil.copy(this.asc.bsAtoms);
+var pt = this.asc.getAtomSetAtomIndex(this.asc.iSet);
+var n = this.asc.getAtomSetAtomCount(this.asc.iSet);
+var bsModel = JU.BSUtil.newBitSet2(pt, pt + n);
+if (bs != null) this.asc.bsAtoms.or(bsModel);
+this.asc.getXSymmetry().applySymmetryBio(this.thisBiomolecule, this.applySymmetryToBonds, this.filter);
+if (bs != null) this.asc.bsAtoms.or(bs);
+this.asc.bsAtoms.andNot(bsModel);
+this.asc.xtalSymmetry = null;
+this.ac = this.asc.ac;
+}}});
+Clazz.defineMethod(c$, "updateBiomolecule", 
+function(vb){
+var map =  new JU.Lst();
+for (var m, $m = vb.iterator (); $m.hasNext()&& ((m = $m.next ()) || true);) {
+var mnew =  new java.util.Hashtable();
+mnew.putAll(m);
+if (this.checkFilterAssembly(mnew)) {
+mnew.put("biomts",  new JU.Lst());
+mnew.put("chains",  new JU.Lst());
+}map.addLast(mnew);
+}
+return map;
+}, "JU.Lst");
 Clazz.overrideMethod(c$, "finalizeSubclass", 
 function(){
-if (this.byChain && !this.isBiomolecule) for (var id, $id = this.chainAtomMap.keySet().iterator (); $id.hasNext()&& ((id = $id.next ()) || true);) this.createParticle(id);
+if (this.byChain) {
+for (var id, $id = this.chainAtomMap.keySet().iterator (); $id.hasNext()&& ((id = $id.next ()) || true);) this.createParticle(id);
 
-var haveBiomolecule = (this.isBiomolecule && this.vBiomolecules != null && this.vBiomolecules.size() > 0);
-if (!this.isCourseGrained && this.asc.ac == this.nAtoms) {
+}if (!this.isCourseGrained && this.asc.ac == this.nAtoms) {
 this.asc.removeCurrentAtomSet();
 } else {
-if ((this.dssr != null || this.validation != null || this.addedData != null) && !this.isCourseGrained && !this.requiresSorting) {
+if ((this.dssr != null || this.validation != null || this.addedData != null) && !this.isBiomolecule && !this.isCourseGrained && !this.requiresSorting) {
 var vs = (this.getInterface("J.adapter.readers.cif.MMCifValidationParser")).set(this);
 var note = null;
 if (this.addedData == null) {
-if (this.validation != null || this.dssr != null) note = vs.finalizeValidations(this.vwr, this.modelMap);
-} else if (this.addedDataKey.equals("_rna3d")) {
+if (this.validation != null || this.dssr != null) {
+note = vs.finalizeValidations(this.vwr, this.modelMap);
+if (this.dssr == null) {
+note = null;
+} else {
+this.addJmolScript("cartoons only");
+}}} else if (this.addedDataKey.equals("_rna3d")) {
 note = vs.finalizeRna3d(this.modelMap);
 }if (note != null) this.appendLoadNote(note);
 }this.setHetero();
-if (this.doSetBonds) this.setBonds();
-}if (this.asc.ac == 0 && !this.isCourseGrained) return false;
-var spaceGroup = this.sgName;
+if (this.doSetBonds) {
+this.setBonds();
+if (this.doSetAllBonds) this.setFormalCharges();
+}}if (this.asc.ac == 0 && !this.isCourseGrained) return false;
 if (this.htSites != null) this.addSites(this.htSites);
-if (haveBiomolecule) {
-this.asc.setCurrentModelInfo("biomolecules", this.vBiomolecules);
-this.setBiomolecules();
-if (this.thisBiomolecule != null) {
-if (this.iHaveFractionalCoordinates) this.fractionalizeCoordinates(false);
-this.asc.getXSymmetry().applySymmetryBio(this.thisBiomolecule, this.applySymmetryToBonds, this.filter);
-this.asc.xtalSymmetry = null;
-}this.doCheckUnitCell = new Boolean (this.doCheckUnitCell &(this.iHaveUnitCell && this.doApplySymmetry)).valueOf();
+if (this.latticeCells != null && this.latticeCells[0] != 0) this.addJmolScript("unitcell;axes on;axes unitcell;");
+if (this.requiresSorting) this.sortAssemblyModels();
+if (this.isBiomolecule) {
+this.doCheckUnitCell = new Boolean (this.doCheckUnitCell &(this.sgName0 != null && this.iHaveUnitCell && this.doApplySymmetry)).valueOf();
 if (this.doCheckUnitCell) {
 this.ignoreFileSpaceGroupName = true;
-this.sgName = spaceGroup;
+this.sgName = this.sgName0;
 this.fractionalizeCoordinates(true);
-this.asc.setCurrentModelInfo("biosymmetry", null);
+this.asc.setCurrentModelInfo("bioSymmetry", null);
 this.asc.setCurrentModelInfo("biosymmetryCount", null);
 this.checkNearAtoms = false;
-if (this.byChain) return true;
-}}if (this.latticeCells != null && this.latticeCells[0] != 0) this.addJmolScript("unitcell;axes on;axes unitcell;");
-if (this.requiresSorting) this.sortAssemblyModels();
-return true;
+}}return true;
+});
+Clazz.defineMethod(c$, "setFormalCharges", 
+function(){
+var modelIndex = this.asc.iSet;
+var i = this.asc.getAtomSetAtomIndex(modelIndex);
+var i2 = this.asc.getAtomSetAtomCount(modelIndex);
+for (; --i2 >= 0; i++) {
+var a = this.asc.atoms[i];
+if (a.isHetero) continue;
+if ("NH2".equals(a.atomName)) a.formalCharge = 1;
+}
 });
 Clazz.overrideMethod(c$, "checkSubclassSymmetry", 
 function(){
@@ -185,7 +265,7 @@ var a = atoms[i];
 var pt = a.sequenceNumber;
 if (pt != seqid) {
 seqid = pt;
-var ckey = a.chainID + a.group3 + seqid;
+var ckey = a.getChainID() + a.group3 + seqid;
 if (this.structConnList.indexOf(ckey) < 0) {
 comp = null;
 continue;
@@ -248,7 +328,7 @@ var list = assem[2];
 var operators = assem[1];
 var name = "biomolecule " + id;
 JU.Logger.info(name + " operators " + operators + " ASYM_IDs " + list);
-this.appendLoadNote("found " + name + ": " + list);
+this.appendLoadNote("found " + name + " chains:" + list + "\t operations:" + operators);
 if (this.vBiomolecules == null) this.vBiomolecules =  new JU.Lst();
 var info = null;
 for (var i = this.vBiomolecules.size(); --i >= 0; ) if (this.vBiomolecules.get(i).get("name").equals(name)) {
@@ -258,6 +338,7 @@ break;
 if (info == null) {
 info =  new java.util.Hashtable();
 info.put("name", name);
+info.put("id", id);
 var iMolecule = this.parseIntStr(id);
 info.put("molecule", iMolecule == -2147483648 ? id : Integer.$valueOf(iMolecule));
 info.put("biomts",  new JU.Lst());
@@ -265,14 +346,17 @@ info.put("chains",  new JU.Lst());
 info.put("assemblies",  new JU.Lst());
 info.put("operators",  new JU.Lst());
 this.vBiomolecules.addLast(info);
+this.checkFilterAssembly(info);
 }(info.get("assemblies")).addLast("$" + list.$replace(',', '$'));
 (info.get("operators")).addLast(this.decodeAssemblyOperators(operators));
-this.checkFilterAssembly(id, info);
 }, "~A");
 Clazz.defineMethod(c$, "checkFilterAssembly", 
-function(id, info){
-if (this.checkFilterKey("ASSEMBLY " + id + ";") || this.checkFilterKey("ASSEMBLY=" + id + ";")) this.thisBiomolecule = info;
-}, "~S,java.util.Map");
+function(info){
+if (info.get("id").equals(this.assemblyID)) {
+this.thisBiomolecule = info;
+return true;
+}return false;
+}, "java.util.Map");
 Clazz.defineMethod(c$, "decodeAssemblyOperators", 
 function(ops){
 var pt = ops.indexOf(")(");
@@ -293,6 +377,32 @@ for (var i = 0; i < opsLeft.length; i++) for (var j = 0; j < opsRight.length; j+
 
 return sb.toString().substring(1);
 }, "~S,~S");
+Clazz.defineMethod(c$, "processExperimentListBlock", 
+function(){
+this.parseLoopParametersFor("_exptl", J.adapter.readers.cif.MMCifReader.exptlFields);
+while (this.cifParser.getData()) {
+var count = 0;
+var id = null;
+var method = null;
+var n = this.cifParser.getColumnCount();
+for (var i = 0; i < n; ++i) {
+var p = this.fieldProperty(i);
+switch (p) {
+case -1:
+break;
+case 0:
+id = this.field;
+break;
+case 1:
+method = this.field;
+break;
+}
+}
+if (count++ == 0 && id != null && method != null) {
+this.exptMethod = method;
+}}
+return true;
+});
 Clazz.defineMethod(c$, "processStructOperListBlock", 
 function(isNCS){
 this.parseLoopParametersFor((isNCS ? "_struct_ncs_oper" : "_pdbx_struct_oper_list"), isNCS ? J.adapter.readers.cif.MMCifReader.ncsoperFields : J.adapter.readers.cif.MMCifReader.operFields);
@@ -438,17 +548,23 @@ htSite.put("groups", groups);
 return true;
 });
 Clazz.defineMethod(c$, "setBiomolecules", 
-function(){
+function(modelBiomolecules){
 if (this.assemblyIdAtoms == null && this.chainAtomCounts == null) return;
 var bsAll =  new JU.BS();
-for (var i = this.vBiomolecules.size(); --i >= 0; ) {
-var biomolecule = this.vBiomolecules.get(i);
+for (var i = modelBiomolecules.size(); --i >= 0; ) {
+var biomolecule = modelBiomolecules.get(i);
 this.setBiomolecule(biomolecule, (biomolecule === this.thisBiomolecule ? bsAll : null));
 }
-if (this.isBiomolecule && bsAll.cardinality() < this.asc.ac) {
-if (this.asc.bsAtoms != null) this.asc.bsAtoms.and(bsAll);
- else if (!this.isCourseGrained) this.asc.bsAtoms = bsAll;
-}});
+var pt = this.asc.getAtomSetAtomIndex(this.asc.iSet);
+var n = this.asc.getAtomSetAtomCount(this.asc.iSet);
+this.assemblyIdAtoms = null;
+if (this.isBiomolecule && bsAll.cardinality() < n) {
+if (this.asc.bsAtoms != null) {
+this.asc.bsAtoms.clearBits(pt, pt + n);
+this.asc.bsAtoms.or(bsAll);
+} else if (!this.isCourseGrained) {
+this.asc.bsAtoms = bsAll;
+}}}, "JU.Lst");
 Clazz.defineMethod(c$, "setBiomolecule", 
 function(biomolecule, bsAll){
 var biomtchains = biomolecule.get("chains");
@@ -457,9 +573,10 @@ var operators = biomolecule.get("operators");
 var assemblies = biomolecule.get("assemblies");
 var sum =  new JU.P3();
 var count = 0;
-var bsAtoms =  new JU.BS();
 var nAtomsTotal = 0;
-var isBioCourse = (this.isBiomolecule && this.isCourseGrained);
+if (this.assemblyIdAtoms != null) {
+biomolecule.put("assemblyIdAtoms", this.assemblyIdAtoms);
+}var isBioCourse = (this.isBiomolecule && this.isCourseGrained);
 for (var i = operators.size(); --i >= 0; ) {
 var ops = JU.PT.split(operators.get(i), ",");
 var ids = JU.PT.split(assemblies.get(i), "$");
@@ -469,10 +586,8 @@ for (var j = 1; j < ids.length; j++) {
 var id = ids[j];
 chainlist += ":" + id + ";";
 if (this.assemblyIdAtoms != null) {
-biomolecule.put("asemblyIdAtoms", this.assemblyIdAtoms);
 var bs = this.assemblyIdAtoms.get(id);
 if (bs != null) {
-bsAtoms.or(bs);
 if (bsAll != null) bsAll.or(bs);
 nAtoms += bs.cardinality();
 }} else if (isBioCourse) {
@@ -517,7 +632,7 @@ var a =  new J.adapter.smarter.Atom();
 a.setT(asum);
 a.scale(1 / c);
 a.elementSymbol = "Pt";
-this.setChainID(a, id);
+this.setChainID(a, id, null);
 a.radius = 16;
 this.asc.addAtom(a);
 }, "~S");
@@ -551,6 +666,46 @@ if (this.structConnList.indexOf(key2) < 0) this.structConnList += key2;
 }
 return true;
 });
+Clazz.defineMethod(c$, "processDatabase2LoopBlock", 
+function(){
+this.parseLoopParametersFor("_database_2", J.adapter.readers.cif.MMCifReader.database2Fields);
+while (this.cifParser.getData()) {
+if (this.key2col[1] != -1) {
+if (this.getFieldString(0).equals("PDB")) {
+this.setDataDOI(this.getFieldString(1));
+this.setPDBID12(this.getFieldString(2));
+}}}
+return true;
+});
+Clazz.defineMethod(c$, "setDataDOI", 
+function(doi){
+if (!this.isNull(doi)) {
+this.dataDOI = doi;
+System.out.println("dataDOI is " + this.dataDOI);
+}}, "~S");
+Clazz.overrideMethod(c$, "processCitationListBlock", 
+function(){
+try {
+this.parseLoopParametersFor("_citation", J.adapter.readers.cif.MMCifReader.$citationFields);
+while (this.cifParser.getData()) {
+if (this.key2col[2] != -1) {
+if (this.getFieldString(0).equalsIgnoreCase("PRIMARY")) {
+this.setPubTitle(this.getFieldString(1));
+this.setPubDOI(this.getFieldString(2));
+}}}
+} catch (e) {
+if (Clazz.exceptionOf(e, Exception)){
+System.err.println("mmCIF Reader error reading _citation " + e.getMessage());
+} else {
+throw e;
+}
+}
+});
+Clazz.defineMethod(c$, "setPubDOI", 
+function(doi){
+if (!this.isNull(doi)) {
+this.citationDOI = doi;
+}}, "~S");
 Clazz.defineMethod(c$, "processCompBondLoopBlock", 
 function(){
 this.doSetBonds = true;
@@ -570,11 +725,11 @@ break;
 }
 if (this.isLigand) {
 this.asc.addNewBondWithOrderA(this.asc.getAtomFromName(atom1), this.asc.getAtomFromName(atom2), order);
-} else if (this.haveHAtoms || this.htHetero != null && this.htHetero.containsKey(comp)) {
+} else if (this.haveHAtoms || this.doSetAllBonds || this.htHetero != null && this.htHetero.containsKey(comp)) {
 if (this.htBondMap == null) this.htBondMap =  new java.util.Hashtable();
 var cmap = this.htBondMap.get(comp);
 if (cmap == null) this.htBondMap.put(comp, cmap =  new JU.Lst());
-cmap.addLast( Clazz.newArray(-1, [atom1, atom2, Integer.$valueOf(this.haveHAtoms ? order : 1)]));
+cmap.addLast( Clazz.newArray(-1, [atom1, atom2, Integer.$valueOf(order)]));
 }}
 return true;
 });
@@ -590,8 +745,9 @@ this.chainAtomCounts.put(assemblyId,  Clazz.newIntArray (1, 0));
 sum.add(atom);
 return false;
 }} else if (this.byChain) {
-if (this.thisChain != atom.chainID) {
-this.thisChain = atom.chainID;
+var chainID = atom.getChainID();
+if (this.thisChain != chainID) {
+this.thisChain = chainID;
 this.chainSum = this.chainAtomMap.get(strChain);
 if (this.chainSum == null) {
 this.chainAtomMap.put(strChain, this.chainSum =  new JU.P3());
@@ -619,7 +775,7 @@ if (isAssembly) {
 this.useFileModelNumbers = true;
 var key = "," + modelNo + ",";
 if (this.modelStrings.indexOf(key) >= 0) {
-this.requiresSorting = true;
+this.setFileIsAssembly();
 } else {
 this.modelStrings += key;
 }}if (this.iHaveDesiredModel && this.asc.atomSetCount > 0 && !isAssembly) {
@@ -639,6 +795,19 @@ this.modelMap.put("" + modelNo, Integer.$valueOf(Math.max(0, this.asc.iSet)));
 this.modelMap.put("_" + Math.max(0, this.asc.iSet), Integer.$valueOf(modelNo));
 }return modelNo;
 }, "~N");
+Clazz.defineMethod(c$, "setFileIsAssembly", 
+function(){
+this.requiresSorting = true;
+if (this.isBiomolecule) {
+this.appendLoadNote("ASSEMBLY filter ignored -- file is already an assembly");
+this.isBiomolecule = false;
+}if (this.bySymop) {
+this.appendLoadNote("BYSYMOP filter ignored -- file is already an assembly");
+this.isCourseGrained = false;
+this.chainAtomMap = null;
+this.chainAtomCounts = null;
+this.bySymop = false;
+}});
 Clazz.defineMethod(c$, "setHetero", 
 function(){
 if (this.htHetero != null) {
@@ -648,6 +817,7 @@ if (this.carbohydrateGroups != null) {
 this.asc.setInfo("carbohydrates", this.carbohydrateGroups);
 this.asc.setCurrentModelInfo("carbohydrates", this.carbohydrateGroups);
 }}});
+c$.exptlFields =  Clazz.newArray(-1, ["_exptl_entry_id", "_exptl_method"]);
 c$.ncsoperFields =  Clazz.newArray(-1, ["*_matrix[1][1]", "*_matrix[1][2]", "*_matrix[1][3]", "*_vector[1]", "*_matrix[2][1]", "*_matrix[2][2]", "*_matrix[2][3]", "*_vector[2]", "*_matrix[3][1]", "*_matrix[3][2]", "*_matrix[3][3]", "*_vector[3]", "*_id", "*_symmetry_operation"]);
 c$.operFields =  Clazz.newArray(-1, ["*_matrix[1][1]", "*_matrix[1][2]", "*_matrix[1][3]", "*_vector[1]", "*_matrix[2][1]", "*_matrix[2][2]", "*_matrix[2][3]", "*_vector[2]", "*_matrix[3][1]", "*_matrix[3][2]", "*_matrix[3][3]", "*_vector[3]", "*_id", "*_symmetry_operation"]);
 c$.assemblyFields =  Clazz.newArray(-1, ["_pdbx_struct_assembly_gen_assembly_id", "_pdbx_struct_assembly_gen_oper_expression", "_pdbx_struct_assembly_gen_asym_id_list"]);
@@ -658,5 +828,7 @@ c$.structSheetRangeFields =  Clazz.newArray(-1, ["*_sheet_id", "*_beg_auth_asym_
 c$.structSiteFields =  Clazz.newArray(-1, ["*_site_id", "*_auth_comp_id", "*_auth_asym_id", "*_auth_seq_id", "*_pdbx_auth_ins_code"]);
 c$.structConnFields =  Clazz.newArray(-1, ["*_ptnr1_auth_asym_id", "*_ptnr1_auth_seq_id", "*_ptnr1_auth_comp_id", "*_ptnr1_label_atom_id", "*_pdbx_ptnr1_label_alt_id", "*_ptnr1_symmetry", "*_ptnr2_auth_asym_id", "*_ptnr2_auth_seq_id", "*_ptnr2_auth_comp_id", "*_ptnr2_label_atom_id", "*_pdbx_ptnr2_label_alt_id", "*_ptnr2_symmetry", "*_conn_type_id", "*_pdbx_value_order"]);
 c$.chemCompBondFields =  Clazz.newArray(-1, ["*_comp_id", "*_atom_id_1", "*_atom_id_2", "*_value_order", "*_pdbx_aromatic_flag"]);
+c$.database2Fields =  Clazz.newArray(-1, ["*_database_id", "*_pdbx_doi", "*_pdbx_database_accession"]);
+c$.$citationFields =  Clazz.newArray(-1, ["*_id", "*_title", "*_pdbx_database_id_doi"]);
 });
-;//5.0.1-v7 Sun Jun 29 22:49:36 CDT 2025
+;//5.0.1-v7 Mon Oct 26 19:48:30 CDT 2026

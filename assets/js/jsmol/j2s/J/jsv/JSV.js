@@ -1,11 +1,12 @@
 Clazz.declarePackage("J.jsv");
-Clazz.load(["J.api.JmolJSpecView"], "J.jsv.JSpecView", ["java.util.Hashtable", "JU.BS", "$.Lst", "$.PT", "JU.Escape", "$.Logger", "JV.FileManager"], function(){
+Clazz.load(["J.api.JmolJSpecView"], "J.jsv.JSV", ["java.util.Hashtable", "JU.BS", "$.Lst", "$.PT", "JU.Escape", "$.Logger", "JV.FileManager"], function(){
 var c$ = Clazz.decorateAsClass(function(){
 this.vwr = null;
-Clazz.instantialize(this, arguments);}, J.jsv, "JSpecView", null, J.api.JmolJSpecView);
+Clazz.instantialize(this, arguments);}, J.jsv, "JSV", null, J.api.JmolJSpecView);
 Clazz.overrideMethod(c$, "setViewer", 
 function(vwr){
 this.vwr = vwr;
+return this;
 }, "JV.Viewer");
 Clazz.overrideMethod(c$, "atomPicked", 
 function(atomIndex){
@@ -28,7 +29,7 @@ break;
 default:
 return null;
 }
-var peaks = this.vwr.ms.getInfo(iModel, "jdxAtomSelect_" + type);
+var peaks = this.vwr.ms.getInfo(iModel, "jdxAtomSelect" + "_" + type);
 if (peaks == null) return null;
 this.vwr.ms.htPeaks =  new java.util.Hashtable();
 var htPeaks = this.vwr.ms.htPeaks;
@@ -56,13 +57,14 @@ Clazz.defineMethod(c$, "sendJSpecView",
 function(peak){
 var msg = JU.PT.getQuotedAttribute(peak, "title");
 if (msg != null) this.vwr.scriptEcho(JU.Logger.debugging ? peak : msg);
-peak = this.vwr.fullName + "JSpecView: " + peak;
-JU.Logger.info("Jmol.JSpecView.sendJSpecView Jmol>JSV " + peak);
+peak = this.vwr.fullName + "JSpecView:" + " " + peak;
+JU.Logger.info("Jmol>JSV " + peak);
 this.vwr.sm.syncSend(peak, ">", 0);
 }, "~S");
 Clazz.overrideMethod(c$, "setModel", 
 function(modelIndex){
-var syncMode = ("sync on".equals(this.vwr.ms.getInfoM("jmolscript")) ? 1 : this.vwr.sm.getSyncMode());
+var startJSV = this.vwr.ms.getInfoM("_startJSpecView");
+var syncMode = (startJSV === Boolean.TRUE ? 1 : this.vwr.sm.getSyncMode());
 if (syncMode != 1) return;
 var peak = this.vwr.ms.getInfo(modelIndex, "jdxModelSelect");
 if (peak != null) this.sendJSpecView(peak + " src=\"Jmol\"");
@@ -76,17 +78,20 @@ return modelIndex;
 }, "~N");
 Clazz.overrideMethod(c$, "processSync", 
 function(script, jsvMode){
-if (JU.Logger.debugging) JU.Logger.info("J.jsv.JSpecView jsvMode=" + jsvMode + " script=" + script);
+if (JU.Logger.debugging) JU.Logger.info("J.jsv.JSV jsvMode=" + jsvMode + " script=" + script);
+System.out.println("JSV processSync " + script + " " + jsvMode);
 switch (jsvMode) {
-default:
-return null;
 case 0:
-this.vwr.sm.syncSend(this.vwr.fullName + "JSpecView" + script.substring(10), ">", 0);
-return null;
 case 77:
 case 28:
 case 35:
-this.vwr.sm.syncSend(this.vwr.fullName + "JSpecView:" + script, ">", 0);
+if (!script.startsWith("JSpecView:")) script = "JSpecView:" + script;
+script = this.vwr.fullName + script;
+this.vwr.sm.syncSend(script, ">", 0);
+return null;
+}
+switch (jsvMode) {
+default:
 return null;
 case 21:
 if (this.vwr.isApplet) return null;
@@ -112,7 +117,7 @@ script = "";
 return null;
 } else {
 if (isSimulation) filename += "#molfile";
-script = "load " + JU.PT.esc(filename);
+script = (modelIndex >= 0 ? "" : "load " + JU.PT.esc(filename));
 }if (id != null) script += ";model " + JU.PT.esc(id);
 if (atoms != null) script += ";select visible & (@" + JU.PT.rep(atoms, ",", " or @") + ")";
  else if (select != null) script += ";select visible & (" + select + ")";
@@ -126,9 +131,9 @@ for (var i = 0; i < list.length; i++) {
 if (i == 0 && list[i].indexOf(JV.FileManager.SIMULATION_PROTOCOL + "C13/") >= 0) type = "13CNMR";
 peaks.addLast(list[i]);
 }
-this.vwr.ms.setInfo(this.vwr.am.cmi, "jdxAtomSelect_" + type, peaks);
+this.vwr.ms.setInfo(this.vwr.am.cmi, "jdxAtomSelect" + "_" + type, peaks);
 return null;
 }
 }, "~S,~N");
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

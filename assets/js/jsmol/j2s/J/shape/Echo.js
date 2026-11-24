@@ -172,11 +172,11 @@ this.currentObject.setMovableYPercent(Clazz.floatToInt(pt.y));
 }}return;
 }if ("offset" === propertyName) {
 if (this.currentObject != null) {
-this.currentObject.pymolOffset = value;
+this.currentObject.setPymolOffset(value);
 }return;
 }if ("align" === propertyName) {
 if (this.currentObject != null) {
-this.currentObject.pymolOffset = null;
+this.currentObject.setPymolOffset(null);
 }}this.setPropTS(propertyName, value, null);
 }, "~S,~O,JU.BS");
 Clazz.overrideMethod(c$, "getPropertyData", 
@@ -221,4 +221,4 @@ lst2.addLast(lst);
 return lst2;
 });
 });
-;//5.0.1-v7 Mon Jun 09 19:40:05 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

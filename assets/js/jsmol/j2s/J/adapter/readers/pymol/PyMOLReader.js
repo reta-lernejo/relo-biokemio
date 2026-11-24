@@ -3,9 +3,10 @@ Clazz.load(["J.adapter.readers.pdb.PdbReader", "JU.BS", "$.P3"], "J.adapter.read
 var c$ = Clazz.decorateAsClass(function(){
 this.allowSurface = true;
 this.doResize = false;
-this.doCache = false;
 this.isStateScript = false;
-this.sourcePNGJ = false;
+this.doCache = true;
+this.optimizePSE = true;
+this.ignoreObjects = false;
 this.ac0 = 0;
 this.$ac = 0;
 this.stateCount = 0;
@@ -66,16 +67,17 @@ this.baseModelIndex = (this.htParams.get("baseModelIndex")).intValue();
 this.forceValence = this.checkFilterKey("SHOWVALENCE");
 this.asc.setInfo("noAutoBond", Boolean.TRUE);
 this.asc.setCurrentModelInfo("pdbNoHydrogens", Boolean.TRUE);
-this.asc.setInfo("isPyMOL", Boolean.TRUE);
 if (this.isTrajectory) this.trajectorySteps =  new JU.Lst();
 this.isStateScript = this.htParams.containsKey("isStateScript");
-this.sourcePNGJ = this.htParams.containsKey("sourcePNGJ");
+var sourcePNGJ = this.htParams.containsKey("sourcePNGJ");
 this.doResize = this.checkFilterKey("DORESIZE");
 this.allowSurface = !this.checkFilterKey("NOSURFACE");
-this.doCache = this.checkFilterKey("DOCACHE");
-if (this.doCache && this.sourcePNGJ) this.doCache = false;
- else if (this.sourcePNGJ && !this.doCache) this.sourcePNGJ = false;
-if (this.doCache) this.bsBytesExcluded =  new JU.BS();
+this.doCache = !this.checkFilterKey("NOCACHE");
+this.optimizePSE = !this.checkFilterKey("NOOPTIMIZEPSE");
+if (sourcePNGJ && this.doCache) {
+this.ignoreObjects = true;
+}if (this.optimizePSE) this.bsBytesExcluded =  new JU.BS();
+System.out.println("PyMOLReader doResize=" + this.doResize + " doCache=" + this.doCache + " optimizePSE=" + this.optimizePSE + "\n  use FILTER 'DORESIZE' or 'NOCACHE' or 'NOOPTIMIZEPSE' to change these settings");
 Clazz.superCall(this, J.adapter.readers.pymol.PyMOLReader, "initializeReader", []);
 });
 Clazz.overrideMethod(c$, "processBinaryDocument", 
@@ -116,6 +118,7 @@ var bytes0 = this.vwr.fm.getFileAsBytes(this.filePath, null);
 var bytes =  Clazz.newByteArray (bytes0.length - nExcluded, 0);
 for (var i = this.bsBytesExcluded.nextClearBit(0), n = bytes0.length, pt = 0; i < n; i = this.bsBytesExcluded.nextClearBit(i + 1)) bytes[pt++] = bytes0[i];
 
+System.out.println("PyMOLReader caching " + bytes.length + " of " + bytes0.length + " bytes for " + this.fileName);
 bytes0 = null;
 var fileName = this.filePath;
 this.vwr.cachePut(fileName, bytes);
@@ -421,7 +424,7 @@ var parentGroupName = (execObject.size() < 8 ? null : J.adapter.readers.pymol.Py
 if (parentGroupName != null && "".equals(parentGroupName.trim())) parentGroupName = null;
 this.pymolScene.setReaderObjectInfo(this.objectName, type, parentGroupName, this.isHidden, J.adapter.readers.pymol.PyMOLReader.listAt(objectHeader, 8), stateSettings, (moleculeOnly ? "_" + (iState + 1) : ""));
 var bsAtoms = null;
-var doExclude = (this.bsBytesExcluded != null);
+var pruneCachedPymolFile = (this.bsBytesExcluded != null);
 var msg = null;
 switch (type) {
 default:
@@ -431,11 +434,11 @@ case -1:
 this.pymolScene.processSelection(execObject);
 break;
 case 1:
-doExclude = false;
+pruneCachedPymolFile = false;
 bsAtoms = this.processMolecule(pymolObject, iState);
 break;
 case 4:
-doExclude = false;
+pruneCachedPymolFile = false;
 this.processMeasure(pymolObject);
 break;
 case 3:
@@ -449,6 +452,7 @@ case 12:
 if (parentGroupName == null) parentGroupName = "";
 break;
 case 6:
+pruneCachedPymolFile = false;
 this.processCGO(pymolObject);
 break;
 case 11:
@@ -468,17 +472,16 @@ msg = "SURFACE";
 break;
 }
 if (parentGroupName != null || bsAtoms != null) this.pymolScene.addGroup(execObject, parentGroupName, type, bsAtoms);
-if (doExclude) {
+if (pruneCachedPymolFile) {
 var i0 = J.adapter.readers.pymol.PyMOLReader.intAt(startLen, 0);
 var len = J.adapter.readers.pymol.PyMOLReader.intAt(startLen, 1);
 this.bsBytesExcluded.setBits(i0, i0 + len);
-JU.Logger.info("cached PSE file excludes PyMOL object type " + type + " name=" + this.objectName + " len=" + len);
+JU.Logger.info("cached PSE file excludes PyMOL object type " + type + " name=" + this.objectName + " at " + i0 + " len=" + len);
 }if (msg != null) JU.Logger.error("Unprocessed object type " + msg + " " + this.objectName);
 return 0;
 }, "JU.Lst,~B,~N,~B");
 Clazz.defineMethod(c$, "processCGO", 
 function(pymolObject){
-if (this.isStateScript) return;
 if (this.isHidden) return;
 var data = J.adapter.readers.pymol.PyMOLReader.sublistAt(pymolObject, [2, 0]);
 var color = J.adapter.readers.pymol.PyMOL.getRGB(J.adapter.readers.pymol.PyMOLReader.intAt(J.adapter.readers.pymol.PyMOLReader.listAt(pymolObject, 0), 2));
@@ -492,7 +495,7 @@ if (this.objectName.endsWith("_e_pot")) this.processMap(pymolObject, true, true)
 Clazz.defineMethod(c$, "processMap", 
 function(pymolObject, isObject, isGadget){
 if (isObject) {
-if (this.sourcePNGJ) return;
+if (this.ignoreObjects) return;
 if (this.isHidden && !isGadget) return;
 if (this.mapObjects == null) this.mapObjects =  new JU.Lst();
 this.mapObjects.addLast(pymolObject);
@@ -578,10 +581,9 @@ if (a != null) this.trajectoryStep[this.trajectoryPtr++] = a;
 }this.addBonds(this.getBondList(J.adapter.readers.pymol.PyMOLReader.listAt(pymolObject, 6)));
 this.addMolStructures();
 this.atoms = this.asc.atoms;
-if (!this.isStateScript) {
 this.asc.setCurrentModelInfo("name", this.pymolScene.modelName);
 this.createShapeObjects();
-}this.ssMapSeq = null;
+this.ssMapSeq = null;
 JU.Logger.info("reading " + (this.$ac - this.ac0) + " atoms and " + nBonds + " bonds");
 JU.Logger.info("----------");
 return bsAtoms;
@@ -635,7 +637,7 @@ this.setSpaceGroupName(J.adapter.readers.pymol.PyMOLReader.stringAt(cryst, 1));
 }, "JU.Lst");
 Clazz.defineMethod(c$, "getBondList", 
 function(bonds){
-var asSingle = !this.pymolScene.getDefaultBoolean(64);
+var asSingle = !this.pymolScene.getBooleanOrDefault(64);
 var b = null;
 var vArray = null;
 var n = bonds.size();
@@ -789,7 +791,7 @@ flags = J.adapter.readers.pymol.PyMOLReader.intAt(a, 24);
 bonded = (J.adapter.readers.pymol.PyMOLReader.intAt(a, 25) != 0);
 if (uniqueID == -1) uniqueID = (a.size() > 40 && J.adapter.readers.pymol.PyMOLReader.intAt(a, 40) == 1 ? J.adapter.readers.pymol.PyMOLReader.intAt(a, 32) : -1);
 if (a.size() > 46) anisou = J.adapter.readers.pymol.PyMOLReader.floatsAt(a, 41,  Clazz.newFloatArray (8, 0), 6);
-}var v = this.pymolScene.getUniqueFloatDef(uniqueID, 64);
+}var v = this.pymolScene.getUniqueDoubleDef(uniqueID, 64);
 if (this.forceValence || v == 1) {
 this.bsValence.set(apt);
 }if (insCode == null) {
@@ -834,7 +836,7 @@ atom.partialCharge = partialCharge;
 atom.vib = JU.V3.new3(uniqueID, cartoonType, NaN);
 if (anisou != null && anisou[0] != 0) this.asc.setAnisoBorU(atom, anisou, 12);
 this.pymolScene.setAtomColor(atomColor);
-if (this.pymolScene.getUniqueFloatDef(uniqueID, 64) == 1) {
+if (this.pymolScene.getUniqueDoubleDef(uniqueID, 64) == 1) {
 this.bsValence.set(apt);
 }this.processAtom2(atom, serNo, x, y, z, formalCharge);
 if (!bonded) {
@@ -931,7 +933,7 @@ if (i == this.$ac) {
 thischain = 0;
 } else {
 seqNo = atoms[i].sequenceNumber;
-thischain = atoms[i].chainID;
+thischain = atoms[i].getChainID();
 thisModel = atoms[i].atomSetIndex;
 }if (thischain != ichain || thisModel != imodel) {
 ichain = thischain;
@@ -953,7 +955,7 @@ var structure =  new J.adapter.smarter.Structure(imodel, type, type, type.toStri
 var a = atoms[istart];
 var b = atoms[iend];
 var i0 = this.asc.getAtomSetAtomIndex(thisModel);
-structure.set(a.chainID, a.sequenceNumber, a.insertionCode, b.chainID, b.sequenceNumber, b.insertionCode, istart - i0, iend - i0);
+structure.set(a.getChainID(), a.sequenceNumber, a.insertionCode, b.getChainID(), b.sequenceNumber, b.insertionCode, istart - i0, iend - i0);
 this.asc.addStructure(structure);
 }bsAtom.setBits(istart, iend + 1);
 istart = -1;
@@ -1030,9 +1032,9 @@ cartoonTypes[i] = this.getCartoonType(i);
 uniqueIDs[i] = this.getUniqueID(i);
 sequenceNumbers[i] = this.getSequenceNumber(i);
 radii[i] = this.getVDW(i);
-if (lastAtomChain != this.atoms[i].chainID || lastAtomSet != this.atoms[i].atomSetIndex) {
+if (lastAtomChain != this.atoms[i].getChainID() || lastAtomSet != this.atoms[i].atomSetIndex) {
 newChain[i] = true;
-lastAtomChain = this.atoms[i].chainID;
+lastAtomChain = this.atoms[i].getChainID();
 lastAtomSet = this.atoms[i].atomSetIndex;
 }}
 this.pymolScene.setAtomInfo(uniqueIDs, cartoonTypes, sequenceNumbers, newChain, radii);
@@ -1147,8 +1149,8 @@ return this.atoms[iAtom].sequenceNumber;
 }, "~N");
 Clazz.defineMethod(c$, "compareAtoms", 
 function(iPrev, i){
-return this.atoms[iPrev].chainID != this.atoms[i].chainID;
+return this.atoms[iPrev].getChainID() != this.atoms[i].getChainID();
 }, "~N,~N");
 c$.nucleic = " A C G T U ADE THY CYT GUA URI DA DC DG DT DU ";
 });
-;//5.0.1-v7 Tue Jun 10 01:13:43 CEST 2025
+;//5.0.1-v7 Mon Oct 26 19:45:17 CDT 2026

@@ -1,5 +1,5 @@
 Clazz.declarePackage("JU");
-(function(){
+Clazz.load(null, "JU.M34", ["JU.PT", "$.SB"], function(){
 var c$ = Clazz.decorateAsClass(function(){
 this.m00 = 0;
 this.m01 = 0;
@@ -10,6 +10,7 @@ this.m12 = 0;
 this.m20 = 0;
 this.m21 = 0;
 this.m22 = 0;
+this.size = 0;
 Clazz.instantialize(this, arguments);}, JU, "M34", null);
 Clazz.defineMethod(c$, "setAA33", 
 function(a){
@@ -332,5 +333,18 @@ Clazz.defineMethod(c$, "err",
 function(){
 throw  new ArrayIndexOutOfBoundsException("matrix column/row out of bounds");
 });
-})();
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+Clazz.defineMethod(c$, "toJSON", 
+function(){
+var sb =  new JU.SB();
+var x =  Clazz.newFloatArray (this.size, 0);
+sb.appendC('[');
+for (var i = 0; i < this.size; i++) {
+if (i > 0) sb.appendC(',');
+this.getRow(i, x);
+sb.append(JU.PT.toJSON(null, x));
+}
+sb.appendC(']');
+return sb.toString();
+});
+});
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

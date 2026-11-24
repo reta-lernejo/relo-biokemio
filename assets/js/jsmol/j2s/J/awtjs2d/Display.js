@@ -1,5 +1,5 @@
 Clazz.declarePackage("J.awtjs2d");
-(function(){
+Clazz.load(null, "J.awtjs2d.Display", ["JU.PT"], function(){
 var c$ = Clazz.declareType(J.awtjs2d, "Display", null);
 c$.getFullScreenDimensions = Clazz.defineMethod(c$, "getFullScreenDimensions", 
 function(canvas, widthHeight){
@@ -21,12 +21,20 @@ function(vwr, g, size){
 {
 }}, "J.api.PlatformViewer,~O,~O");
 c$.prompt = Clazz.defineMethod(c$, "prompt", 
-function(label, data, list, asButtons){
+function(vwr, label, data, list, asButtons){
+if (!asButtons) {
 {
 var s = (data == null ? alert(label) : prompt(label, data));
-if (s != null)return s;
+return "" + s;
+}}if (data != null) list = JU.PT.split(data, "|");
+var option = (vwr).eval.promptAsync(label, list);
+if (option != null) {
+if (data == null) {
+for (var i = 0; i < list.length; i++) if (list[i].equals(data)) return "" + i;
+
+}return option;
 }return "null";
-}, "~S,~S,~A,~B");
+}, "J.api.PlatformViewer,~S,~S,~A,~B");
 c$.convertPointFromScreen = Clazz.defineMethod(c$, "convertPointFromScreen", 
 function(canvas, ptTemp){
 {
@@ -63,5 +71,5 @@ j += dw;
 }
 context.putImageData(canvas.imgdata,0,0);
 }}, "~O,~O,~N,~N,~N,~N,~B");
-})();
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+});
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

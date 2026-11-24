@@ -1,5 +1,5 @@
 Clazz.declarePackage("JU");
-Clazz.load(null, "JU.MeshSurface", ["JU.AU", "$.P3", "J.api.Interface", "JU.BoxInfo", "$.C", "$.Geodesic", "$.TempArray"], function(){
+Clazz.load(null, "JU.MeshSurface", ["JU.AU", "$.P3", "J.api.Interface", "JU.BoxInfo", "$.C", "$.GData", "$.Geodesic"], function(){
 var c$ = Clazz.decorateAsClass(function(){
 this.vwr = null;
 this.slicer = null;
@@ -168,7 +168,7 @@ return (this.bsSlabGhost != null && this.slabMeshType == 1073742018 ? "mesh" : n
 });
 Clazz.defineMethod(c$, "resetSlab", 
 function(){
-if (this.slicer != null) this.slicer.slabPolygons(JU.TempArray.getSlabObjectType(1073742333, null, false, null), false);
+if (this.slicer != null) this.slicer.slabPolygons(JU.GData.getSlabObjectType(1073742333, null, false, null), false);
 });
 Clazz.defineMethod(c$, "slabPolygonsList", 
 function(slabInfo, allowCap){
@@ -223,4 +223,4 @@ var factor = (ra < rb ? 1 : -1);
 return (((q) + factor * Math.sqrt(q * q + p)) / 2);
 }, "~N,~N,~N,~N");
 });
-;//5.0.1-v7 Mon Jun 09 19:40:05 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

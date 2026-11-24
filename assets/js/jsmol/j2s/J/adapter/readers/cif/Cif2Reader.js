@@ -6,4 +6,4 @@ function(){
 return  new J.adapter.readers.cif.Cif2DataParser().set(this, null, this.debugging);
 });
 });
-;//5.0.1-v7 Wed Jun 11 07:46:27 CDT 2025
+;//5.0.1-v7 Mon Oct 26 19:45:17 CDT 2026

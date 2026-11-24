@@ -13,7 +13,7 @@ return true;
 });
 c$.validateAndAllocateA = Clazz.defineMethod(c$, "validateAndAllocateA", 
 function(chain, group3, seqcode, firstIndex, lastIndex, specialAtomIndexes){
-return (firstIndex != lastIndex || specialAtomIndexes[2] != firstIndex ? null :  new JM.AlphaMonomer().set2(chain, group3, seqcode, firstIndex, lastIndex, JM.AlphaMonomer.alphaOffsets));
+return (specialAtomIndexes[2] != firstIndex ? null :  new JM.AlphaMonomer().set2(chain, group3, seqcode, firstIndex, lastIndex,  Clazz.newByteArray (1, 0)));
 }, "JM.Chain,~S,~N,~N,~N,~A");
 Clazz.defineMethod(c$, "isAlphaMonomer", 
 function(){
@@ -31,14 +31,19 @@ Clazz.overrideMethod(c$, "setStrucNo",
 function(n){
 if (this.proteinStructure != null) this.proteinStructure.strucNo = n;
 }, "~N");
-Clazz.overrideMethod(c$, "getProteinStructureType", 
+Clazz.overrideMethod(c$, "getBioStructureType", 
 function(){
 return this.proteinStructure == null ? J.c.STR.NONE : this.proteinStructure.type;
 });
-Clazz.overrideMethod(c$, "getProteinStructureSubType", 
-function(){
-return this.proteinStructure == null ? J.c.STR.NONE : this.proteinStructure.subtype;
-});
+Clazz.overrideMethod(c$, "getBioStructureSubType", 
+function(dssx){
+switch (dssx) {
+case 1111490651:
+if (this.proteinStructure != null) return this.proteinStructure.subtype;
+break;
+}
+return J.c.STR.NONE;
+}, "~N");
 Clazz.overrideMethod(c$, "getStrucNo", 
 function(){
 return this.proteinStructure != null ? this.proteinStructure.strucNo : 0;
@@ -89,7 +94,7 @@ function(possiblyPreviousMonomer){
 if (possiblyPreviousMonomer == null) return true;
 var atom1 = this.getLeadAtom();
 var atom2 = possiblyPreviousMonomer.getLeadAtom();
-return atom1.isBonded(atom2) || atom1.distance(atom2) <= 4.2;
+return atom1.isBonded(atom2) || atom1.distance(atom2) <= 4.5;
 }, "JM.Monomer");
 Clazz.overrideMethod(c$, "getQuaternionFrameCenter", 
 function(qType){
@@ -150,6 +155,9 @@ break;
 }
 return JU.Quat.getQuaternionFrameV(vA, vB, vC, false);
 }, "~S");
-c$.alphaOffsets =  Clazz.newByteArray(-1, [0]);
+Clazz.overrideMethod(c$, "getGroupMenuKey", 
+function(){
+return "p>";
 });
-;//5.0.1-v7 Sat Jun 07 00:08:51 CEST 2025
+});
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

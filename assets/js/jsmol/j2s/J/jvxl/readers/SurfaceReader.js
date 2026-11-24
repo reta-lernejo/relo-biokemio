@@ -93,7 +93,7 @@ this.meshData = sg.meshData;
 this.jvxlData = sg.jvxlData;
 this.setVolumeDataV(sg.volumeDataTemp);
 this.meshDataServer = sg.meshDataServer;
-this.cJvxlEdgeNaN = String.fromCharCode(125);
+this.cJvxlEdgeNaN = '}';
 }, "J.jvxl.readers.SurfaceGenerator");
 Clazz.defineMethod(c$, "setOutputChannel", 
 function(out){
@@ -646,4 +646,4 @@ return -1;
 });
 c$.colorPhases =  Clazz.newArray(-1, ["_orb", "x", "y", "z", "xy", "yz", "xz", "x2-y2", "z2"]);
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

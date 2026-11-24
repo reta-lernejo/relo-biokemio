@@ -50,12 +50,12 @@ this.atomTypePt0 = 0;
 this.atomTypeLen = 0;
 this.isCourseGrained = false;
 this.isbiomol = false;
+this.haveDoubleBonds = false;
 this.$cryst1 = 0;
 this.fileSgName = null;
 this.htGroup1 = null;
 this.maxLength = 80;
 this.pdbID = null;
-this.haveDoubleBonds = false;
 this.dataT = null;
 this.tlsU = null;
 this.vConnect = null;
@@ -160,7 +160,7 @@ return true;
 case 12:
 case 13:
 case 14:
-this.scale(ptOption - 11);
+this.scale(ptOption - 12 + 1);
 return true;
 case 15:
 this.expdta();
@@ -172,6 +172,7 @@ case 17:
 if (this.line.startsWith("REMARK 285")) return this.remark285();
 if (this.line.startsWith("REMARK 350")) return this.remark350();
 if (this.line.startsWith("REMARK 290")) return this.remark290();
+if (this.line.startsWith("REMARK 998")) return this.remark998();
 if (this.line.contains("This file does not adhere to the PDB standard")) {
 this.gromacsWideFormat = true;
 }if (this.getTlsGroups) {
@@ -223,7 +224,7 @@ function(){
 this.checkNotPDB();
 if (this.pdbID != null && this.pdbID.length > 0) {
 if (!this.isMultiModel) this.asc.setAtomSetName(this.pdbID);
-this.asc.setCurrentModelInfo("pdbID", this.pdbID);
+this.setPDBID(this.pdbID, null);
 }this.checkUnitCellParams();
 if (!this.isCourseGrained) this.connectAll(this.maxSerial, this.isConnectStateBug);
 var symmetry;
@@ -255,7 +256,7 @@ if (this.doCheckUnitCell && this.isbiomol) {
 this.ignoreFileSpaceGroupName = true;
 this.sgName = this.fileSgName;
 this.fractionalizeCoordinates(true);
-this.asc.setModelInfoForSet("biosymmetry", null, this.asc.iSet);
+this.asc.setModelInfoForSet("bioSymmetry", null, this.asc.iSet);
 this.checkNearAtoms = false;
 }if (this.latticeCells != null && this.latticeCells[0] != 0) this.addJmolScript("unitcell;axes on;axes unitcell;");
 this.finalizeReaderASCR();
@@ -321,7 +322,7 @@ this.asc.setInfo("CLASSIFICATION", this.line.substring(7).trim());
 });
 Clazz.defineMethod(c$, "title", 
 function(){
-if (this.lineLength > 10) this.appendLoadNote(this.line.substring(10, Math.min(this.maxLength, this.line.length)).trim());
+if (this.lineLength > 10) this.citationTitle = this.line.substring(10, Math.min(this.maxLength, this.line.length)).trim();
 });
 Clazz.defineMethod(c$, "compnd", 
 function(isSource){
@@ -483,6 +484,12 @@ if (this.doApplySymmetry || this.isbiomol) this.setSymmetryOperator(tokens[3]);
 }}
 return false;
 });
+Clazz.defineMethod(c$, "remark998", 
+function(){
+if (this.asc.isConSurf == null) {
+if (this.line.indexOf("ConSurf") >= 0) this.asc.isConSurf = Boolean.TRUE;
+}return true;
+});
 Clazz.defineMethod(c$, "getSerial", 
 function(i, j){
 var c = this.line.charAt(i);
@@ -540,7 +547,7 @@ function(atom, name, altID, group3, chainID, seqNo, insCode, isHetero, sym){
 atom.atomName = name;
 if (altID != ' ') atom.altLoc = altID;
 atom.group3 = (group3 == null ? "UNK" : group3);
-atom.chainID = chainID;
+atom.setChainID(chainID);
 if (this.biomtChainAtomCounts != null) this.biomtChainAtomCounts[chainID % 256]++;
 atom.sequenceNumber = seqNo;
 atom.insertionCode = J.api.JmolAdapter.canonizeInsertionCode(insCode);
@@ -565,9 +572,9 @@ this.nRes++;
 if (atom.group3.equals("UNK")) this.nUNK++;
 }this.setAtomCoordXYZ(atom, x, y, z);
 atom.formalCharge = charge;
-this.setAdditionalAtomParameters(atom);
 if (this.haveMappedSerials) this.asc.addAtomWithMappedSerialNumber(atom);
  else this.asc.addAtom(atom);
+this.setAdditionalAtomParameters(atom);
 if (this.ac++ == 0 && !this.isCourseGrained) this.setModelPDB(true);
 if (atom.isHetero) {
 if (this.htHetero != null) {
@@ -616,7 +623,7 @@ this.lastGroup = atom.sequenceNumber;
 this.lastInsertion = atom.insertionCode;
 this.lastAltLoc = '\0';
 }if (atom.altLoc != '\0') {
-var msg = " atom [" + atom.group3 + "]" + atom.sequenceNumber + (atom.insertionCode == '\0' ? "" : "^" + atom.insertionCode) + (atom.chainID == 0 ? "" : ":" + this.vwr.getChainIDStr(atom.chainID)) + "." + atom.atomName + "%" + atom.altLoc + "\n";
+var msg = " atom [" + atom.group3 + "]" + atom.sequenceNumber + (atom.insertionCode == '\0' ? "" : "^" + atom.insertionCode) + (atom.getChainID() == 0 ? "" : ":" + this.vwr.getChainIDStr(atom.getChainID())) + "." + atom.atomName + "%" + atom.altLoc + "\n";
 if (this.conformationIndex >= 0 && atom.altLoc != this.lastAltLoc) {
 this.lastAltLoc = atom.altLoc;
 this.conformationIndex--;
@@ -730,7 +737,7 @@ endIndex = 31;
 } else return;
 if (this.lineLength < endIndex + 4) return;
 var structureID = this.line.substring(11, 15).trim();
-var serialID = this.line.substring(7, 10).trim();
+var strandID = this.line.substring(7, 10).trim();
 var startChainID = this.vwr.getChainID(this.line.substring(startChainIDIndex, startChainIDIndex + 1), true);
 var startSequenceNumber = this.parseIntRange(this.line, startIndex, startIndex + 4);
 var startInsertionCode = this.line.charAt(startIndex + 4);
@@ -739,7 +746,7 @@ var endSequenceNumber = this.parseIntRange(this.line, endIndex, endIndex + 4);
 var endInsertionCode = ' ';
 if (this.lineLength > endIndex + 4) endInsertionCode = this.line.charAt(endIndex + 4);
 if (substructureType === J.c.STR.NONE) substructureType = structureType;
-var structure =  new J.adapter.smarter.Structure(-1, structureType, substructureType, structureID, serialID, strandCount, null);
+var structure =  new J.adapter.smarter.Structure(-1, structureType, substructureType, structureID, strandID, strandCount, null);
 structure.set(startChainID, startSequenceNumber, startInsertionCode, endChainID, endSequenceNumber, endInsertionCode, 0, 0);
 this.asc.addStructure(structure);
 });
@@ -765,9 +772,10 @@ if (name == null) name = this.pdbID;
 this.haveMappedSerials = (this.thisBiomolecule != null && this.applySymmetry);
 this.sbConect = null;
 this.asc.newAtomSet();
-this.asc.setCurrentModelInfo("pdbID", this.pdbID);
-if (this.asc.iSet == 0 || this.isTrajectory) this.asc.setAtomSetName(this.pdbID);
-this.asc.setCurrentModelInfo("name", name);
+this.setPDBID(this.pdbID, null);
+if (this.asc.iSet == 0 || this.isTrajectory) {
+this.asc.setAtomSetName(this.pdbID);
+}this.asc.setCurrentModelInfo("name", name);
 this.checkUnitCellParams();
 if (!this.isCourseGrained) this.setModelPDB(true);
 this.asc.setCurrentAtomSetNumber(modelNumber);
@@ -811,7 +819,8 @@ if (this.isbiomol) this.doConvertToFractional = false;
 }, "~N");
 Clazz.defineMethod(c$, "expdta", 
 function(){
-if (this.line.toUpperCase().indexOf("NMR") >= 0) this.asc.setInfo("isNMRdata", "true");
+var type = this.line.substring(7).trim().toUpperCase();
+this.exptMethod = type;
 });
 Clazz.defineMethod(c$, "formul", 
 function(){
@@ -1065,7 +1074,9 @@ return;
 var isSameChain = (chain0 == chain1);
 for (var iAtom = index0; iAtom < indexMax; iAtom++) {
 var atom = atoms[iAtom];
-if (isSameChain ? atom.sequenceNumber >= res0 && atom.sequenceNumber <= res1 : atom.chainID > chain0 && atom.chainID < chain1 || atom.chainID == chain0 && atom.sequenceNumber >= res0 || atom.chainID == chain1 && atom.sequenceNumber <= res1) {
+var chainID = atom.getChainID();
+var n = atom.sequenceNumber;
+if (isSameChain ? n >= res0 && n <= res1 : chainID > chain0 && chainID < chain1 || chainID == chain0 && n >= res0 || chainID == chain1 && n <= res1) {
 data[iAtom - index0] = this.tlsGroupID;
 this.setTlsTensor(atom, group, symmetry);
 }}
@@ -1085,7 +1096,7 @@ function(atom1, atom2, chain, resno, isTrue){
 var atoms = this.asc.atoms;
 for (var i = atom1; i < atom2; i++) {
 var atom = atoms[i];
-if ((atom.chainID == chain && atom.sequenceNumber == resno) == isTrue) return i;
+if ((atom.getChainID() == chain && atom.sequenceNumber == resno) == isTrue) return i;
 }
 if (isTrue) {
 JU.Logger.warn("PdbReader findAtom chain=" + chain + " resno=" + resno + " not found");
@@ -1186,4 +1197,4 @@ this.connectNextAtomSet = index + 1;
 this.connectNextAtomIndex = firstAtom;
 }, "~N,~B");
 });
-;//5.0.1-v7 Wed Jun 11 09:30:30 CDT 2025
+;//5.0.1-v7 Mon Oct 26 19:58:15 CDT 2026

@@ -4,7 +4,6 @@ var c$ = Clazz.decorateAsClass(function(){
 this.oc = null;
 this.indent = 0;
 this.modifiedKeys = null;
-this.writeNullAsString = false;
 this.whiteSpace = false;
 this.ws = "";
 Clazz.instantialize(this, arguments);}, JU, "JSONWriter", null);
@@ -12,10 +11,6 @@ Clazz.defineMethod(c$, "setModifyKeys",
 function(mapNewToOld){
 this.modifiedKeys = mapNewToOld;
 }, "java.util.Map");
-Clazz.defineMethod(c$, "setWriteNullAsString", 
-function(b){
-this.writeNullAsString = b;
-}, "~B");
 Clazz.defineMethod(c$, "append", 
 function(s){
 if (s != null) if (this.whiteSpace) this.oc.append("\t\t\t\t\t\t\t\t\t\t\t\t\t\t".substring(0, Math.min(this.indent, "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".length)));
@@ -53,7 +48,7 @@ this.writeString(o.toString());
 }}, "~O");
 Clazz.defineMethod(c$, "writeNull", 
 function(){
-this.oc.append(this.writeNullAsString ? "\"null\"" : "null");
+this.oc.append("null");
 });
 Clazz.defineMethod(c$, "writeNumber", 
 function(o){
@@ -184,4 +179,4 @@ this.whiteSpace = b;
 this.ws = (b ? "\n" : "");
 }, "~B");
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

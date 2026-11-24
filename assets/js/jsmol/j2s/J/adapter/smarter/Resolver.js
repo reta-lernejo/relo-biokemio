@@ -1,5 +1,5 @@
 Clazz.declarePackage("J.adapter.smarter");
-Clazz.load(null, "J.adapter.smarter.Resolver", ["java.io.BufferedInputStream", "java.util.StringTokenizer", "JU.LimitedLineReader", "$.PT", "$.Rdr", "J.adapter.smarter.AtomSetCollectionReader", "$.SmarterJmolAdapter", "J.api.Interface", "JU.Logger", "JV.JC"], function(){
+Clazz.load(null, "J.adapter.smarter.Resolver", ["java.io.BufferedInputStream", "java.util.StringTokenizer", "JU.LimitedLineReader", "$.PT", "$.Rdr", "J.adapter.smarter.AtomSetCollectionReader", "$.SmarterJmolAdapter", "J.api.Interface", "JU.Logger"], function(){
 var c$ = Clazz.declareType(J.adapter.smarter, "Resolver", null);
 c$.getReaderClassBase = Clazz.defineMethod(c$, "getReaderClassBase", 
 function(type){
@@ -36,12 +36,7 @@ if (readerName == null) errMsg = "unrecognized file format type " + type + " fil
  else JU.Logger.info("The Resolver assumes " + readerName + " file=" + fullName);
 } else {
 readerName = J.adapter.smarter.Resolver.determineAtomSetCollectionReader(readerOrDocument, htParams);
-if (readerName.charAt(0) == '\n') {
-type = (htParams == null ? null : htParams.get("defaultType"));
-if (type != null) {
-type = J.adapter.smarter.Resolver.getReaderFromType(type);
-if (type != null) readerName = type;
-}}if (readerName.charAt(0) == '\n') errMsg = "unrecognized file format for file\n" + fullName + "\n" + J.adapter.smarter.Resolver.split(readerName, 50);
+if (readerName.charAt(0) == '\n') errMsg = "unrecognized file format for file\n" + fullName + "\n" + J.adapter.smarter.Resolver.split(readerName, 50);
  else if (readerName.equals("spt")) errMsg = "NOTE: file recognized as a script file: " + fullName + "\n";
  else if (!fullName.equals("ligand")) JU.Logger.info("The Resolver thinks " + readerName);
 }if (errMsg != null) {
@@ -59,13 +54,14 @@ var className = null;
 var err = null;
 className = J.adapter.smarter.Resolver.getReaderClassBase(readerName);
 if ((rdr = J.api.Interface.getInterface(className, null, "reader")) == null) {
-err = JV.JC.READER_NOT_FOUND + className;
+err = "File reader was not found:" + className;
 JU.Logger.error(err);
 return err;
 }return rdr;
 }, "~S,java.util.Map");
 c$.getReaderFromType = Clazz.defineMethod(c$, "getReaderFromType", 
 function(type){
+if (type != null) {
 if (type.endsWith("(XML)")) {
 type = "Xml" + type.substring(0, type.length - 5);
 }type = ";" + type.toLowerCase() + ";";
@@ -75,7 +71,7 @@ var pt;
 for (var i = J.adapter.smarter.Resolver.readerSets.length; --i >= 0; ) {
 if ((pt = (set = J.adapter.smarter.Resolver.readerSets[i--]).toLowerCase().indexOf(type)) >= 0) return set.substring(pt + 1, set.indexOf(";", pt + 2));
 }
-return null;
+}return null;
 }, "~S");
 c$.split = Clazz.defineMethod(c$, "split", 
 function(a, n){
@@ -106,19 +102,21 @@ if (readerName != null) return readerName;
 readerOrDocument = JU.Rdr.getBufferedReader( new java.io.BufferedInputStream(readerOrDocument), null);
 }var rdr = readerOrDocument;
 var llr =  new JU.LimitedLineReader(rdr, 16384);
-var leader = llr.getHeader(64).trim();
+var leader = llr.getHeader(64);
 if (leader.length == 0) throw  new java.io.EOFException("File contains no data.");
+leader = leader.trim();
+var isJSONMap = false;
+if (leader.length > 0) {
 if (leader.indexOf("PNG") == 1 && leader.indexOf("PNGJ") >= 0) return "pngj";
 if (leader.indexOf("PNG") == 1 || leader.indexOf("JPG") == 1 || leader.indexOf("JFIF") == 6) return "spt";
 if (leader.indexOf("\"num_pairs\"") >= 0) return "dssr";
 if (leader.indexOf("output.31\n") >= 0) return "GenNBO|output.31";
 if ((readerName = J.adapter.smarter.Resolver.checkFileStart(leader)) != null) {
 return (readerName.equals("Xml") ? J.adapter.smarter.Resolver.getXmlType(llr.getHeader(0)) : readerName);
-}var msg;
-var isJSONMap = (leader.charAt(0) == '{');
+}isJSONMap = (leader.charAt(0) == '{');
 if (isJSONMap && (readerName = J.adapter.smarter.Resolver.checkJsonHeader(leader)) != null) {
 return readerName;
-}var lines =  new Array(16);
+}}var lines =  new Array(16);
 var nLines = 0;
 for (var i = 0; i < lines.length; ++i) {
 lines[i] = llr.readLineWithNewline();
@@ -129,14 +127,19 @@ if ((readerName = J.adapter.smarter.Resolver.checkLineStarts(lines)) != null) re
 if ((readerName = J.adapter.smarter.Resolver.checkHeaderContains(llr.getHeader(0))) != null) {
 return readerName;
 }if ((readerName = J.adapter.smarter.Resolver.checkSpecial2(lines)) != null) return readerName;
+var msg;
 if (isJSONMap) {
 var json = rdr.readLine();
 if ((readerName = J.adapter.smarter.Resolver.checkJSONContains(json)) != null) {
 if (htParams != null) htParams.put("fileData", json);
 return readerName;
 }msg = (htParams == null ? null : json.substring(0, Math.min(100, json.length)));
+} else if (htParams == null) {
+msg = null;
 } else {
-msg = (htParams == null ? null : "\n" + lines[0] + "\n" + lines[1] + "\n" + lines[2] + "\n");
+if ((readerName = J.adapter.smarter.Resolver.getReaderFromType(htParams.get("defaultType"))) != null) {
+return readerName;
+}msg = "\n" + lines[0] + "\n" + lines[1] + "\n" + lines[2] + "\n";
 }return msg;
 }, "~O,java.util.Map");
 c$.checkJsonHeader = Clazz.defineMethod(c$, "checkJsonHeader", 
@@ -436,6 +439,10 @@ c$.fixDOSName = Clazz.defineMethod(c$, "fixDOSName",
 function(fileName){
 return (fileName.indexOf(":\\") >= 0 ? fileName.$replace('\\', '/') : fileName);
 }, "~S");
+c$.setDefaultType = Clazz.defineMethod(c$, "setDefaultType", 
+function(type, htParams){
+htParams.put("defaultType", type);
+}, "~S,java.util.Map");
 c$.readerSets =  Clazz.newArray(-1, ["cif.", ";Cif;Cif2;MMCif;MMTF;MagCif;BCIF;", "molxyz.", ";Mol3D;Mol;Xyz;", "more.", ";AFLOW;BinaryDcd;CDX;Gromacs;Jcampdx;MdCrd;MdTop;Mol2;TlsDataOnly;", "quantum.", ";Adf;Csf;Dgrid;GamessUK;GamessUS;Gaussian;GaussianFchk;GaussianWfn;Jaguar;Molden;MopacGraphf;GenNBO;NWChem;Psi;Qchem;QCJSON;WebMO;Orca;MO;Ams;", "pdb.", ";Pdb;Pqr;P2n;JmolData;", "pymol.", ";PyMOL;", "simple.", ";Alchemy;Ampac;Cube;FoldingXyz;GhemicalMM;HyperChem;Jme;JSON;Mopac;MopacArchive;Tinker;Input;FAH;", "spartan.", ";Spartan;SpartanSmol;Odyssey;", "xtal.", ";Abinit;Aims;Bilbao;Castep;Cgd;Crystal;Dmol;Espresso;Gulp;Jana;Magres;Shelx;Siesta;VaspOutcar;VaspPoscar;Wien2k;Xcrysden;PWmat;Optimade;Cmdf;Cmdx;FSGOutput;", "xml.", ";XmlCdx;XmlArgus;XmlCml;XmlChem3d;XmlMolpro;XmlNmrml;XmlOdyssey;XmlXsd;XmlVasp;XmlQE;"]);
 c$.cdxMagic =  Clazz.newByteArray(-1, [86, 106, 67, 68]);
 c$.cmdfMagic =  Clazz.newByteArray(-1, [67, 77, 68, 70]);
@@ -488,7 +495,7 @@ c$.bilbaoContainsRecords =  Clazz.newArray(-1, ["Bilbao", ">Bilbao Crystallograp
 c$.xmlContainsRecords =  Clazz.newArray(-1, ["Xml", "<?xml", "<atom", "<molecule", "<reaction", "<cml", "<bond", ".dtd\"", "<list>", "<entry", "<identifier", "http://www.xml-cml.org/schema/cml2/core"]);
 c$.gaussianContainsRecords =  Clazz.newArray(-1, ["Gaussian", "Entering Gaussian System", "Entering Link 1", "1998 Gaussian, Inc."]);
 c$.ampacContainsRecords =  Clazz.newArray(-1, ["Ampac", "AMPAC Version"]);
-c$.mopacContainsRecords =  Clazz.newArray(-1, ["Mopac", "MOPAC 93 (c) Fujitsu", "MOPAC FOR LINUX (PUBLIC DOMAIN VERSION)", "MOPAC:  VERSION  6", "MOPAC   7", "MOPAC2", "MOPAC (PUBLIC"]);
+c$.mopacContainsRecords =  Clazz.newArray(-1, ["Mopac", "MOPAC 93 (c) Fujitsu", "MOPAC FOR LINUX (PUBLIC DOMAIN VERSION)", "MOPAC:  VERSION  6", "MOPAC   7", "MOPAC2", "MOPAC (PUBLIC", "MOPAC v"]);
 c$.qchemContainsRecords =  Clazz.newArray(-1, ["Qchem", "Welcome to Q-Chem", "A Quantum Leap Into The Future Of Chemistry"]);
 c$.gamessUKContainsRecords =  Clazz.newArray(-1, ["GamessUK", "GAMESS-UK", "G A M E S S - U K"]);
 c$.gamessUSContainsRecords =  Clazz.newArray(-1, ["GamessUS", "GAMESS", "$CONTRL"]);
@@ -519,4 +526,4 @@ c$.magCifContainsRecords =  Clazz.newArray(-1, ["MagCif", "_space_group_magn"]);
 c$.headerContainsRecords =  Clazz.newArray(-1, [J.adapter.smarter.Resolver.sptRecords, J.adapter.smarter.Resolver.bilbaoContainsRecords, J.adapter.smarter.Resolver.xmlContainsRecords, J.adapter.smarter.Resolver.gaussianContainsRecords, J.adapter.smarter.Resolver.ampacContainsRecords, J.adapter.smarter.Resolver.mopacContainsRecords, J.adapter.smarter.Resolver.gamessUKContainsRecords, J.adapter.smarter.Resolver.gamessUSContainsRecords, J.adapter.smarter.Resolver.qchemContainsRecords, J.adapter.smarter.Resolver.spartanBinaryContainsRecords, J.adapter.smarter.Resolver.spartanContainsRecords, J.adapter.smarter.Resolver.mol2Records, J.adapter.smarter.Resolver.adfContainsRecords, J.adapter.smarter.Resolver.psiContainsRecords, J.adapter.smarter.Resolver.nwchemContainsRecords, J.adapter.smarter.Resolver.uicrcifContainsRecords, J.adapter.smarter.Resolver.dgridContainsRecords, J.adapter.smarter.Resolver.crystalContainsRecords, J.adapter.smarter.Resolver.dmolContainsRecords, J.adapter.smarter.Resolver.gulpContainsRecords, J.adapter.smarter.Resolver.espressoContainsRecords, J.adapter.smarter.Resolver.siestaContainsRecords, J.adapter.smarter.Resolver.xcrysDenContainsRecords, J.adapter.smarter.Resolver.mopacArchiveContainsRecords, J.adapter.smarter.Resolver.abinitContainsRecords, J.adapter.smarter.Resolver.gaussianFchkContainsRecords, J.adapter.smarter.Resolver.inputContainsRecords, J.adapter.smarter.Resolver.aflowContainsRecords, J.adapter.smarter.Resolver.magCifContainsRecords, J.adapter.smarter.Resolver.qcJsonContainsRecords, J.adapter.smarter.Resolver.optimadeContainsRecords, J.adapter.smarter.Resolver.orcaContainsRecords, J.adapter.smarter.Resolver.jsonArrayContainsRecords, J.adapter.smarter.Resolver.amsContainsRecords]);
 c$.jsonContainsRecords =  Clazz.newArray(-1, [J.adapter.smarter.Resolver.optimadeContainsRecords]);
 });
-;//5.0.1-v7 Tue Jun 10 01:13:43 CEST 2025
+;//5.0.1-v7 Mon Oct 26 19:45:17 CDT 2026

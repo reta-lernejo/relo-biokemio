@@ -1,5 +1,5 @@
 Clazz.declarePackage("JS");
-Clazz.load(["JS.ScriptError"], "JS.ScriptParam", ["java.util.Hashtable", "JU.BS", "$.CU", "$.Lst", "$.M3", "$.M4", "$.Measure", "$.P3", "$.P4", "$.PT", "$.Quat", "$.SB", "$.V3", "JM.TickInfo", "JS.SV", "$.T", "JU.BSUtil", "$.Edge", "$.Escape", "$.Logger"], function(){
+Clazz.load(["JS.ScriptError"], "JS.ScriptParam", ["java.util.Hashtable", "JU.BArray", "$.BS", "$.Base64", "$.CU", "$.Lst", "$.M3", "$.M4", "$.Measure", "$.P3", "$.P4", "$.PT", "$.Quat", "$.SB", "$.V3", "JM.TickInfo", "JS.SV", "$.T", "JU.BSUtil", "$.Edge", "$.Escape", "$.Logger"], function(){
 var c$ = Clazz.decorateAsClass(function(){
 this.contextVariables = null;
 this.contextFunctions = null;
@@ -86,7 +86,11 @@ return JS.SV.newS(JS.SV.sValue(sc.statement[0]));
 }sc = sc.parentContext;
 }
 return JS.SV.newS("");
-}}$var = $var.toLowerCase();
+}} else if ($var.startsWith(";base90+35,")) {
+return JS.SV.newV(10, JS.SV.decodeBase90_35($var));
+} else if ($var.startsWith(";base64,")) {
+return JS.SV.newV(15,  new JU.BArray(JU.Base64.decodeBase64($var)));
+}$var = $var.toLowerCase();
 var v = (this.contextVariables == null ? null : this.contextVariables.get($var));
 if (v == null && !isLocal && this.thisContext != null) v = this.thisContext.getVariable($var);
 return (v != null && v.tok == 1275068418 ? v.arrayToList(v) : v);
@@ -195,7 +199,7 @@ if (this.tokAt(i + 1) == 268437504) {
 index = (this).parameterExpressionList(-i - 1, -1, true).get(0).asInt();
 if (this.getToken(--this.iToken).tok != 268437505) this.invArg();
 }if (this.chk) return  new JU.P3();
-if (this.tokAt(i + 1) == 1073742336 && (this.tokAt(i + 2) == 1140850691 || this.tokAt(i + 2) == 1140850694)) {
+if (this.tokAt(i + 1) == 1073742336 && (this.tokAt(i + 2) == 1275068435 || this.tokAt(i + 2) == 1140850694)) {
 index = 2147483647;
 this.iToken = i + 2;
 }if ((center = (this).getObjectCenter(id, index, modelIndex)) == null) this.errorStr(12, id);
@@ -347,22 +351,60 @@ this.invArg();
 return data;
 }, "JS.T");
 Clazz.defineMethod(c$, "hklParameter", 
-function(i, pts, allowOffset){
-if (!this.chk && this.vwr.getCurrentUnitCell() == null) this.error(33);
-var pt = this.getPointOrPlane(i, 71);
-var offset = NaN;
+function(i, pts, allowOffset, retHKL){
+return this.hklParameterUC(i, pts, allowOffset, null, retHKL);
+}, "~N,JU.Lst,~B,JU.P3");
+Clazz.defineMethod(c$, "hklParameterUC", 
+function(i, pts, allowOffset, ucHKL, retHKL){
+if (!this.chk && ucHKL == null && this.vwr.getCurrentUnitCell() == null) {
+this.error(33);
+}var retPt = null;
+out : while (true) {
+var pt;
+switch (this.tokAt(i)) {
+case 4:
+case 805307393:
+var s = this.paramAsStr(i);
+if (s.equals("?")) {
+s = (this.chk ? "1 1 1" : this.vwr.prompt("Enter h k l", "", false));
+}s = JU.PT.clean(JU.PT.rep(s, ",", " "));
+var shkl = JU.PT.split(s, " ");
+if (shkl.length != 3) {
+this.error(3);
+}var data =  Clazz.newIntArray (3, 0);
+for (var j = 0; j < 3; j++) {
+data[j] = JU.PT.parseInt(shkl[j]);
+if (data[j] == -2147483648) break out;
+}
+pt = JU.P3.new3(data[0], data[1], data[2]);
+break;
+case 2:
+pt = JU.P3.new3(this.intParameter(i++), this.intParameter(i++), this.intParameter(i++));
+break;
+default:
+pt = this.getPointOrPlane(i, 71);
+}
+var isPlane = (Clazz.instanceOf(pt,"JU.P4"));
+if (retHKL != null) {
+if (isPlane) {
+retHKL.setT(pt);
+} else {
+retHKL.x = NaN;
+}}var offset = NaN;
 if (allowOffset) {
 offset = (Clazz.instanceOf(pt,"JU.P4") ? (pt).w : NaN);
 if (this.tokAt(this.iToken + 1) == 1073742066) {
 this.iToken++;
 offset = this.floatParameter(++this.iToken);
-}}var p = this.getHklPlane(pt, offset, pts);
-if (p == null) this.error(3);
-if (!this.chk && JU.Logger.debugging) JU.Logger.debug("defined plane: " + p);
-return p;
-}, "~N,JU.Lst,~B");
+}}retPt = this.getHklPlane(pt, offset, pts, ucHKL);
+break;
+}
+if (retPt == null) this.error(3);
+if (!this.chk && JU.Logger.debugging) JU.Logger.debug("defined plane: " + retPt);
+return retPt;
+}, "~N,JU.Lst,~B,J.api.SymmetryInterface,JU.P3");
 Clazz.defineMethod(c$, "getHklPlane", 
-function(pt, offset, pts){
+function(pt, offset, pts, ucHKL){
 var pt1 = JU.P3.new3(pt.x == 0 ? 1 : 1 / pt.x, 0, 0);
 var pt2 = JU.P3.new3(0, pt.y == 0 ? 1 : 1 / pt.y, 0);
 var pt3 = JU.P3.new3(0, 0, pt.z == 0 ? 1 : 1 / pt.z);
@@ -383,12 +425,17 @@ pt1.set(1, pt2.y, 0);
 pt2.set(0, 1, pt3.z);
 } else if (pt.z == 0) {
 pt3.set(pt1.x, 0, 1);
-}this.vwr.toCartesian(pt1, false);
+}if (ucHKL == null) {
+this.vwr.toCartesian(pt1, false);
 this.vwr.toCartesian(pt2, false);
 this.vwr.toCartesian(pt3, false);
-var v3 =  new JU.V3();
+} else {
+ucHKL.toCartesian(pt1, false);
+ucHKL.toCartesian(pt2, false);
+ucHKL.toCartesian(pt3, false);
+}var v3 =  new JU.V3();
 var plane = JU.Measure.getPlaneThroughPoints(pt1, pt2, pt3,  new JU.V3(), v3,  new JU.P4());
-if (!Float.isNaN(offset)) {
+if (!Double.isNaN(offset)) {
 plane.w = -offset;
 if (pts != null) {
 JU.Measure.getPlaneProjection(pt1, plane, pt1, v3);
@@ -399,7 +446,7 @@ pts.addLast(pt1);
 pts.addLast(pt2);
 pts.addLast(pt3);
 }return plane;
-}, "JU.T3,~N,JU.Lst");
+}, "JU.T3,~N,JU.Lst,J.api.SymmetryInterface");
 Clazz.defineMethod(c$, "getPointOrPlane", 
 function(index, mode){
 var coord =  Clazz.newFloatArray (6, 0);
@@ -892,7 +939,7 @@ return null;
 Clazz.defineMethod(c$, "isColorParam", 
 function(i){
 var tok = this.tokAt(i);
-return tok != 0 && (tok == 570425378 || tok == 1073742195 || tok == 268437504 || tok == 7 || tok == 8 || this.isPoint3f(i) || (tok == 4 || JS.T.tokAttr(tok, 1073741824)) && JU.CU.getArgbFromString(this.st[i].value) != 0);
+return tok != 0 && (tok == 570425378 || tok == 134218255 || tok == 1073742195 || tok == 268437504 || tok == 7 || tok == 8 || this.isPoint3f(i) || (tok == 4 || JS.T.tokAttr(tok, 1073741824)) && JU.CU.getArgbFromString(this.st[i].value) != 0);
 }, "~N");
 Clazz.defineMethod(c$, "getArgbParam", 
 function(index){
@@ -912,6 +959,7 @@ switch (this.getToken(index).tok) {
 default:
 if (!JS.T.tokAttr(this.theTok, 1073741824)) break;
 case 570425378:
+case 134218255:
 case 4:
 return JU.CU.getArgbFromString(this.paramAsStr(index));
 case 1073742195:
@@ -1097,19 +1145,19 @@ break;
 case 18:
 if (Float.isNaN(offset)) offset = 0;
 case 33:
-p4 = this.getHklPlane(vc = JU.P3.new3(0, 0, 1), 0, null);
+p4 = this.getHklPlane(vc = JU.P3.new3(0, 0, 1), 0, null, null);
 p4.scale4(f = -f);
 break;
 case 21:
 if (Float.isNaN(offset)) offset = 0;
 case 27:
-p4 = this.getHklPlane(vc = JU.P3.new3(1, 0, 0), 0, null);
+p4 = this.getHklPlane(vc = JU.P3.new3(1, 0, 0), 0, null, null);
 p4.scale4(-(f = -f));
 break;
 case 24:
 if (Float.isNaN(offset)) offset = 0;
 case 30:
-p4 = this.getHklPlane(vc = JU.P3.new3(0, 1, 0), 0, null);
+p4 = this.getHklPlane(vc = JU.P3.new3(0, 1, 0), 0, null, null);
 p4.scale4(-f);
 break;
 }
@@ -1204,4 +1252,4 @@ if (throwError) this.invArg();
 return null;
 }, "~N,~N,~B");
 });
-;//5.0.1-v7 Sun Jun 29 22:48:16 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

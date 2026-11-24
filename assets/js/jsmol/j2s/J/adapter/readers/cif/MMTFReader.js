@@ -2,7 +2,6 @@ Clazz.declarePackage("J.adapter.readers.cif");
 Clazz.load(["J.adapter.readers.cif.MMCifReader"], "J.adapter.readers.cif.MMTFReader", ["java.util.Hashtable", "JU.BS", "$.Lst", "$.M4", "$.MessagePackReader", "$.PT", "$.SB", "J.adapter.smarter.Atom", "$.Bond", "$.Structure", "JS.SV", "JU.Logger"], function(){
 var c$ = Clazz.decorateAsClass(function(){
 this.haveStructure = false;
-this.$pdbID = null;
 this.map = null;
 this.fileAtomCount = 0;
 this.opCount = 0;
@@ -44,8 +43,8 @@ JU.Logger.info("MMTF version " + this.map.get("mmtfVersion"));
 JU.Logger.info("MMTF Producer " + this.map.get("mmtfProducer"));
 var title = this.map.get("title");
 if (title != null) this.appendLoadNote(title);
-this.$pdbID = this.map.get("structureId");
-if (this.$pdbID == null) this.$pdbID = this.map.get("pdbId");
+this.pdbID = this.map.get("structureId");
+if (this.pdbID == null) this.pdbID = this.map.get("pdbId");
 this.fileAtomCount = (this.map.get("numAtoms")).intValue();
 var nBonds = (this.map.get("numBonds")).intValue();
 this.groupCount = (this.map.get("numGroups")).intValue();
@@ -53,7 +52,7 @@ this.groupModels =  Clazz.newIntArray (this.groupCount, 0);
 this.groupDSSP =  Clazz.newIntArray (this.groupCount, 0);
 this.groupMap =  Clazz.newIntArray (this.groupCount, 0);
 var modelCount = (this.map.get("numModels")).intValue();
-this.appendLoadNote("id=" + this.$pdbID + " numAtoms=" + this.fileAtomCount + " numBonds=" + nBonds + " numGroups=" + this.groupCount + " numModels=" + modelCount);
+this.appendLoadNote("id=" + this.pdbID + " numAtoms=" + this.fileAtomCount + " numBonds=" + nBonds + " numGroups=" + this.groupCount + " numModels=" + modelCount);
 this.getMMTFAtoms(doDoubleBonds);
 System.out.println("MMTF read and parsed in " + (System.currentTimeMillis() - t) + " ms");
 if (!this.isCourseGrained) {
@@ -118,7 +117,7 @@ nChain = chainsPerModel[iModel];
 iChain = 0;
 this.setModelPDB(true);
 this.incrementModel(iModel + 1);
-this.asc.setCurrentModelInfo("pdbID", this.$pdbID);
+this.setPDBID(this.pdbID, null);
 this.nAtoms0 = this.asc.ac;
 if (this.done) return;
 }}var g = groupList[groupTypeList[j]];
@@ -158,7 +157,7 @@ a.elementSymbol = elementList[pt];
 a.atomName = atomNameList[pt++];
 if (seqNo >= 0) this.maxSerial = Math.max(this.maxSerial, a.sequenceNumber = seqNo);
 a.group3 = group3;
-this.setChainID(a, chainID);
+this.setChainID(a, chainID, labelAsym);
 if (bf != null) a.bfactor = bf[iatom];
 if (altloc != null) a.altLoc = altloc[iatom];
 if (occ != null) a.foccupancy = occ[iatom];
@@ -181,7 +180,7 @@ var bo = g.get("bondOrderList");
 var bi = g.get("bondAtomList");
 this.addMMTFBonds(bo, bi, a0, doMulti, false);
 }}
-this.asc.setCurrentModelInfo("pdbID", this.$pdbID);
+this.setPDBID(this.pdbID, null);
 }, "~B");
 Clazz.defineMethod(c$, "addMMTFBonds", 
 function(bo, bi, a0, doMulti, isInter){
@@ -213,7 +212,8 @@ for (var i = o.length; --i >= 0; ) {
 var info =  new java.util.Hashtable();
 this.vBiomolecules.addLast(info);
 var iMolecule = i + 1;
-this.checkFilterAssembly("" + iMolecule, info);
+info.put("id", "" + iMolecule);
+this.checkFilterAssembly(info);
 info.put("name", "biomolecule " + iMolecule);
 info.put("molecule", Integer.$valueOf(iMolecule));
 var assemb =  new JU.Lst();
@@ -289,4 +289,4 @@ function(key){
 return JU.MessagePackReader.decode(this.map.get(key));
 }, "~S");
 });
-;//5.0.1-v7 Wed Jun 11 07:46:27 CDT 2025
+;//5.0.1-v7 Mon Oct 26 19:59:57 CDT 2026

@@ -3,6 +3,7 @@ Clazz.load(["J.shape.TextShape"], "J.shape.Hover", ["JU.AU", "JM.Text", "JU.C"],
 var c$ = Clazz.decorateAsClass(function(){
 this.hoverText = null;
 this.atomIndex = -1;
+this.withPointer = null;
 this.xy = null;
 this.text = null;
 this.labelFormat = "%U";
@@ -12,6 +13,7 @@ Clazz.instantialize(this, arguments);}, J.shape, "Hover", J.shape.TextShape);
 Clazz.overrideMethod(c$, "initShape", 
 function(){
 this.isHover = true;
+this.withPointer = null;
 var font3d = this.vwr.gdata.getFont3DFSS("SansSerif", "Plain", 12);
 var bgcolix = JU.C.getColixS("#FFFFC3");
 var colix = 4;
@@ -25,6 +27,9 @@ if (value == null) this.atomIndex = -1;
  else {
 this.atomIndex = (value).intValue();
 }return;
+}if ("pointer" === propertyName) {
+this.withPointer = (value);
+return;
 }if ("text" === propertyName) {
 this.text = value;
 if (this.text != null && this.text.length == 0) this.text = null;
@@ -57,4 +62,4 @@ return;
 }this.setPropTS(propertyName, value, null);
 }, "~S,~O,JU.BS");
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

@@ -1,28 +1,31 @@
 Clazz.declarePackage("JV");
-Clazz.load(["JU.BS"], "JV.SelectionManager", ["JU.AU", "J.i18n.GT", "JU.BSUtil"], function(){
+Clazz.load(["J.api.JmolSelectionListener", "JU.BS"], "JV.SelectionManager", ["JU.AU", "J.c.PAL", "J.i18n.GT", "JU.BSUtil", "$.C", "$.Escape"], function(){
 var c$ = Clazz.decorateAsClass(function(){
-this.vwr = null;
-this.listeners = null;
-this.bsHidden = null;
-this.bsSelection = null;
-this.bsFixed = null;
 this.bsSubset = null;
 this.bsDeleted = null;
 this.noneSelected = null;
+this.bsHidden = null;
+this.bsFixed = null;
+this.vwr = null;
+this.listeners = null;
+this.bsSelection = null;
 this.empty = 1;
 this.hideNotSelected = false;
 this.bsTemp = null;
+this.colorer = null;
 Clazz.instantialize(this, arguments);}, JV, "SelectionManager", null);
 Clazz.prepareFields (c$, function(){
-this.listeners =  new Array(0);
 this.bsHidden =  new JU.BS();
-this.bsSelection =  new JU.BS();
 this.bsFixed =  new JU.BS();
+this.bsSelection =  new JU.BS();
 this.bsTemp =  new JU.BS();
 });
 Clazz.makeConstructor(c$, 
 function(vwr){
 this.vwr = vwr;
+this.listeners =  new Array(0);
+this.colorer =  new JV.SelectionManager.SelectionColorer(vwr);
+this.addListener(this.colorer);
 }, "JV.Viewer");
 Clazz.defineMethod(c$, "processDeletedModelAtoms", 
 function(bsAtoms){
@@ -160,7 +163,7 @@ this.bsSubset = bs;
 }, "JU.BS");
 Clazz.defineMethod(c$, "isInSelectionSubset", 
 function(atomIndex){
-return (atomIndex < 0 || this.bsSubset == null || this.bsSubset.get(atomIndex));
+return (atomIndex < 0 || this.vwr.am.splitFrame && !this.vwr.am.isSplitFrameSelectable(atomIndex) || this.bsSubset == null || this.bsSubset.get(atomIndex));
 }, "~N");
 Clazz.defineMethod(c$, "invertSelection", 
 function(){
@@ -225,12 +228,12 @@ this.bsSelection.andNot(this.bsDeleted);
 return bsNew.cardinality();
 }, "JU.BS");
 Clazz.defineMethod(c$, "getSelectedAtoms", 
-function(){
-if (this.bsSubset == null) return this.bsSelection;
-var bs = JU.BSUtil.copy(this.bsSelection);
+function(asCopy){
+var bs = (asCopy || this.bsSubset != null ? JU.BSUtil.copy(this.bsSelection) : this.bsSelection);
+if (this.bsSubset == null) return bs;
 bs.and(this.bsSubset);
 return bs;
-});
+}, "~B");
 Clazz.defineMethod(c$, "getSelectedAtomsNoSubset", 
 function(){
 return JU.BSUtil.copy(this.bsSelection);
@@ -250,5 +253,68 @@ Clazz.defineMethod(c$, "getMotionFixedAtoms",
 function(){
 return this.bsFixed;
 });
+Clazz.defineMethod(c$, "setSelectionColors", 
+function(colorSelected, colorUnselected, translucency, translucentLevel){
+this.colorer.set(colorSelected, colorUnselected, translucency, translucentLevel);
+this.vwr.selectStatus(this.getSelectedAtoms(true), false, 0, false, true);
+this.colorer.enabled = (colorSelected != null || colorUnselected != null);
+}, "Integer,Integer,~S,~N");
+Clazz.defineMethod(c$, "getSelectionColors", 
+function(){
+return (this.colorer.enabled ? this.colorer.toString() : "NULL NULL");
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+/*if3*/;(function(){
+var c$ = Clazz.decorateAsClass(function(){
+this.enabled = false;
+this.colorSelected = null;
+this.colorUnselected = null;
+this.bsColorSelected = null;
+this.bsColorUnselected = null;
+this.translucency = null;
+this.translucentLevel = null;
+this.vwr = null;
+Clazz.instantialize(this, arguments);}, JV.SelectionManager, "SelectionColorer", null, J.api.JmolSelectionListener);
+Clazz.makeConstructor(c$, 
+function(vwr){
+this.vwr = vwr;
+}, "JV.Viewer");
+Clazz.overrideMethod(c$, "selectionChanged", 
+function(selection){
+if (!this.enabled) return;
+var bsAll = this.vwr.getAllAtoms();
+JU.BSUtil.copy2(selection, this.bsColorSelected);
+JU.BSUtil.copy2(bsAll, this.bsColorUnselected);
+this.bsColorUnselected.andNot(this.bsColorSelected);
+this.vwr.shm.setShapePropertyBs(0, "color", this.colorSelected, this.bsColorSelected);
+this.vwr.shm.setShapePropertyBs(0, "color", this.colorUnselected, this.bsColorUnselected);
+if (this.translucency != null) {
+this.vwr.shm.setShapePropertyBs(0, "translucency", this.translucency, this.bsColorUnselected);
+this.vwr.shm.setShapePropertyBs(0, "translucentLevel", this.translucentLevel, this.bsColorUnselected);
+}}, "JU.BS");
+Clazz.defineMethod(c$, "colorString", 
+function(c, isTranslucent){
+if (c == null || c === J.c.PAL.NONE) return "NULL";
+var ic = JU.C.getShadedRGB((c).intValue(), (isTranslucent ? this.translucentLevel.doubleValue() : 0));
+return "#" + JU.Escape.getHexColorFromRGB(ic);
+}, "~O,~B");
+Clazz.defineMethod(c$, "set", 
+function(colorSelected, colorUnselected, translucency, translucentLevel){
+if (this.bsColorSelected == null) {
+this.bsColorSelected =  new JU.BS();
+this.bsColorUnselected =  new JU.BS();
+}this.colorSelected = (colorSelected == null ? J.c.PAL.NONE : colorSelected);
+this.colorUnselected = (colorUnselected == null ? J.c.PAL.NONE : colorUnselected);
+if (translucentLevel == 1.7976931348623157E308) {
+this.translucency = null;
+} else {
+this.translucency = translucency;
+this.translucentLevel = Double.$valueOf(translucentLevel);
+}this.enabled = true;
+}, "Integer,Integer,~S,~N");
+Clazz.overrideMethod(c$, "toString", 
+function(){
+return this.colorString(this.colorSelected, false) + " " + this.colorString(this.colorUnselected, this.translucency != null);
+});
+/*eoif3*/})();
+});
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

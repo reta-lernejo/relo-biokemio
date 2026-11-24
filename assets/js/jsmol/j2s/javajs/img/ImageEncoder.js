@@ -15,10 +15,11 @@ Clazz.overrideMethod(c$, "createImage",
 function(type, out, params){
 this.out = out;
 this.logging = (Boolean.TRUE === params.get("logging"));
+this.pixels = params.get("imagePixels");
+if (this.pixels != null) {
 this.width = (params.get("imageWidth")).intValue();
 this.height = (params.get("imageHeight")).intValue();
-this.pixels = params.get("imagePixels");
-this.date = params.get("date");
+}this.date = params.get("date");
 var q = params.get("quality");
 this.quality = (q == null ? -1 : q.intValue());
 this.setParams(params);
@@ -41,4 +42,4 @@ Clazz.defineMethod(c$, "close",
 function(){
 });
 });
-;//5.0.1-v7 Fri May 30 06:19:09 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

@@ -242,4 +242,4 @@ if (!this.haveMacros) this.writeMacros2();
 this.output("r(" + this.getTriad(ptA) + "," + this.getTriad(ptB) + "," + this.getTriad(ptC) + "," + this.color4(colix) + ")\n");
 }, "JU.T3,JU.T3,JU.T3,~N");
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

@@ -90,7 +90,7 @@ switch (mad) {
 case -1:
 case -2:
 if (mad == -1 && this.shape.madOn >= 0) return this.shape.madOn;
-switch (this.monomers[groupIndex].getProteinStructureType()) {
+switch (this.monomers[groupIndex].getBioStructureType()) {
 case J.c.STR.SHEET:
 case J.c.STR.HELIX:
 return this.shape.madHelixSheet;
@@ -232,4 +232,4 @@ function(){
 return null;
 });
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

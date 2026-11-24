@@ -166,4 +166,4 @@ return a;
 c$.version = "QCJSON 0-0-0.Jmol_" + JV.Viewer.getJmolVersion().$replace(' ', '_');
 c$.htConvert =  new java.util.Hashtable();
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

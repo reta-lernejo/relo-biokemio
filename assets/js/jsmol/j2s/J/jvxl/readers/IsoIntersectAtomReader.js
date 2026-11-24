@@ -133,4 +133,4 @@ if (r < value) value = r;
 return (value == 3.4028235E38 ? NaN : value);
 }, "JU.T3,JU.BS");
 });
-;//5.0.1-v7 Sat Jun 07 00:08:51 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

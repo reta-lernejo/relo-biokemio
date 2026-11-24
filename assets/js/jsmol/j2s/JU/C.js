@@ -191,6 +191,23 @@ c$.getBgContrast = Clazz.defineMethod(c$, "getBgContrast",
 function(argb){
 return ((JU.CU.toFFGGGfromRGB(argb) & 0xFF) < 128 ? 8 : 4);
 }, "~N");
+c$.getColixShadedRGB = Clazz.defineMethod(c$, "getColixShadedRGB", 
+function(colix){
+return JU.C.getShadedRGB(JU.C.getArgb(colix), JU.C.getColixTranslucencyFractional(colix));
+}, "~N");
+c$.getShadedRGB = Clazz.defineMethod(c$, "getShadedRGB", 
+function(ic, translucentLevel){
+return (translucentLevel == 0 ? ic : JU.C.getShade(ic, translucentLevel));
+}, "~N,~N");
+c$.getShade = Clazz.defineMethod(c$, "getShade", 
+function(ic, translucentLevel){
+var opacity = 1 - translucentLevel;
+return JU.C.shade(ic, 16, opacity) | JU.C.shade(ic, 8, opacity) | JU.C.shade(ic, 0, opacity);
+}, "~N,~N");
+c$.shade = Clazz.defineMethod(c$, "shade", 
+function(ic, off, opacity){
+return Math.max(0, Math.min(Clazz.doubleToInt((((ic >> off) & 0xFF) - 0xFF) * opacity + 0xFF), 0xFF)) << off;
+}, "~N,~N,~N");
 c$.colixMax = 4;
 c$.argbs =  Clazz.newIntArray (128, 0);
 {
@@ -202,4 +219,4 @@ var predefinedArgbs =  Clazz.newIntArray(-1, [0xFF000000, 0xFFFFA500, 0xFFFFC0CB
 for (var i = 0; i < predefinedArgbs.length; ++i) JU.C.getColix(predefinedArgbs[i]);
 
 }});
-;//5.0.1-v7 Mon Jun 02 10:11:19 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

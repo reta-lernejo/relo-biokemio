@@ -338,4 +338,4 @@ return (this.type + " " + this.modelIndex + " " + this.atomIndex1 + " " + this.a
 c$.ADP_FACTOR = Math.sqrt(0.5) / 3.141592653589793;
 c$.tSort = null;
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

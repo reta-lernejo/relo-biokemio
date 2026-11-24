@@ -1,24 +1,26 @@
 Clazz.declarePackage("J.shapesurface");
-Clazz.load(["J.shape.Mesh"], "J.shapesurface.IsosurfaceMesh", ["java.util.Hashtable", "JU.AU", "$.BS", "$.CU", "$.Lst", "$.M4", "$.P3", "$.P3i", "$.PT", "$.SB", "$.V3", "J.api.Interface", "J.jvxl.data.JvxlCoder", "$.JvxlData", "JS.T", "JU.C", "$.ColorEncoder", "$.Logger", "$.SimpleUnitCell", "JV.Viewer"], function(){
+Clazz.load(["J.shape.Mesh"], "J.shapesurface.IsosurfaceMesh", ["java.util.Hashtable", "JU.AU", "$.BS", "$.CU", "$.Lst", "$.M4", "$.P3", "$.P3i", "$.PT", "$.SB", "$.V3", "J.api.Interface", "J.jvxl.data.JvxlCoder", "$.JvxlData", "JS.T", "JU.BSUtil", "$.C", "$.ColorEncoder", "$.Logger", "$.SimpleUnitCell", "JV.Viewer"], function(){
 var c$ = Clazz.decorateAsClass(function(){
 this.jvxlData = null;
 this.vertexIncrement = 1;
 this.firstRealVertex = -1;
 this.dataType = 0;
 this.hasGridPoints = false;
+this.vertexColorMap = null;
 this.calculatedArea = null;
 this.calculatedVolume = null;
 this.info = null;
+this.contourValues = null;
+this.contourColixes = null;
+this.colorEncoder = null;
+this.colorPhased = false;
+this.probeValues = null;
+this.pymolVertexColorMap = null;
+this.bsVdw = null;
 this.assocGridPointMap = null;
 this.assocGridPointNormals = null;
 this.mergeAssociatedNormalCount = 0;
 this.centers = null;
-this.contourValues = null;
-this.contourColixes = null;
-this.colorEncoder = null;
-this.bsVdw = null;
-this.colorPhased = false;
-this.probeValues = null;
 Clazz.instantialize(this, arguments);}, J.shapesurface, "IsosurfaceMesh", J.shape.Mesh);
 Clazz.makeConstructor(c$, 
 function(vwr, thisID, colix, index){
@@ -306,53 +308,88 @@ this.jvxlData.contourValues = null;
 this.jvxlData.contourColixes = null;
 this.jvxlData.vContours = null;
 });
-Clazz.defineMethod(c$, "setVertexColorMap", 
-function(){
-this.vertexColorMap =  new java.util.Hashtable();
-var lastColix = -999;
-var bs = null;
-for (var i = this.vc; --i >= 0; ) {
-var c = this.vcs[i];
-if (c != lastColix) {
-var color = JU.C.getHexCode(lastColix = c);
-bs = this.vertexColorMap.get(color);
-if (bs == null) this.vertexColorMap.put(color, bs =  new JU.BS());
-}bs.set(i);
-}
-});
-Clazz.defineMethod(c$, "setVertexColixesForAtoms", 
-function(vwr, colixes, atomMap, bs){
-this.jvxlData.vertexDataOnly = true;
-this.jvxlData.vertexColors =  Clazz.newIntArray (this.vc, 0);
+Clazz.defineMethod(c$, "setPymolVertexColixesForAtoms", 
+function(vwr, data, bs){
+this.checkAllocColixes();
+var colixes = data[0];
+var atomMap = null;
+var atrans = data[1];
+var ctrans = (atrans == null ? null :  Clazz.newShortArray (atrans.length, 0));
+var haveTransparentVertices = false;
+if (colixes != null) {
+for (var i = 0; i < colixes.length; i++) {
+var colix = colixes[i];
+colixes[i] = colix;
+var f = (atrans == null ? 0 : atrans[i]);
+if (f > 0.01) {
+ctrans[i] = JU.C.getColixTranslucent3(colix, true, f);
+haveTransparentVertices = true;
+}}
+atomMap =  Clazz.newIntArray (bs.length(), 0);
+for (var pt = 0, i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i + 1), pt++) atomMap[i] = pt;
+
+}this.jvxlData.vertexColors =  Clazz.newIntArray (this.vc, 0);
 this.jvxlData.nVertexColors = this.vc;
+this.colorEncoder = null;
 var atoms = vwr.ms.at;
 var gdata = vwr.gdata;
+var isTranslucent = JU.C.isTransparent(this.colix);
 for (var i = this.mergeVertexCount0; i < this.vc; i++) {
 var iAtom = this.vertexSource[i];
 if (iAtom < 0 || !bs.get(iAtom)) continue;
 this.jvxlData.vertexColors[i] = gdata.getColorArgbOrGray(this.vcs[i] = JU.C.copyColixTranslucency(this.colix, atoms[iAtom].colixAtom));
 var colix = (colixes == null ? 0 : colixes[atomMap[iAtom]]);
+var trans = (ctrans == null ? -1 : ctrans[atomMap[iAtom]]);
 if (colix == 0) colix = atoms[iAtom].colixAtom;
-this.vcs[i] = JU.C.copyColixTranslucency(this.colix, colix);
+if (isTranslucent) this.vcs[i] = JU.C.copyColixTranslucency(this.colix, colix);
+ else if (trans == 0) this.vcs[i] = colix;
+ else this.vcs[i] = JU.C.copyColixTranslucency(trans, colix);
 }
-}, "JV.Viewer,~A,~A,JU.BS");
+this.setPymolColors();
+return haveTransparentVertices;
+}, "JV.Viewer,~A,JU.BS");
+Clazz.defineMethod(c$, "setPymolColors", 
+function(){
+this.pymolVertexColorMap = this.vertexColorMap =  new java.util.Hashtable();
+var lastColix = -999;
+var bs = null;
+for (var i = this.vc; --i >= 0; ) {
+var c = this.vcs[i];
+if (c != lastColix) {
+var color = J.shapesurface.IsosurfaceMesh.getVertexColorString(lastColix = c);
+if (JU.C.isColixTranslucent(c)) this.hasTranslucentVertices = true;
+bs = this.vertexColorMap.get(color);
+if (bs == null) this.vertexColorMap.put(color, bs =  new JU.BS());
+}bs.set(i);
+}
+return;
+});
+c$.getVertexColorString = Clazz.defineMethod(c$, "getVertexColorString", 
+function(c){
+var color = JU.C.getHexCode(c);
+if (JU.C.isColixTranslucent(c)) {
+color += " translucent " + JU.C.getColixTranslucencyFractional(c);
+}return color;
+}, "~N");
 Clazz.defineMethod(c$, "colorVertices", 
 function(colix, bs, isAtoms){
-if (this.vertexSource == null) return;
-colix = JU.C.copyColixTranslucency(this.colix, colix);
+if (this.vertexSource == null) {
+return;
+}if (JU.C.isColixTranslucent(colix)) this.hasTranslucentVertices = true;
+ else colix = JU.C.copyColixTranslucency(this.colix, colix);
 var bsVertices = (isAtoms ?  new JU.BS() : bs);
 this.checkAllocColixes();
-if (isAtoms) for (var i = 0; i < this.vc; i++) {
+if (isAtoms) {
+for (var i = 0; i < this.vc; i++) {
 var pt = this.vertexSource[i];
 if (pt >= 0 && bs.get(pt)) {
 this.vcs[i] = colix;
 if (bsVertices != null) bsVertices.set(i);
 }}
- else for (var i = 0; i < this.vc; i++) if (bsVertices.get(i)) this.vcs[i] = colix;
+} else {
+for (var i = 0; i < this.vc; i++) if (bsVertices.get(i)) this.vcs[i] = colix;
 
-if (!isAtoms) {
-return;
-}var color = JU.C.getHexCode(colix);
+}var color = J.shapesurface.IsosurfaceMesh.getVertexColorString(colix);
 if (this.vertexColorMap == null) this.vertexColorMap =  new java.util.Hashtable();
 J.shapesurface.IsosurfaceMesh.addColorToMap(this.vertexColorMap, color, bs);
 }, "~N,JU.BS,~B");
@@ -364,11 +401,20 @@ this.isColorSolid = false;
 c$.addColorToMap = Clazz.defineMethod(c$, "addColorToMap", 
 function(colorMap, color, bs){
 var bsMap = null;
-for (var entry, $entry = colorMap.entrySet().iterator (); $entry.hasNext()&& ((entry = $entry.next ()) || true);) if (entry.getKey() === color) {
+var toRemove =  new JU.Lst();
+for (var entry, $entry = colorMap.entrySet().iterator (); $entry.hasNext()&& ((entry = $entry.next ()) || true);) {
+var key = entry.getKey();
+if (key === color) {
 bsMap = entry.getValue();
 bsMap.or(bs);
 } else {
-entry.getValue().andNot(bs);
+var bsVal = entry.getValue();
+bsVal.andNot(bs);
+if (bsVal.isEmpty()) {
+toRemove.addLast(key);
+}}}
+while (!toRemove.isEmpty()) {
+colorMap.remove(toRemove.removeItemAt(0));
 }
 if (bsMap == null) colorMap.put(color, bs);
 }, "java.util.Map,~S,JU.BS");
@@ -397,7 +443,10 @@ if (this.jvxlData.vertexColorMap.size() == 0) this.jvxlData.vertexColorMap = nul
 }, "~B");
 Clazz.defineMethod(c$, "setColorCommand", 
 function(){
-if (this.colorEncoder == null || (this.colorCommand = this.colorEncoder.getColorScheme()) == null) return;
+if ("inherit".equals(this.jvxlData.colorScheme)) {
+this.colorCommand = "#inherit;";
+return;
+}if (this.colorEncoder == null || (this.colorCommand = this.colorEncoder.getColorScheme()) == null) return;
 if (this.colorCommand.equals("inherit")) {
 this.colorCommand = "#inherit;";
 return;
@@ -417,8 +466,8 @@ var translucencyLevel = (this.jvxlData.translucency == 0 ? NaN : this.jvxlData.t
 if (this.jvxlData.meshColor != null) this.meshColix = JU.C.getColixS(this.jvxlData.meshColor);
 this.setJvxlDataRendering();
 this.isColorSolid = !this.jvxlData.isBicolorMap && this.jvxlData.vertexColors == null && this.jvxlData.vertexColorMap == null;
-if (this.colorEncoder == null) return false;
 if (this.jvxlData.vertexColorMap == null) {
+if (this.colorEncoder == null && ("inherit".equals(this.jvxlData.colorScheme) || this.jvxlData.vertexColorMap == null)) return false;
 if (this.jvxlData.colorScheme != null) {
 var colorScheme = this.jvxlData.colorScheme;
 var isTranslucent = colorScheme.startsWith("translucent ");
@@ -431,9 +480,22 @@ this.remapColors(null, null, translucencyLevel);
 if (this.jvxlData.baseColor != null) {
 for (var i = this.vc; --i >= 0; ) this.vcs[i] = this.colix;
 
-}for (var entry, $entry = this.jvxlData.vertexColorMap.entrySet().iterator (); $entry.hasNext()&& ((entry = $entry.next ()) || true);) {
+}System.out.println("mapping color from PyMOL vertex colors");
+for (var entry, $entry = this.jvxlData.vertexColorMap.entrySet().iterator (); $entry.hasNext()&& ((entry = $entry.next ()) || true);) {
 var bsMap = entry.getValue();
-var colix = JU.C.copyColixTranslucency(this.colix, JU.C.getColixS(entry.getKey()));
+var key = entry.getKey();
+var pt = key.indexOf(" translucent");
+var isTranslucent = (pt >= 0);
+var t = (isTranslucent ? JU.PT.parseFloat(key.substring(pt + 12)) : -1);
+if (Float.isNaN(t)) {
+System.out.println("Isourface error reading JVXL file translucent vertex color:" + key);
+isTranslucent = false;
+} else if (isTranslucent) {
+key = key.substring(0, pt);
+this.hasTranslucentVertices = true;
+}var colix = JU.C.getColixS(key);
+if (isTranslucent) colix = JU.C.getColixTranslucent3(colix, true, t);
+ else colix = JU.C.copyColixTranslucency(this.colix, colix);
 for (var i = bsMap.nextSetBit(0); i >= 0; i = bsMap.nextSetBit(i + 1)) this.vcs[i] = colix;
 
 }
@@ -467,7 +529,6 @@ this.jvxlData.vertexCount = this.vc;
 if (this.vvs == null || this.jvxlData.vertexCount == 0) return;
 if (this.vcs == null || this.vcs.length != this.vc) this.allocVertexColixes();
 if (inherit) {
-this.jvxlData.vertexDataOnly = true;
 this.jvxlData.vertexColors =  Clazz.newIntArray (this.vc, 0);
 this.jvxlData.nVertexColors = this.vc;
 var atoms = vwr.ms.at;
@@ -658,11 +719,12 @@ return  Clazz.newFloatArray(-1, [min, max]);
 });
 Clazz.defineMethod(c$, "getDataRange", 
 function(){
-return (this.jvxlData.jvxlPlane != null && this.colorEncoder == null ? null :  Clazz.newFloatArray(-1, [this.jvxlData.mappedDataMin, this.jvxlData.mappedDataMax, (this.jvxlData.isColorReversed ? this.jvxlData.valueMappedToBlue : this.jvxlData.valueMappedToRed), (this.jvxlData.isColorReversed ? this.jvxlData.valueMappedToRed : this.jvxlData.valueMappedToBlue)]));
+return ("inherit".equals(this.jvxlData.colorScheme) || this.jvxlData.jvxlPlane != null && this.colorEncoder == null ? null :  Clazz.newFloatArray(-1, [this.jvxlData.mappedDataMin, this.jvxlData.mappedDataMax, (this.jvxlData.isColorReversed ? this.jvxlData.valueMappedToBlue : this.jvxlData.valueMappedToRed), (this.jvxlData.isColorReversed ? this.jvxlData.valueMappedToRed : this.jvxlData.valueMappedToBlue)]));
 });
 Clazz.defineMethod(c$, "getInfo", 
 function(isAll){
 var info = Clazz.superCall(this, J.shapesurface.IsosurfaceMesh, "getInfo", [isAll]);
+if (this.vertexColorMap != null) info.put("vertexColorMap", this.vertexColorMap);
 if (isAll) {
 var bs =  new JU.BS();
 var valid = this.getValidVertices(bs);
@@ -710,5 +772,41 @@ for (var i = this.vc; --i >= 0; ) {
 if (!thisSet.get(this.vertexSets[i])) bs.set(i);
 }
 }}, "JU.BS");
+Clazz.defineMethod(c$, "copyVertexColorMap", 
+function(){
+if (this.vertexColorMap == null) return null;
+var map =  new java.util.Hashtable();
+for (var e, $e = this.vertexColorMap.entrySet().iterator (); $e.hasNext()&& ((e = $e.next ()) || true);) {
+map.put(e.getKey(), JU.BSUtil.copy(e.getValue()));
+}
+return map;
 });
-;//5.0.1-v7 Sun Jun 29 22:48:16 CDT 2025
+Clazz.defineMethod(c$, "setPropertyColor", 
+function(color){
+this.colorsExplicit = false;
+this.colorEncoder = null;
+this.vertexSource = null;
+this.jvxlData.baseColor = color;
+this.jvxlData.nVertexColors = 0;
+this.jvxlData.jvxlColorData = null;
+this.jvxlData.vertexColorMap = this.pymolVertexColorMap = this.vertexColorMap = null;
+this.hasTranslucentVertices = false;
+this.pcs = this.vcs = null;
+this.isColorSolid = true;
+}, "~S");
+Clazz.defineMethod(c$, "setPropertyColorPhase", 
+function(colix0, colix1, translucentLevel){
+this.colorPhased = true;
+this.colix = this.jvxlData.minColorIndex = colix0;
+this.jvxlData.maxColorIndex = colix1;
+this.jvxlData.isBicolorMap = true;
+this.jvxlData.colorDensity = false;
+this.isColorSolid = false;
+this.remapColors(this.vwr, null, translucentLevel);
+}, "~N,~N,~N");
+Clazz.defineMethod(c$, "getDataName", 
+function(){
+return "isosurface_" + this.thisID + ".jvxl";
+});
+});
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

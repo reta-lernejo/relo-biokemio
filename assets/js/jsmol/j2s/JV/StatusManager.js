@@ -130,17 +130,25 @@ this.setStatusChanged("atomMoved", -1, bsMoved, false);
 var isEnabled = this.notifyEnabled(J.c.CBK.ATOMMOVED);
 if (isEnabled || sJmol != null) this.fireJmolScriptCallback(isEnabled, J.c.CBK.ATOMMOVED,  Clazz.newArray(-1, [sJmol, bsMoved, Integer.$valueOf(bsMoved.cardinality())]), true);
 }, "JU.BS");
+Clazz.defineMethod(c$, "notifyCalculation", 
+function(type, atoms, result){
+var sJmol = this.getJmolScriptCallback(J.c.CBK.CALCULATION);
+var isEnabled = this.notifyEnabled(J.c.CBK.CALCULATION);
+if (isEnabled || sJmol != null) this.fireJmolScriptCallback(isEnabled, J.c.CBK.CALCULATION,  Clazz.newArray(-1, [sJmol, atoms, type, result]), true);
+}, "~S,JU.BS,~S");
 Clazz.defineMethod(c$, "setStatusSelect", 
 function(atoms){
 var sJmol = this.getJmolScriptCallback(J.c.CBK.SELECT);
 this.setStatusChanged("select", -1, atoms, false);
 var isEnabled = this.notifyEnabled(J.c.CBK.SELECT);
-if (isEnabled || sJmol != null) this.fireJmolScriptCallback(isEnabled, J.c.CBK.SELECT,  Clazz.newArray(-1, [sJmol, atoms, Integer.$valueOf(atoms.cardinality()), Integer.$valueOf(atoms.nextSetBit(0)), Integer.$valueOf(atoms.length())]), true);
+if (isEnabled || sJmol != null) this.fireJmolScriptCallback(isEnabled, J.c.CBK.SELECT,  Clazz.newArray(-1, [sJmol, atoms, Integer.$valueOf(atoms.cardinality()), Integer.$valueOf(atoms.nextSetBit(0)), Integer.$valueOf(atoms.length()), this.vwr.slm.getSelectionColors()]), true);
 }, "JU.BS");
 Clazz.defineMethod(c$, "setStatusStructureModified", 
 function(atomIndex, modelIndex, mode, msg, n, bsAtoms){
-if (atomIndex >= 0 && bsAtoms == null) bsAtoms = JU.BSUtil.newAndSetBit(atomIndex);
-var sJmol = this.getJmolScriptCallback(J.c.CBK.STRUCTUREMODIFIED);
+if (bsAtoms == null) {
+if (atomIndex >= 0) bsAtoms = JU.BSUtil.newAndSetBit(atomIndex);
+ else bsAtoms = this.vwr.bsA();
+}var sJmol = this.getJmolScriptCallback(J.c.CBK.STRUCTUREMODIFIED);
 var isEnabled = this.notifyEnabled(J.c.CBK.STRUCTUREMODIFIED);
 if (isEnabled || sJmol != null) this.fireJmolScriptCallback(isEnabled, J.c.CBK.STRUCTUREMODIFIED,  Clazz.newArray(-1, [sJmol, Integer.$valueOf(mode), Integer.$valueOf(atomIndex), Integer.$valueOf(modelIndex), msg, Integer.$valueOf(n), bsAtoms]), true);
 }, "~N,~N,~N,~S,~N,JU.BS");
@@ -246,7 +254,7 @@ function(mode, x, y, fileName, retType){
 this.setStatusChanged("dragDrop", 0, "", false);
 var sJmol = this.getJmolScriptCallback(J.c.CBK.DRAGDROP);
 var isEnabled = this.notifyEnabled(J.c.CBK.DRAGDROP);
-if (isEnabled || sJmol != null) this.fireJmolScriptCallback(isEnabled, J.c.CBK.DRAGDROP,  Clazz.newArray(-1, [sJmol, Integer.$valueOf(mode), Integer.$valueOf(x), Integer.$valueOf(y), fileName, retType]), true);
+if (isEnabled || sJmol != null) this.fireJmolScriptCallback(isEnabled, J.c.CBK.DRAGDROP,  Clazz.newArray(-1, [sJmol, Integer.$valueOf(mode), Integer.$valueOf(x), Integer.$valueOf(y), fileName, retType == null ?  new Array(1) : retType]), true);
 return isEnabled;
 }, "~N,~N,~N,~S,~A");
 Clazz.defineMethod(c$, "setScriptEcho", 
@@ -359,22 +367,21 @@ JU.Logger.debug(this.vwr.appletName + " sync mode=" + syncMode + "; synced? " + 
 }}, "~N");
 Clazz.defineMethod(c$, "syncSend", 
 function(script, appletNameOrProp, port){
-if (port != 0 || this.notifyEnabled(J.c.CBK.SYNC)) {
+if (port == 0 && !this.notifyEnabled(J.c.CBK.SYNC)) return null;
 var o =  Clazz.newArray(-1, [null, script, appletNameOrProp, Integer.$valueOf(port)]);
 if (this.cbl != null) this.cbl.notifyCallback(J.c.CBK.SYNC, o);
 return o[0];
-}return null;
 }, "~S,~O,~N");
 Clazz.defineMethod(c$, "processService", 
 function(info){
 var s = info.get("service");
-if (s == null) return null;
+if (s == null || !this.notifyEnabled(J.c.CBK.SERVICE)) return null;
 if (Clazz.instanceOf(s,"JS.SV")) {
 var m =  new java.util.Hashtable();
 for (var e, $e = info.entrySet().iterator (); $e.hasNext()&& ((e = $e.next ()) || true);) m.put(e.getKey(), JS.SV.oValue(e.getValue()));
 
 info = m;
-}if (this.notifyEnabled(J.c.CBK.SERVICE)) this.cbl.notifyCallback(J.c.CBK.SERVICE,  Clazz.newArray(-1, [null, info]));
+}this.cbl.notifyCallback(J.c.CBK.SERVICE,  Clazz.newArray(-1, [null, info]));
 return info;
 }, "java.util.Map");
 Clazz.defineMethod(c$, "getSyncMode", 
@@ -429,10 +436,6 @@ if (sType != null) params.put("dialogImageType", sType);
 }if (sType != null) this.imageType = sType;
 }return outputFileName;
 }, "~S,~S,java.util.Map");
-Clazz.defineMethod(c$, "getJspecViewProperties", 
-function(myParam){
-return (this.jsl == null ? null : this.jsl.getJSpecViewProperty(myParam == null || myParam.length == 0 ? "" : ":" + myParam));
-}, "~S");
 Clazz.defineMethod(c$, "resizeInnerPanel", 
 function(width, height){
 return (this.jsl == null || width == this.vwr.getScreenWidth() && height == this.vwr.getScreenHeight() ?  Clazz.newIntArray(-1, [width, height]) : this.jsl.resizeInnerPanel("preferredWidthHeight " + width + " " + height + ";"));
@@ -508,6 +511,10 @@ var isEnabled = this.notifyEnabled(J.c.CBK.AUDIO);
 if (isEnabled || sJmol != null) this.fireJmolScriptCallback(isEnabled, J.c.CBK.AUDIO,  Clazz.newArray(-1, [sJmol, htParams, status]), true);
 if (status === "ended" && htParams.get("autoclose") !== Boolean.FALSE) this.registerAudio(htParams.get("id"), null);
 }, "java.util.Map");
+Clazz.defineMethod(c$, "syncScriptErr", 
+function(script){
+return this.syncScript(script, "?", 0);
+}, "~S");
 Clazz.defineMethod(c$, "syncScript", 
 function(script, applet, port){
 if ("GET_GRAPHICS".equalsIgnoreCase(script)) {
@@ -515,25 +522,29 @@ this.setSyncDriver(5);
 this.syncSend(script, applet, 0);
 this.vwr.setBooleanProperty("_syncMouse", false);
 this.vwr.setBooleanProperty("_syncScript", false);
-return;
+return null;
 }if ("=".equals(applet)) {
 applet = "~";
 this.setSyncDriver(2);
 }var disableSend = "~".equals(applet);
 if (port > 0 || !disableSend && !".".equals(applet)) {
-this.syncSend(script, applet, port);
-if (!"*".equals(applet) || script.startsWith("{")) return;
-}if (script.equalsIgnoreCase("on") || script.equalsIgnoreCase("true")) {
+var msg = this.syncSend(script, applet, port);
+if (!"*".equals(applet) || script.startsWith("{")) return ("?".equals(applet) ? msg : null);
+}switch (script.toLowerCase()) {
+case "on":
+case "true":
 this.setSyncDriver(1);
-return;
-}if (script.equalsIgnoreCase("off") || script.equalsIgnoreCase("false")) {
+return null;
+case "off":
+case "false":
 this.setSyncDriver(0);
-return;
-}if (script.equalsIgnoreCase("slave")) {
+return null;
+case "slave":
 this.setSyncDriver(2);
-return;
-}var syncMode = this.getSyncMode();
-if (syncMode == 0) return;
+return null;
+}
+var syncMode = this.getSyncMode();
+if (syncMode == 0) return null;
 if (syncMode != 1) disableSend = false;
 if (JU.Logger.debugging) JU.Logger.debug(this.vwr.htmlName + " syncing with script: " + script);
 if (disableSend) this.setSyncDriver(3);
@@ -546,23 +557,24 @@ case 49:
 case 56:
 case 63:
 this.syncSend(script, ".", port);
-return;
+return null;
 case -1:
 break;
 case 0:
 case 77:
 case 28:
 case 35:
-if (disableSend) return;
+if (disableSend) return null;
 case 21:
 case 7:
 case 14:
-if ((script = this.vwr.getJSV().processSync(script, serviceMode)) == null) return;
+if ((script = this.vwr.getJSV().processSync(script, serviceMode)) == null) return null;
 }
 this.vwr.evalStringQuietSync(script, true, false);
-return;
+return null;
 }this.mouseScript(script);
 if (disableSend) this.vwr.setSyncDriver(4);
+return null;
 }, "~S,~S,~N");
 Clazz.defineMethod(c$, "mouseScript", 
 function(script){
@@ -621,6 +633,10 @@ throw e;
 }
 this.vwr.showString("error reading SYNC command: " + script, false);
 }, "~S");
+Clazz.defineMethod(c$, "processPluginRequest", 
+function(name, action, value){
+return (this.jsl == null ? null : this.jsl.processPluginRequest(name, action, value));
+}, "~S,~S,~O");
 c$.MAXIMUM_QUEUE_LENGTH = 16;
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

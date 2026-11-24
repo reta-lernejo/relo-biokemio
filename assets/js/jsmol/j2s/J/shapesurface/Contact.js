@@ -1,5 +1,5 @@
 Clazz.declarePackage("J.shapesurface");
-Clazz.load(["J.shapesurface.Isosurface", "JU.P3", "$.V3", "J.atomdata.RadiusData", "J.c.VDW"], "J.shapesurface.Contact", ["java.util.Hashtable", "JU.BS", "$.CU", "$.Lst", "$.Measure", "J.atomdata.AtomData", "J.c.HB", "J.jvxl.data.JvxlCoder", "$.MeshData", "$.VolumeData", "JS.T", "JU.BSUtil", "$.BoxInfo", "$.ContactPair", "$.Escape", "$.Logger", "$.TempArray"], function(){
+Clazz.load(["J.shapesurface.Isosurface", "JU.P3", "$.V3", "J.atomdata.RadiusData", "J.c.VDW"], "J.shapesurface.Contact", ["java.util.Hashtable", "JU.BS", "$.CU", "$.Lst", "$.Measure", "J.atomdata.AtomData", "J.c.HB", "J.jvxl.data.JvxlCoder", "$.MeshData", "$.VolumeData", "JS.T", "JU.BSUtil", "$.BoxInfo", "$.ContactPair", "$.Escape", "$.GData", "$.Logger"], function(){
 var c$ = Clazz.decorateAsClass(function(){
 this.displayType = 0;
 this.atoms = null;
@@ -442,7 +442,7 @@ if (displayType == 134217750) {
 iSlab0 = -100;
 }break;
 }
-if (iSlab0 != iSlab1) this.thisMesh.getMeshSlicer().slabPolygons(JU.TempArray.getSlabWithinRange(iSlab0, iSlab1), false);
+if (iSlab0 != iSlab1) this.thisMesh.getMeshSlicer().slabPolygons(JU.GData.getSlabWithinRange(iSlab0, iSlab1), false);
 if (displayType != 2097180) this.thisMesh.setMerged(true);
 }, "~N,JU.ContactPair,JU.BS,JU.BS,J.atomdata.RadiusData,~A,~O,~B,J.jvxl.data.VolumeData,~N");
 Clazz.defineMethod(c$, "setVolumeData", 
@@ -543,4 +543,4 @@ cp.xVdwClash = ((x / 2));
 }}, "JU.ContactPair,~N,~N,~N,~N");
 c$.rdVDW =  new J.atomdata.RadiusData(null, 1, J.atomdata.RadiusData.EnumType.FACTOR, J.c.VDW.AUTO);
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

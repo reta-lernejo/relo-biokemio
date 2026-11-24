@@ -385,4 +385,4 @@ return s;
 }, "java.io.File");
 c$.inchiVersionInternal = null;
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

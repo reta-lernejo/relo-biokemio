@@ -1,5 +1,5 @@
 Clazz.declarePackage("J.shapesurface");
-Clazz.load(["J.jvxl.api.MeshDataServer", "J.shape.MeshCollection", "JU.P3i", "$.P4"], "J.shapesurface.Isosurface", ["java.util.Hashtable", "JU.A4", "$.AU", "$.BS", "$.CU", "$.Lst", "$.M3", "$.M4", "$.P3", "$.PT", "$.Quat", "$.Rdr", "$.SB", "$.V3", "J.jvxl.data.JvxlCoder", "$.JvxlData", "$.MeshData", "J.jvxl.readers.SurfaceGenerator", "J.shape.Mesh", "J.shapesurface.IsosurfaceMesh", "JU.C", "$.Escape", "$.Logger", "$.TempArray", "JV.JC", "$.Viewer"], function(){
+Clazz.load(["J.jvxl.api.MeshDataServer", "J.shape.MeshCollection", "JU.P4"], "J.shapesurface.Isosurface", ["java.util.Hashtable", "JU.A4", "$.AU", "$.BS", "$.CU", "$.Lst", "$.M3", "$.M4", "$.P3", "$.PT", "$.Quat", "$.Rdr", "$.SB", "$.V3", "J.jvxl.data.JvxlCoder", "$.JvxlData", "$.MeshData", "J.jvxl.readers.SurfaceGenerator", "J.shape.Mesh", "J.shapesurface.IsosurfaceMesh", "JU.C", "$.Escape", "$.GData", "$.Logger", "JV.JC", "$.Viewer"], function(){
 var c$ = Clazz.decorateAsClass(function(){
 this.isomeshes = null;
 this.thisMesh = null;
@@ -23,6 +23,7 @@ this.isWithinNot = false;
 this.withinPoints = null;
 this.cutoffRange = null;
 this.allowMesh = true;
+this.haveCached = false;
 this.script = null;
 this.iHaveModelIndex = false;
 this.nLCAO = 0;
@@ -30,13 +31,10 @@ this.lcaoDir = null;
 this.associateNormals = false;
 this.oldFileName = null;
 this.newFileName = null;
-this.ptXY = null;
-this.keyXy = null;
 Clazz.instantialize(this, arguments);}, J.shapesurface, "Isosurface", J.shape.MeshCollection, J.jvxl.api.MeshDataServer);
 Clazz.prepareFields (c$, function(){
 this.isomeshes =  new Array(4);
 this.lcaoDir =  new JU.P4();
-this.ptXY =  new JU.P3i();
 });
 Clazz.overrideMethod(c$, "allocMesh", 
 function(thisID, m){
@@ -68,21 +66,25 @@ this.setPropI(propertyName, value, bs);
 }, "~S,~O,JU.BS");
 Clazz.defineMethod(c$, "setPropI", 
 function(propertyName, value, bs){
-if ("cache" === propertyName) {
-if (this.currentMesh == null) return;
-var id = this.currentMesh.thisID;
-var imodel = this.currentMesh.modelIndex;
-this.vwr.cachePut("cache://isosurface_" + id, (this.getPropI("jvxlDataXml", -1)).getBytes());
-this.deleteMeshI(this.currentMesh.index);
+if ("cacheAll" === propertyName) {
+var mesh0 = this.thisMesh;
+for (var i = this.meshCount; --i >= 0; ) {
+if (this.isomeshes[i] != null) {
+var id = this.isomeshes[i].thisID;
 this.setPropI("init", null, null);
 this.setPropI("thisID", id, null);
-this.setPropI("modelIndex", Integer.$valueOf(imodel), null);
-this.setPropI("fileName", "cache://isosurface_" + id, null);
-this.setPropI("readFile", null, null);
-this.setPropI("finalize", "isosurface ID " + JU.PT.esc(id) + (imodel >= 0 ? " modelIndex " + imodel : "") + " /*file*/" + JU.PT.esc("cache://isosurface_" + id), null);
-this.setPropI("clear", null, null);
+this.setPropI("cache", null, null);
+}}
+if (mesh0 != null) {
+this.setPropI("init", null, null);
+this.setPropI("thisID", mesh0.thisID, null);
+}return;
+}if ("cache" === propertyName) {
+if (this.currentMesh == null) return;
+this.cacheIsosurface();
 return;
 }if ("delete" === propertyName) {
+if (this.thisMesh != null && this.haveCached) this.vwr.cachePut("cache://" + this.thisMesh.getDataName(), null);
 this.setPropertySuper(propertyName, value, bs);
 if (!this.explicitID) this.nLCAO = this.nUnnamed = 0;
 this.currentMesh = this.thisMesh = null;
@@ -99,25 +101,11 @@ return;
 if (this.actualID != null) value = this.actualID;
 this.setPropertySuper("thisID", value, null);
 return;
-}if ("params" === propertyName) {
+}if ("pymolparams" === propertyName) {
 if (this.thisMesh != null) {
 this.ensureMeshSource();
-this.thisMesh.checkAllocColixes();
-var data = value;
-var colixes = data[0];
-var atomMap = null;
-if (colixes != null) {
-for (var i = 0; i < colixes.length; i++) {
-var colix = colixes[i];
-var f = 0;
-if (f > 0.01) colix = JU.C.getColixTranslucent3(colix, true, f);
-colixes[i] = colix;
-}
-atomMap =  Clazz.newIntArray (bs.length(), 0);
-for (var pt = 0, i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i + 1), pt++) atomMap[i] = pt;
-
-}this.thisMesh.setVertexColixesForAtoms(this.vwr, colixes, atomMap, bs);
-this.thisMesh.setVertexColorMap();
+var needToCache = this.thisMesh.setPymolVertexColixesForAtoms(this.vwr, value, bs);
+if (needToCache) this.cacheIsosurface();
 }return;
 }if ("atomcolor" === propertyName) {
 if (this.thisMesh != null) {
@@ -130,7 +118,10 @@ this.thisMesh.volumeRenderPointSize = (value).floatValue();
 }return;
 }if ("vertexcolor" === propertyName) {
 if (this.thisMesh != null) {
-this.thisMesh.colorVertices(JU.C.getColixO(value), bs, false);
+var colix = JU.C.getColixO((value)[0]);
+var t = ((value)[1]).floatValue();
+if (t != 1.7976931348623157E308 && t != 0) colix = JU.C.getColixTranslucent3(colix, true, t);
+this.thisMesh.colorVertices(colix, bs, false);
 }return;
 }if ("colorPhase" === propertyName) {
 var colors = value;
@@ -138,16 +129,16 @@ var colix0 = JU.C.getColix((colors[0]).intValue());
 var colix1 = JU.C.getColix((colors[1]).intValue());
 var id = (this.thisMesh != null ? this.thisMesh.thisID : JU.PT.isWild(this.previousMeshID) ? this.previousMeshID : null);
 var list = this.getMeshList(id, false);
-for (var i = list.size(); --i >= 0; ) this.setColorPhase(list.get(i), colix0, colix1);
+for (var i = list.size(); --i >= 0; ) (list.get(i)).setPropertyColorPhase(colix0, colix1, this.translucentLevel);
 
 return;
 }if ("color" === propertyName) {
 var color = JU.C.getHexCode(JU.C.getColixO(value));
 if (this.thisMesh != null) {
-this.setIsoMeshColor(this.thisMesh, color);
+this.thisMesh.setPropertyColor(color);
 } else {
 var list = this.getMeshList(JU.PT.isWild(this.previousMeshID) ? this.previousMeshID : null, false);
-for (var i = list.size(); --i >= 0; ) this.setIsoMeshColor(list.get(i), color);
+for (var i = list.size(); --i >= 0; ) (list.get(i)).setPropertyColor(color);
 
 }this.setPropertySuper(propertyName, value, bs);
 return;
@@ -293,7 +284,7 @@ if (this.thisMesh != null) this.thisMesh.atomIndex = this.atomIndex;
 this.center.setT(value);
 } else if ("colorRGB" === propertyName) {
 var rgb = (value).intValue();
-if (rgb == 1296041985) {
+if (rgb == 1296041986) {
 this.colorType = rgb;
 } else {
 this.colorType = 0;
@@ -409,6 +400,24 @@ if (m.atomIndex >= firstAtomDeleted) m.atomIndex -= nAtomsDeleted;
 return;
 }this.setPropertySuper(propertyName, value, bs);
 }, "~S,~O,JU.BS");
+Clazz.defineMethod(c$, "cacheIsosurface", 
+function(){
+this.haveCached = true;
+var imodel = this.currentMesh.modelIndex;
+var id = this.currentMesh.thisID;
+var jvxl = (this.getPropI("jvxlDataXml", -1));
+var cacheName = this.thisMesh.getDataName();
+var fname = "cache://" + cacheName;
+this.vwr.cachePut(fname, jvxl.getBytes());
+this.deleteMeshI(this.currentMesh.index);
+this.setPropI("init", null, null);
+this.setPropI("thisID", id, null);
+this.setPropI("modelIndex", Integer.$valueOf(imodel), null);
+this.setPropI("fileName", fname, null);
+this.setPropI("readFile", null, null);
+this.setPropI("finalize", "isosurface ID " + JU.PT.esc(id) + (imodel >= 0 ? " modelIndex " + imodel : "") + " /*file*/" + JU.PT.esc(fname), null);
+this.setPropI("clear", null, null);
+});
 Clazz.defineMethod(c$, "getFileReader", 
 function(fileName){
 var value = this.vwr.fm.getBufferedReaderOrErrorMessageFromName(fileName, null, true, true);
@@ -425,25 +434,6 @@ throw e;
 }
 return value;
 }, "~S");
-Clazz.defineMethod(c$, "setIsoMeshColor", 
-function(m, color){
-m.jvxlData.baseColor = color;
-m.isColorSolid = true;
-m.pcs = null;
-m.colorsExplicit = false;
-m.colorEncoder = null;
-m.vertexColorMap = null;
-}, "J.shapesurface.IsosurfaceMesh,~S");
-Clazz.defineMethod(c$, "setColorPhase", 
-function(m, colix0, colix1){
-m.colorPhased = true;
-m.colix = m.jvxlData.minColorIndex = colix0;
-m.jvxlData.maxColorIndex = colix1;
-m.jvxlData.isBicolorMap = true;
-m.jvxlData.colorDensity = false;
-m.isColorSolid = false;
-m.remapColors(this.vwr, null, this.translucentLevel);
-}, "J.shapesurface.IsosurfaceMesh,~N,~N");
 Clazz.defineMethod(c$, "ensureMeshSource", 
 function(){
 var haveColors = (this.thisMesh.vertexSource != null);
@@ -474,7 +464,7 @@ this.thisMesh.calculatedArea = null;
 this.thisMesh.getMeshSlicer().slabPolygons(slabInfo, false);
 this.thisMesh.reinitializeLightingAndColor(this.vwr);
 }, "~A");
-Clazz.defineMethod(c$, "setPropertySuper", 
+Clazz.overrideMethod(c$, "setPropertySuper", 
 function(propertyName, value, bs){
 if (propertyName === "thisID" && this.currentMesh != null && this.currentMesh.thisID != null && this.currentMesh.thisID.equals(value)) {
 this.checkExplicit(value);
@@ -595,6 +585,8 @@ this.jvxlData.slabInfo = m.slabOptions.toString();
 }var sb =  new JU.SB();
 this.getMeshCommand(sb, m.index);
 m.setJvxlColorMap(true);
+if (m.vertexColorMap != null) this.jvxlData.vertexColorMap = m.copyVertexColorMap();
+if (this.jvxlData.vertexColorMap != null) this.jvxlData.nVertexColors = this.jvxlData.vertexColorMap.size();
 return J.jvxl.data.JvxlCoder.jvxlGetFile(this.jvxlData, meshData, this.title, "", true, 1, sb.toString(), null);
 }if (property === "jvxlFileInfo") {
 return J.jvxl.data.JvxlCoder.jvxlGetInfo(this.jvxlData);
@@ -671,8 +663,8 @@ return sb.toString();
 Clazz.defineMethod(c$, "getMeshCommand", 
 function(sb, i){
 var imesh = this.meshes[i];
-if (imesh == null || imesh.scriptCommand == null) return;
-var cmd = imesh.scriptCommand;
+var cmd;
+if (imesh == null || (cmd = imesh.scriptCommand) == null) return;
 var modelCount = this.ms.mc;
 if (modelCount > 1) J.shape.Shape.appendCmd(sb, "frame " + this.vwr.getModelNumberDotted(imesh.modelIndex));
 cmd = JU.PT.rep(cmd, ";; isosurface map", " map");
@@ -684,7 +676,21 @@ var pt = cmd.indexOf("; #");
 if (pt >= 0) cmd = cmd.substring(0, pt);
 if (imesh.connectedAtoms != null) cmd += " connect " + JU.Escape.eAI(imesh.connectedAtoms);
 cmd = JU.PT.trim(cmd, ";");
-if (imesh.linkedMesh != null) cmd += " LINK";
+var writeJVXL = false;
+if (cmd.indexOf("cache://") >= 0) {
+var dataName = imesh.getDataName();
+var cacheName = "cache://" + dataName;
+var old = "/*file*/" + JU.PT.esc(cacheName);
+pt = cmd.indexOf(old);
+if (pt < 0) {
+System.err.println("Isosurface no cache string found in command " + old);
+} else {
+var o = this.vwr.fm.cacheGet(cacheName, false);
+if (JU.AU.isAB(o)) o =  String.instantialize(o);
+var jvxl = " data " + JU.PT.esc(dataName) + o + "end " + JU.PT.esc(dataName);
+cmd = cmd.substring(0, pt) + jvxl + cmd.substring(pt + old.length);
+writeJVXL = true;
+}}if (imesh.linkedMesh != null) cmd += " LINK";
 if (this.myType === "lcaoCartoon" && imesh.atomIndex >= 0) cmd += " ATOMINDEX " + imesh.atomIndex;
 J.shape.Shape.appendCmd(sb, cmd);
 var id = this.myType + " ID " + JU.PT.esc(imesh.thisID);
@@ -697,18 +703,19 @@ if (imesh.slabOptions != null) J.shape.Shape.appendCmd(sb, imesh.slabOptions.toS
 if (cmd.charAt(0) != '#') {
 if (this.allowMesh) J.shape.Shape.appendCmd(sb, imesh.getState(this.myType));
 if (!imesh.isColorSolid && imesh.colorType == 0 && JU.C.isColixTranslucent(imesh.colix)) J.shape.Shape.appendCmd(sb, "color " + this.myType + " " + J.shape.Shape.getTranslucentLabel(imesh.colix));
-if (imesh.colorCommand != null && imesh.colorType == 0 && !imesh.colorCommand.equals("#inherit;")) {
+if (!writeJVXL && imesh.colorCommand != null && imesh.colorType == 0 && !imesh.colorCommand.equals("#inherit;")) {
 J.shape.Shape.appendCmd(sb, imesh.colorCommand);
 }var colorArrayed = (imesh.isColorSolid && imesh.pcs != null);
 if (imesh.isColorSolid && imesh.colorType == 0 && !imesh.colorsExplicit && !colorArrayed) {
 J.shape.Shape.appendCmd(sb, J.shape.Shape.getColorCommandUnk(this.myType, imesh.colix, this.translucentAllowed));
 } else if (imesh.jvxlData.isBicolorMap && imesh.colorPhased) {
 J.shape.Shape.appendCmd(sb, "color isosurface phase " + J.shape.Shape.encodeColor(imesh.jvxlData.minColorIndex) + " " + J.shape.Shape.encodeColor(imesh.jvxlData.maxColorIndex));
-}if (imesh.vertexColorMap != null) {
+}if (imesh.vertexColorMap != null && imesh.vertexColorMap !== imesh.pymolVertexColorMap) {
 for (var entry, $entry = imesh.vertexColorMap.entrySet().iterator (); $entry.hasNext()&& ((entry = $entry.next ()) || true);) {
 var bs = entry.getValue();
-if (!bs.isEmpty()) J.shape.Shape.appendCmd(sb, "color " + this.myType + " " + JU.Escape.eBS(bs) + " " + entry.getKey());
-}
+if (!bs.isEmpty()) {
+J.shape.Shape.appendCmd(sb, "color " + this.myType + " " + JU.Escape.eBond(bs) + " " + entry.getKey());
+}}
 }}}, "JU.SB,~N");
 Clazz.defineMethod(c$, "getScriptBitSets", 
 function(script, bsCmd){
@@ -756,9 +763,9 @@ function(s, isCap){
 try {
 if (s.indexOf("array") == 0) {
 var pts = JU.PT.split(s.substring(6, s.length - 1), ",");
-return JU.TempArray.getSlabObjectType(1812599299,  Clazz.newArray(-1, [JU.Escape.uP(pts[0]), JU.Escape.uP(pts[1]), JU.Escape.uP(pts[2]), JU.Escape.uP(pts[3])]), isCap, null);
+return JU.GData.getSlabObjectType(1812599299,  Clazz.newArray(-1, [JU.Escape.uP(pts[0]), JU.Escape.uP(pts[1]), JU.Escape.uP(pts[2]), JU.Escape.uP(pts[3])]), isCap, null);
 }var plane = JU.Escape.uP(s);
-if (Clazz.instanceOf(plane,"JU.P4")) return JU.TempArray.getSlabObjectType(134217750, plane, isCap, null);
+if (Clazz.instanceOf(plane,"JU.P4")) return JU.GData.getSlabObjectType(134217750, plane, isCap, null);
 } catch (e) {
 if (Clazz.exceptionOf(e, Exception)){
 } else {
@@ -1027,7 +1034,7 @@ this.setBsVdw();
 this.thisMesh.isColorSolid = false;
 this.thisMesh.colorDensity = this.jvxlData.colorDensity;
 this.thisMesh.volumeRenderPointSize = this.jvxlData.pointSize;
-this.thisMesh.colorEncoder = this.sg.params.colorEncoder;
+this.thisMesh.colorEncoder = (this.jvxlData.vertexColorMap == null ? this.sg.params.colorEncoder : null);
 this.thisMesh.getContours();
 if (this.thisMesh.jvxlData.nContours != 0 && this.thisMesh.jvxlData.nContours != -1) this.explicitContours = true;
 if (this.explicitContours && this.thisMesh.jvxlData.jvxlPlane != null) this.thisMesh.havePlanarContours = true;
@@ -1178,56 +1185,6 @@ throw e;
 }
 }
 }, "~N,~N");
-Clazz.overrideMethod(c$, "checkObjectClicked", 
-function(x, y, action, bsVisible, drawPicking){
-if (!drawPicking) return null;
-if (!this.vwr.isBound(action, 18)) return null;
-var dmin2 = 100;
-if (this.vwr.gdata.isAntialiased()) {
-x <<= 1;
-y <<= 1;
-dmin2 <<= 1;
-}var imesh = -1;
-var jmaxz = -1;
-var jminz = -1;
-var maxz = -2147483648;
-var minz = 2147483647;
-var pickFront = true;
-for (var i = 0; i < this.meshCount; i++) {
-var m = this.isomeshes[i];
-if (!this.isPickable(m, bsVisible)) continue;
-var centers = (pickFront ? m.vs : m.getCenters());
-if (centers == null) continue;
-for (var j = centers.length; --j >= 0; ) {
-var v = centers[j];
-if (v == null) continue;
-var d2 = this.coordinateInRange(x, y, v, dmin2, this.ptXY);
-if (d2 >= 0) {
-if (this.ptXY.z < minz) {
-if (pickFront) imesh = i;
-minz = this.ptXY.z;
-jminz = j;
-}if (this.ptXY.z > maxz) {
-if (!pickFront) imesh = i;
-maxz = this.ptXY.z;
-jmaxz = j;
-}}}
-}
-if (imesh < 0) return null;
-this.pickedMesh = this.isomeshes[imesh];
-this.setPropertySuper("thisID", this.pickedMesh.thisID, null);
-var iFace = this.pickedVertex = (pickFront ? jminz : jmaxz);
-var ptRet =  new JU.P3();
-ptRet.setT((pickFront ? this.pickedMesh.vs[this.pickedVertex] : (this.pickedMesh).centers[iFace]));
-this.pickedModel = this.pickedMesh.modelIndex;
-var map = this.getPickedPoint(ptRet, this.pickedModel);
-this.setStatusPicked(-4, ptRet, map);
-return map;
-}, "~N,~N,~N,JU.BS,~B");
-Clazz.defineMethod(c$, "isPickable", 
-function(m, bsVisible){
-return m.visibilityFlags != 0 && (m.modelIndex < 0 || bsVisible.get(m.modelIndex)) && !JU.C.isColixTranslucent(m.colix);
-}, "J.shapesurface.IsosurfaceMesh,JU.BS");
 Clazz.defineMethod(c$, "findValue", 
 function(x, y, isPicking, bsVisible){
 var dmin2 = 100;
@@ -1315,4 +1272,4 @@ function(mesh){
 return (mesh == null ? null : (mesh).getValidVertices(null));
 }, "J.shape.Mesh");
 });
-;//5.0.1-v7 Sun Jun 29 22:48:16 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

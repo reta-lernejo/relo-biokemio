@@ -69,4 +69,4 @@ ptC.ave(vW, vH);
 ptC.sub2(pt, ptC);
 }, "~N,~N,JU.P3,JU.V3,JU.V3,JU.P3,~N");
 });
-;//5.0.1-v7 Sat Jun 07 00:08:51 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

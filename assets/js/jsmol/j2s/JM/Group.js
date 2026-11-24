@@ -12,8 +12,10 @@ this.seqcode = 0;
 this.groupID = 0;
 this.selectedIndex = 0;
 this.shapeVisibilityFlags = 0;
+this.asymID = 0;
 this.dssrNT = null;
 this.strutPoint = null;
+this.unitID = null;
 Clazz.instantialize(this, arguments);}, JM, "Group", null, JM.Structure);
 /*LV!1824 unnec constructor*/Clazz.defineMethod(c$, "setGroup", 
 function(chain, group3, seqcode, firstAtomIndex, lastAtomIndex){
@@ -85,14 +87,17 @@ Clazz.defineMethod(c$, "getStrucNo",
 function(){
 return 0;
 });
-Clazz.defineMethod(c$, "getProteinStructureType", 
+Clazz.defineMethod(c$, "getBioStructureType", 
 function(){
 return J.c.STR.NOT;
 });
-Clazz.defineMethod(c$, "getProteinStructureSubType", 
-function(){
-return this.getProteinStructureType();
-});
+Clazz.defineMethod(c$, "getBioStructureSubType", 
+function(type){
+return this.getBioStructureType();
+}, "~N");
+Clazz.defineMethod(c$, "setDSSRStructureSubType", 
+function(type){
+}, "J.c.STR");
 Clazz.defineMethod(c$, "setProteinStructureType", 
 function(type, monomerIndexCurrent){
 return -1;
@@ -216,14 +221,19 @@ Clazz.defineMethod(c$, "isLeadAtom",
 function(atomIndex){
 return false;
 }, "~N");
+Clazz.defineMethod(c$, "getLeadAtom", 
+function(){
+return null;
+});
 Clazz.defineMethod(c$, "getLeadAtomOr", 
 function(atom){
 var a = this.getLeadAtom();
 return (a == null ? atom : a);
 }, "JM.Atom");
-Clazz.defineMethod(c$, "getLeadAtom", 
+Clazz.defineMethod(c$, "getLeadOrFirstAtomIndex", 
 function(){
-return null;
+var a = this.getLeadAtom();
+return (a == null ? this.firstAtomIndex : this.leadAtomIndex);
 });
 Clazz.defineMethod(c$, "getQuaternion", 
 function(qType){
@@ -334,8 +344,31 @@ function(){
 if (this.strutPoint == null) this.strutPoint =  new JU.Point3fi();
 this.strutPoint.sX = -2147483648;
 });
+Clazz.defineMethod(c$, "getUnitID", 
+function(){
+if (this.unitID == null) {
+var ia = this.getLeadOrFirstAtomIndex();
+this.unitID = this.chain.model.ms.at[ia].getUnitID(2);
+}return this.unitID;
+});
+Clazz.defineMethod(c$, "getGroupMenuKey", 
+function(){
+return "o>";
+});
+Clazz.defineMethod(c$, "getAsymIDStr", 
+function(){
+return (this.asymID == 0 ? this.chain.getIDStr() : this.asymID < 256 ? "" + String.fromCharCode(this.asymID) : this.chain.model.ms.vwr.getChainIDStr(this.asymID));
+});
+Clazz.defineMethod(c$, "getAsymID", 
+function(){
+return (this.asymID == 0 ? this.chain.chainID : this.asymID);
+});
+Clazz.defineMethod(c$, "setAsymID", 
+function(asymID){
+this.asymID = asymID;
+}, "~N");
 c$.standardGroupList = null;
 c$.group3Names =  new Array(128);
 c$.specialAtomNames = null;
 });
-;//5.0.1-v7 Mon Jun 09 20:29:14 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

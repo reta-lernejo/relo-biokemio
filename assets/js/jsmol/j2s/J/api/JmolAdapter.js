@@ -49,4 +49,4 @@ return J.api.JmolAdapter.canonizeAlphaDigit(altLoc);
 }, "~S");
 c$.cellParamNames =  Clazz.newArray(-1, ["_cell_length_a", "_cell_length_b", "_cell_length_c", "_cell_angle_alpha", "_cell_angle_beta", "_cell_angle_gamma"]);
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

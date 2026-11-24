@@ -229,4 +229,4 @@ c$.unitCubePoints =  Clazz.newArray(-1, [JU.P3.new3(0, 0, 0), JU.P3.new3(0, 0, 1
 c$.toCanonical =  Clazz.newIntArray(-1, [0, 3, 4, 7, 1, 2, 5, 6]);
 c$.unitBboxPoints =  new Array(8);
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

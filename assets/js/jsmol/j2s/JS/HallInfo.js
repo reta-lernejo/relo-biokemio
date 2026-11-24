@@ -433,4 +433,4 @@ return JS.SymmetryOperation.getXYZFromMatrix(this.seitzMatrix12ths, true, allPos
 }, "~B");
 /*eoif3*/})();
 });
-;//5.0.1-v7 Sun Jun 29 13:52:47 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

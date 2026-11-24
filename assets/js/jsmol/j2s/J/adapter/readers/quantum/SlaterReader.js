@@ -121,4 +121,4 @@ return (e1 < e2 ? -1 : e2 < e1 ? 1 : 0);
 c$.fact_2n =  Clazz.newDoubleArray(-1, [1, 2, 24, 720, 40320, 3628800, 479001600]);
 c$.dfact2 =  Clazz.newDoubleArray(-1, [1, 1, 3, 15, 105]);
 });
-;//5.0.1-v7 Tue Jun 10 01:13:43 CEST 2025
+;//5.0.1-v7 Mon Oct 26 19:45:17 CDT 2026

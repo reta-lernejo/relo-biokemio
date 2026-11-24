@@ -8,7 +8,7 @@ this.isPathGuide = false;
 this.points = null;
 this.pointGuides = null;
 this.frameTimeMillis = 0;
-this.floatSecondsTotal = 0;
+this.secondsTotal = 0;
 this.axis = null;
 this.degrees = 0;
 this.center = null;
@@ -72,7 +72,7 @@ if (!this.runSleep(sleepTime, 0)) return;
 mode = 0;
 break;
 case 1:
-if (!this.runSleep(Clazz.floatToInt(this.floatSecondsTotal * 1000) - 30, -2)) return;
+if (!this.runSleep(Clazz.floatToInt(this.secondsTotal * 1000) - 30, -2)) return;
 mode = -2;
 break;
 case -2:
@@ -80,7 +80,7 @@ if (this.isNavTo) {
 if (!Float.isNaN(this.xTrans) || !Float.isNaN(this.yTrans)) this.navTranslatePercentOrTo(-1, this.xTrans, this.yTrans);
 if (!Float.isNaN(this.depthPercent)) this.setNavigationDepthPercent(this.depthPercent);
 }this.vwr.setInMotion(false);
-this.vwr.moveUpdate(this.floatSecondsTotal);
+this.vwr.moveUpdate(this.secondsTotal);
 if (!this.stopped && ++this.iList < this.navigationList.size()) {
 mode = 2;
 break;
@@ -125,7 +125,7 @@ break;
 case 4160:
 case 268441090:
 if (tok == 4160) {
-this.tm.transformPt3f(o[2], ptTemp);
+this.tm.transformPt3fSafe(o[2], ptTemp);
 } else {
 ptTemp.x = (o[2]).floatValue();
 ptTemp.y = (o[3]).floatValue();
@@ -144,14 +144,14 @@ break;
 }, "~A,JU.P3");
 Clazz.defineMethod(c$, "navigate", 
 function(seconds, pathGuide, path, theta, indexStart, indexEnd){
-this.floatSecondsTotal = seconds;
+this.secondsTotal = seconds;
 this.setupNav(seconds, pathGuide, path, indexStart, indexEnd);
 this.isStep = true;
 this.run();
 }, "~N,~A,~A,~A,~N,~N");
 Clazz.defineMethod(c$, "navigateTo", 
 function(seconds, axis, degrees, center, depthPercent, xTrans, yTrans){
-this.floatSecondsTotal = seconds;
+this.secondsTotal = seconds;
 this.axis = axis;
 this.degrees = degrees;
 this.center = center;
@@ -164,7 +164,7 @@ this.run();
 }, "~N,JU.V3,~N,JU.P3,~N,~N,~N");
 Clazz.defineMethod(c$, "setNavPercent", 
 function(pt1){
-this.tm.transformPt3f(this.tm.navigationCenter, this.tm.navigationOffset);
+this.tm.transformPt3fSafe(this.tm.navigationCenter, this.tm.navigationOffset);
 var x = pt1.x;
 var y = pt1.y;
 if (!Float.isNaN(x)) x = this.tm.width * x / 100 + (Float.isNaN(y) ? this.tm.navigationOffset.x : (this.tm.width / 2));
@@ -200,10 +200,10 @@ this.targetTime += this.frameTimeMillis;
 Clazz.defineMethod(c$, "setupNavTo", 
 function(){
 this.isNavTo = true;
-if (!this.vwr.haveDisplay) this.floatSecondsTotal = 0;
+if (!this.vwr.haveDisplay) this.secondsTotal = 0;
 var fps = 30;
-this.totalSteps = Clazz.floatToInt(this.floatSecondsTotal * fps) - 1;
-if (this.floatSecondsTotal > 0) this.vwr.setInMotion(true);
+this.totalSteps = Clazz.floatToInt(this.secondsTotal * fps) - 1;
+if (this.secondsTotal > 0) this.vwr.setInMotion(true);
 if (this.degrees == 0) this.degrees = NaN;
 if (this.totalSteps > 0) {
 this.frameTimeMillis = Clazz.doubleToInt(1000 / fps);
@@ -339,11 +339,11 @@ this.tm.modelCenterOffset += dz;
 this.tm.calcCameraFactors();
 this.tm.calcTransformMatrix();
 this.tm.matrixTransform.rotTrans2(this.tm.navigationCenter, this.tm.navigationShiftXY);
-}}this.tm.transformPt3f(this.tm.fixedRotationCenter, this.tm.fixedTranslation);
+}}this.tm.transformPt3fSafe(this.tm.fixedRotationCenter, this.tm.fixedTranslation);
 this.tm.fixedRotationOffset.setT(this.tm.fixedTranslation);
 this.tm.previousX = this.tm.fixedTranslation.x;
 this.tm.previousY = this.tm.fixedTranslation.y;
-this.tm.transformPt3f(this.tm.navigationCenter, this.tm.navigationOffset);
+this.tm.transformPt3fSafe(this.tm.navigationCenter, this.tm.navigationOffset);
 this.tm.navigationOffset.z = this.tm.referencePlaneOffset;
 this.tm.navMode = 0;
 this.calcNavSlabAndDepthValues();
@@ -359,7 +359,7 @@ Clazz.defineMethod(c$, "newNavigationCenter",
 function(){
 this.tm.mode = this.tm.defaultMode;
 var pt =  new JU.P3();
-this.tm.transformPt3f(this.tm.fixedRotationCenter, pt);
+this.tm.transformPt3fSafe(this.tm.fixedRotationCenter, pt);
 pt.x -= this.tm.navigationOffset.x;
 pt.y -= this.tm.navigationOffset.y;
 var f = -this.tm.getPerspectiveFactor(pt.z);
@@ -377,7 +377,7 @@ this.tm.navZ = 0;
 this.tm.rotateYRadians((0.017453292519943295 * .02 * this.tm.navX), null);
 var pt = this.tm.navigationCenter;
 var pts =  new JU.P3();
-this.tm.transformPt3f(pt, pts);
+this.tm.transformPt3fSafe(pt, pts);
 pts.z += this.tm.navZ;
 this.tm.unTransformPoint(pts, pt);
 this.tm.setNavigatePt(pt);
@@ -535,4 +535,4 @@ Clazz.superCall(this, J.navigate.Navigator, "oops", [e]);
 this.tm.navigating = false;
 }, "Exception");
 });
-;//5.0.1-v7 Mon Jun 09 19:40:05 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

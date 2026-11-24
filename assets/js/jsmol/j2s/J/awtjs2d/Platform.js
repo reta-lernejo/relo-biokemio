@@ -1,5 +1,5 @@
 Clazz.declarePackage("J.awtjs2d");
-Clazz.load(["J.api.GenericPlatform"], "J.awtjs2d.Platform", ["java.net.URL", "JU.AjaxURLStreamHandlerFactory", "$.Rdr", "J.api.Interface", "J.awtjs2d.Display", "$.Image", "$.JSFile", "$.JSFont", "$.Mouse"], function(){
+Clazz.load(["J.api.GenericPlatform"], "J.awtjs2d.Platform", ["java.net.URL", "java.util.Date", "JU.AjaxURLStreamHandlerFactory", "$.Rdr", "J.api.Interface", "J.awtjs2d.Display", "$.Image", "$.JSFile", "$.JSFont", "$.Mouse"], function(){
 var c$ = Clazz.decorateAsClass(function(){
 this.canvas = null;
 this.vwr = null;
@@ -71,7 +71,7 @@ return J.awtjs2d.Display.hasFocus(canvas);
 }, "~O");
 Clazz.overrideMethod(c$, "prompt", 
 function(label, data, list, asButtons){
-return J.awtjs2d.Display.prompt(label, data, list, asButtons);
+return J.awtjs2d.Display.prompt(this.vwr, label, data, list, asButtons);
 }, "~S,~S,~A,~B");
 Clazz.overrideMethod(c$, "renderScreenImage", 
 function(context, size){
@@ -210,16 +210,12 @@ return J.awtjs2d.JSFont.newFont(fontFace, isBold, isItalic, fontSize, "px");
 }, "~S,~B,~B,~N");
 Clazz.overrideMethod(c$, "getDateFormat", 
 function(isoType){
+if (isoType != null && isoType.contains("32000")) {
+return "D:" + this.getDateFormat("8224") + "'00'";
+}var d =  new java.util.Date();
 {
 if (isoType == null) {
-} else if (isoType.indexOf("8824") >= 0) {
-var d = new Date();
-var x = d.toString().split(" ");
-var MM = "0" + (1 + d.getMonth()); MM = MM.substring(MM.length - 2);
-var dd = "0" + d.getDate(); dd = dd.substring(dd.length - 2);
-return x[3] + MM + dd + x[4].replace(/\:/g,"") + x[5].substring(3,6) + "'" + x[5].substring(6,8) + "'"
 } else if (isoType.indexOf("8601") >= 0){
-var d = new Date();
 var x = d.toString().split(" ");
 // Firefox now doing this?
 if (x.length == 1)
@@ -227,8 +223,13 @@ return x;
 var MM = "0" + (1 + d.getMonth()); MM = MM.substring(MM.length - 2);
 var dd = "0" + d.getDate(); dd = dd.substring(dd.length - 2);
 return x[3] + '-' + MM + '-' + dd + 'T' + x[4]
+} else if (isoType.indexOf("8824") >= 0) {
+var x = d.toString().split(" ");
+var MM = "0" + (1 + d.getMonth()); MM = MM.substring(MM.length - 2);
+var dd = "0" + d.getDate(); dd = dd.substring(dd.length - 2);
+return x[3] + MM + dd + x[4].replace(/\:/g,"") + x[5].substring(3,6) + "'" + x[5].substring(6,8) + "'"
 }
-return ("" + (new Date())).split(" (")[0];
+return d.toUTCString();
 }}, "~S");
 Clazz.overrideMethod(c$, "newFile", 
 function(name){
@@ -285,4 +286,4 @@ return (ok ? 1 : 2);
 }, "~S,~S");
 c$.inchi = null;
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

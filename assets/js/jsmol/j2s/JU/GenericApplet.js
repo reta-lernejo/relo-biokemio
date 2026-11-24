@@ -197,10 +197,6 @@ Clazz.overrideMethod(c$, "register",
 function(id, jsi){
 JU.GenericApplet.checkIn(id, jsi);
 }, "~S,J.api.JmolSyncInterface");
-Clazz.overrideMethod(c$, "getJSpecViewProperty", 
-function(key){
-return null;
-}, "~S");
 Clazz.defineMethod(c$, "syncScript", 
 function(script){
 this.viewer.syncScript(script, "~", 0);
@@ -359,6 +355,7 @@ return true;
 case J.c.CBK.AUDIO:
 case J.c.CBK.APPLETREADY:
 case J.c.CBK.ATOMMOVED:
+case J.c.CBK.CALCULATION:
 case J.c.CBK.CLICK:
 case J.c.CBK.HOVER:
 case J.c.CBK.MINIMIZATION:
@@ -383,6 +380,7 @@ case J.c.CBK.APPLETREADY:
 data[3] = this.appletObject;
 break;
 case J.c.CBK.AUDIO:
+case J.c.CBK.CALCULATION:
 case J.c.CBK.ERROR:
 case J.c.CBK.EVAL:
 case J.c.CBK.HOVER:
@@ -783,7 +781,11 @@ Clazz.overrideMethod(c$, "getFullName",
 function(){
 return this.fullName;
 });
+Clazz.overrideMethod(c$, "processPluginRequest", 
+function(name, action, value){
+return null;
+}, "~S,~S,~O");
 c$.htRegistry = null;
 c$.isJS = false;
 });
-;//5.0.1-v7 Mon Jun 02 10:11:19 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

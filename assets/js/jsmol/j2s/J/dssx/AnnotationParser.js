@@ -1,5 +1,5 @@
 Clazz.declarePackage("J.dssx");
-Clazz.load(["J.api.JmolAnnotationParser"], "J.dssx.AnnotationParser", ["java.util.Hashtable", "JU.AU", "$.BS", "$.Lst", "$.PT", "$.SB", "JM.Group", "JM.BioResolver", "JS.SV", "JU.BSUtil", "$.Logger"], function(){
+Clazz.load(["J.api.JmolAnnotationParser"], "J.dssx.AnnotationParser", ["java.util.Hashtable", "JU.AU", "$.BS", "$.Lst", "$.PT", "$.SB", "JM.BioResolver", "JS.SV", "JU.BSUtil", "$.Logger"], function(){
 var c$ = Clazz.declareType(J.dssx, "AnnotationParser", null, J.api.JmolAnnotationParser);
 /*LV!1824 unnec constructor*/Clazz.defineMethod(c$, "getAnnotationKVPairs", 
 function(a, match, dotPath, sb, pre, showDetail, isMappingOnly, type){
@@ -219,7 +219,6 @@ return list;
 Clazz.defineMethod(c$, "findAnnotationAtoms", 
 function(vwr, name, _list, key, bs){
 if (_list == null) return;
-System.out.println("Checking " + name + " for " + key);
 var data = vwr.extractProperty(_list, "[" + key + "]", -1);
 var list = null;
 if (Clazz.instanceOf(data,"JU.Lst")) {
@@ -359,36 +358,7 @@ return sb.toString();
 }, "JV.Viewer,JS.SV,~S,~N,~N");
 Clazz.defineMethod(c$, "getAttachedAtomForPDBH", 
 function(group3, name){
-if (name.charAt(0) == 'H') {
-if (J.dssx.AnnotationParser.pdbAtomForH == null) {
-J.dssx.AnnotationParser.pdbAtomForH =  new java.util.Hashtable();
-this.assignPDBH("", "N H H1 H2 H3 CB HB2 HB3 CD HD2 HD3 CG HG2 HG3 C2' H2'' H2' C5' H5'' H5' OXT HXT");
-for (var i = JM.BioResolver.pdbBondInfo.length; --i >= 1; ) {
-this.assignPDBH(JM.Group.group3Names[i], JM.BioResolver.pdbBondInfo[i]);
-}
-}var a = J.dssx.AnnotationParser.pdbAtomForH.get(name);
-if (a == null) a = J.dssx.AnnotationParser.pdbAtomForH.get(group3 + name);
-if (a != null) return a;
-}return name;
-}, "~S,~S");
-Clazz.defineMethod(c$, "assignPDBH", 
-function(group3, sNames){
-var names = JU.PT.getTokens(JU.PT.rep(sNames, "@", " "));
-var a = null;
-for (var i = 0, n = names.length; i < n; i++) {
-var s = names[i];
-if (s.charAt(0) != 'H') {
-a = s;
-continue;
-}s = group3 + s;
-if (s.indexOf("?") >= 0) {
-s = s.substring(0, s.length - 1);
-J.dssx.AnnotationParser.pdbAtomForH.put(s + "1", a);
-J.dssx.AnnotationParser.pdbAtomForH.put(s + "2", a);
-J.dssx.AnnotationParser.pdbAtomForH.put(s + "3", a);
-} else {
-J.dssx.AnnotationParser.pdbAtomForH.put(s, a);
-}}
+return (name.charAt(0) == 'H' ? JM.BioResolver.getPDBHAtomForH(group3, name) : name);
 }, "~S,~S");
 Clazz.overrideMethod(c$, "fixAtoms", 
 function(modelIndex, dbObj, bsAddedMask, type, margin){
@@ -414,9 +384,6 @@ Clazz.overrideMethod(c$, "getHBonds",
 function(ms, modelIndex, vHBonds, doReport){
 return null;
 }, "JM.ModelSet,~N,JU.Lst,~B");
-Clazz.overrideMethod(c$, "getAtomicDSSRData", 
-function(ms, modelIndex, dssrData, dataType){
-}, "JM.ModelSet,~N,~A,~S");
 Clazz.overrideMethod(c$, "setGroup1", 
 function(ms, modelIndex){
 }, "JM.ModelSet,~N");
@@ -424,6 +391,122 @@ Clazz.overrideMethod(c$, "getDSSRFrame",
 function(dssrNT){
 return null;
 }, "java.util.Map");
-c$.pdbAtomForH = null;
+Clazz.overrideMethod(c$, "getAtomicDSSRData", 
+function(ms, modelIndex, dataList){
+}, "JM.ModelSet,~N,JM.ModelSet.DataList");
+Clazz.defineMethod(c$, "getMap", 
+function(map, key){
+return map.get(key);
+}, "java.util.Map,~S");
+Clazz.defineMethod(c$, "getList", 
+function(map, key){
+return map.get(key);
+}, "java.util.Map,~S");
+Clazz.defineMethod(c$, "getList0Map", 
+function(map, key){
+return this.getList(map, key).get(0);
+}, "java.util.Map,~S");
+Clazz.defineMethod(c$, "getListMap", 
+function(list, i){
+return list.get(i);
+}, "JU.Lst,~N");
+Clazz.overrideMethod(c$, "setQScores", 
+function(vwr, json){
+var entryMap = this.getList0Map(this.getMap(json, "data"), "entries");
+var summaryMap = this.getList0Map(entryMap, "pdbx_vrpt_summary_em");
+if (summaryMap == null) return null;
+var rcsb_ID = entryMap.get("rcsb_id");
+var modelIndex = vwr.getModelIndexFromId(rcsb_ID);
+if (modelIndex < 0) return null;
+var htSummary =  new java.util.Hashtable();
+htSummary.put("overall", summaryMap.get("Q_score"));
+var modelAtoms = vwr.getModelUndeletedAtomsBitSet(modelIndex);
+var bsAtoms = JU.BSUtil.copy(modelAtoms);
+var atomCount = bsAtoms.cardinality();
+var propertyValues =  Clazz.newFloatArray (atomCount, 0);
+for (var i = atomCount; --i >= 0; ) propertyValues[i] = NaN;
+
+var bsTemp = JU.BS.newN(atomCount);
+var entities = this.getList(entryMap, "polymer_entities");
+if (entities != null) {
+for (var j = 0; j < entities.size(); j++) {
+var pdata = this.getList(this.getListMap(entities, j), "polymer_entity_instances");
+for (var i = 0; i < pdata.size(); i++) {
+var instance = this.getListMap(pdata, i);
+var ids = this.getMap(instance, "rcsb_polymer_entity_instance_container_identifiers");
+var asymID = ids.get("asym_id");
+htSummary.put(asymID, this.getList0Map(instance, "pdbx_vrpt_summary_entity_fit_to_map").get("Q_score"));
+var chainID = vwr.getChainID(asymID, false);
+this.mapPolymerQ(vwr, bsAtoms, instance, asymID, chainID, propertyValues, bsTemp);
+}
+}
+}entities = this.getList(entryMap, "nonpolymer_entities");
+if (entities != null) {
+for (var j = 0; j < entities.size(); j++) {
+var pdata = this.getList(this.getListMap(entities, j), "nonpolymer_entity_instances");
+for (var i = 0; i < pdata.size(); i++) {
+var instance = this.getListMap(pdata, i);
+this.mapLigandQ(vwr, bsAtoms, instance, propertyValues, bsTemp);
+}
+}
+}htSummary.put("values", propertyValues);
+return htSummary;
+}, "JV.Viewer,java.util.Map");
+Clazz.defineMethod(c$, "mapPolymerQ", 
+function(vwr, bsAtoms, instance, chain, chainID, propertyValues, bsTemp){
+var features = this.getList(instance, "rcsb_polymer_instance_feature");
+var positions = null;
+for (var j = features.size(); --j >= 0; ) {
+var feature = this.getListMap(features, j);
+if ("Q_SCORE".equals(feature.get("type"))) {
+positions = this.getList(feature, "feature_positions");
+break;
+}}
+if (positions == null) return;
+for (var j = 0; j < positions.size(); j++) {
+var pos = this.getListMap(positions, j);
+var seq0 = pos.get("beg_seq_id");
+var values = this.getList(pos, "values");
+this.getAtoms(vwr, bsAtoms, chain, chainID, seq0.intValue(), null, values.size(), bsTemp);
+if (!this.setQ(vwr, bsTemp, values, propertyValues)) {
+System.err.println("AnnotationParser.polymer: no atoms were found for " + chain + "." + seq0);
+}}
+}, "JV.Viewer,JU.BS,java.util.Map,~S,~N,~A,JU.BS");
+Clazz.defineMethod(c$, "getAtoms", 
+function(vwr, bsAtoms, asymID, chainID, seqID, group0, nGroups, bsTemp){
+vwr.ms.getAsymBits(chainID, seqID, group0, bsAtoms, bsTemp, nGroups);
+}, "JV.Viewer,JU.BS,~S,~N,~N,~S,~N,JU.BS");
+Clazz.defineMethod(c$, "mapLigandQ", 
+function(vwr, bsAtoms, instance, propertyValues, bsTemp){
+var ids = this.getMap(instance, "rcsb_nonpolymer_entity_instance_container_identifiers");
+var compID = ids.get("comp_id");
+var asymID = ids.get("asym_id");
+var chainID = vwr.getChainID(asymID, false);
+var values =  new JU.Lst();
+values.addLast(this.getList0Map(instance, "rcsb_nonpolymer_instance_validation_score").get("Q_score"));
+this.getAtoms(vwr, bsAtoms, asymID, chainID, -1, compID, 1, bsTemp);
+if (!this.setQ(vwr, bsTemp, values, propertyValues)) {
+System.err.println("AnnotationParser.nonpolymer: no atoms were found for " + asymID + "." + compID);
+}}, "JV.Viewer,JU.BS,java.util.Map,~A,JU.BS");
+Clazz.defineMethod(c$, "setQ", 
+function(vwr, atomset, values, propertyValues){
+var nv = values.size();
+var atoms = vwr.ms.at;
+var i = atomset.nextSetBit(0);
+if (i < 0) return false;
+var glast = atoms[i].group;
+for (var j = 0; j < nv && i >= 0; j++) {
+var d = (values.get(j)).floatValue();
+while (i >= 0) {
+var g = atoms[i].group;
+if (g !== glast) {
+glast = g;
+break;
+}propertyValues[i] = d;
+i = atomset.nextSetBit(i + 1);
+}
+}
+return true;
+}, "JV.Viewer,JU.BS,JU.Lst,~A");
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

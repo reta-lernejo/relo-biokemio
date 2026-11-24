@@ -68,6 +68,14 @@ Clazz.makeConstructor(c$,
 function(){
 this.boxXY =  Clazz.newFloatArray (5, 0);
 });
+Clazz.defineMethod(c$, "getPymolOffset", 
+function(){
+return this.pymolOffset;
+});
+Clazz.defineMethod(c$, "setPymolOffset", 
+function(pymolOffset){
+this.pymolOffset = pymolOffset;
+}, "~A");
 c$.newLabel = Clazz.defineMethod(c$, "newLabel", 
 function(vwr, font, text, colix, bgcolix, align, scalePixelsPerMicron){
 var t =  new JM.Text();
@@ -108,7 +116,7 @@ Clazz.defineMethod(c$, "setOffset",
 function(offset){
 this.offsetX = JV.JC.getXOffset(offset);
 this.offsetY = JV.JC.getYOffset(offset);
-this.pymolOffset = null;
+this.setPymolOffset(null);
 this.valign = 3;
 }, "~N");
 Clazz.defineMethod(c$, "getFontMetrics", 
@@ -498,7 +506,7 @@ var isRelative = this.isPymolOffsetRelative();
 if (atomPt != null && isRelative) pTemp.setT(atomPt);
  else pTemp.set(0, 0, 0);
 pTemp.add3(this.pymolOffset[4], this.pymolOffset[5], this.pymolOffset[6]);
-this.vwr.tm.transformPtScr(pTemp, screen);
+this.vwr.tm.transformPtScrSafe(pTemp, screen);
 if (isPixel) {
 screen.x += this.pymolOffset[1];
 screen.y += this.pymolOffset[2];
@@ -524,4 +532,4 @@ function(){
 return this.textUnformatted;
 });
 });
-;//5.0.1-v7 Mon Jun 02 10:11:19 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

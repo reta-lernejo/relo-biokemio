@@ -264,4 +264,4 @@ this.renderTriangle(this.rScr, this.rPt, 3, 4, 9, true);
 this.renderTriangle(this.rScr, this.rPt, 4, 0, 9, true);
 });
 });
-;//5.0.1-v7 Sun Jun 29 22:48:16 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

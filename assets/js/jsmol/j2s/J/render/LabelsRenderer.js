@@ -124,13 +124,13 @@ if (text.font == null) text.setFontFromFid(this.fid);
 text.atomX = this.atomPt.sX;
 text.atomY = this.atomPt.sY;
 text.atomZ = this.zSlab;
-if (text.pymolOffset == null) {
+if (text.getPymolOffset() == null) {
 text.setXYZs(this.atomPt.sX, this.atomPt.sY, this.zBox, this.zSlab);
 text.colix = this.labelColix;
 text.bgcolix = this.bgcolix;
 } else {
 text.getPymolScreenOffset(this.atomPt, this.screen, this.zSlab, this.pTemp, this.sppa);
-}}if (text.pymolOffset == null) {
+}}if (text.getPymolOffset() == null) {
 if (text.font == null) text.setFontFromFid(this.font3d.fid);
 text.setOffset(this.offset);
 if (this.textAlign != 0) text.setAlignment(this.textAlign);
@@ -143,4 +143,4 @@ function(text, pTemp, pointerColix, mode){
 return J.render.TextRenderer.render(this.vwr, text, this.g3d, this.scalePixelsPerMicron, this.imageFontScaling, this.boxXY, this.xy, pTemp, pointerColix, (this.doPointer == 0 ? 0 : this.vwr.getInt(553648147)), mode);
 }, "JM.Text,JU.P3i,~N,~N");
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

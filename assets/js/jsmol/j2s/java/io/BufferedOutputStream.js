@@ -9,14 +9,6 @@ Clazz.superConstructor (this, java.io.BufferedOutputStream, []);
 this.jzSetFOS(out);
 this.buf =  Clazz.newByteArray (8192, 0);
 }, "java.io.OutputStream");
-Clazz.makeConstructor(c$, 
-function(out, size){
-Clazz.superConstructor (this, java.io.BufferedOutputStream, []);
-this.jzSetFOS(out);
-if (size <= 0) {
-throw  new IllegalArgumentException(("K0058"));
-}this.buf =  Clazz.newByteArray (size, 0);
-}, "java.io.OutputStream,~N");
 Clazz.overrideMethod(c$, "flush", 
 function(){
 if (this.count > 0) {
@@ -59,4 +51,4 @@ this.count = 0;
 }this.buf[this.count++] = oneByte;
 }, "~N");
 });
-;//5.0.1-v7 Mon May 12 23:42:45 CDT 2025
+;//5.0.1-v7 Fri Dec 19 08:21:45 CST 2025

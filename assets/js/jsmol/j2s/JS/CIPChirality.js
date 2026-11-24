@@ -84,8 +84,7 @@ return (n > 2 && n <= 10);
 }, "JU.SimpleNode");
 Clazz.defineMethod(c$, "clearSmallRingEZ", 
 function(atoms, lstEZ){
-for (var j = this.data.lstSmallRings.length; --j >= 0; ) this.data.lstSmallRings[j].andNot(this.data.bsAtropisomeric);
-
+this.data.clearAtropisomericRings();
 for (var i = lstEZ.size(); --i >= 0; ) {
 var ab = lstEZ.get(i);
 for (var j = this.data.lstSmallRings.length; --j >= 0; ) {
@@ -101,15 +100,15 @@ function(atom, lstEZ, bsToDo){
 var index = atom.getIndex();
 var bonds = atom.getEdges();
 var c = 0;
-var isAtropic = this.data.bsAtropisomeric.get(index);
+var isAtropic = this.data.isAtropisomeric(atom);
 for (var j = bonds.length; --j >= 0; ) {
 var bond = bonds[j];
 var atom1;
 var index1;
 if (isAtropic) {
 atom1 = bonds[j].getOtherNode(atom);
+if (!this.data.isAtropisomeric(atom)) continue;
 index1 = atom1.getIndex();
-if (!this.data.bsAtropisomeric.get(index1)) continue;
 c = this.setBondChirality(atom, atom1, atom, atom1, true);
 } else if (this.data.getBondOrder(bond) == 2) {
 atom1 = this.getLastCumuleneAtom(bond, atom, null, null);
@@ -246,7 +245,7 @@ ruleA = ruleB = this.currentRule = 9;
 b2.rule6refIndex = a1.atoms[atop = a1.getEneTop() - 1].atomIndex;
 if (b2.sortSubstituents(0)) btop = b2.getEneTop() - 1;
 }var c = (atop >= 0 && btop >= 0 ? this.getEneChirality(b2.atoms[btop], b2, a1, a1.atoms[atop], isAxial, true) : 0);
-if (c != 0 && (isAxial || !this.data.bsAtropisomeric.get(a.getIndex()) && !this.data.bsAtropisomeric.get(b.getIndex()))) {
+if (c != 0 && (isAxial || !this.data.isAtropisomeric(a) && !this.data.isAtropisomeric(b))) {
 if (isAxial == (ruleA == 8) == (ruleB == 8)) c &= -9;
  else c |= 8;
 a.setCIPChirality(c | ((ruleA - 1) << 5));
@@ -333,7 +332,7 @@ this.isDuplicate = this.multipleBondDuplicate = isDuplicate;
 this.isKekuleAmbiguous = (this.b$["JS.CIPChirality"].data.bsKekuleAmbiguous != null && this.b$["JS.CIPChirality"].data.bsKekuleAmbiguous.get(this.atomIndex));
 this.elemNo = (isDuplicate && this.isKekuleAmbiguous ? parent.getKekuleElementNumber() : atom.getElementNumber());
 this.bondCount = atom.getCovalentBondCount();
-this.isSP3 = (this.bondCount == 4 || this.bondCount == 3 && !isAlkene && (this.elemNo > 10 || this.b$["JS.CIPChirality"].data.bsAzacyclic != null && this.b$["JS.CIPChirality"].data.bsAzacyclic.get(this.atomIndex)));
+this.isSP3 = (this.bondCount == 4 || this.bondCount == 3 && !isAlkene && (this.elemNo > 10 || this.elemNo == 7 && this.b$["JS.CIPChirality"].data.isAzacyclic(atom)));
 if (parent != null) this.sphere = parent.sphere + 1;
 if (this.sphere == 1) {
 this.rootSubstituent = this;
@@ -690,7 +689,9 @@ return (this.atomIndex == b.atomIndex ? 0 : this.getMass() > b.getMass() ? -1 : 
 }, "JS.CIPChirality.CIPAtom");
 Clazz.defineMethod(c$, "compareRule3", 
 function(b){
-return (this.isDuplicate || b.isDuplicate || !this.parent.isAlkeneAtom2 || !b.parent.isAlkeneAtom2 || !this.parent.alkeneParent.isEvenEne || !b.parent.alkeneParent.isEvenEne || this.parent === b.parent ? 0 : this.parent.auxEZ < b.parent.auxEZ ? -1 : 1);
+if (this.isDuplicate || b.isDuplicate || !this.parent.isAlkeneAtom2 || !b.parent.isAlkeneAtom2 || !this.parent.alkeneParent.isEvenEne || !b.parent.alkeneParent.isEvenEne) return 0;
+var ret = Integer.compare(this.parent.auxEZ, b.parent.auxEZ);
+return ret;
 }, "JS.CIPChirality.CIPAtom");
 Clazz.defineMethod(c$, "compareRules4ac", 
 function(b, test){
@@ -926,7 +927,7 @@ if (i > 0 && thisAtom.isAlkene && !thisAtom.isAlkeneAtom2) {
 if (newParent.isAlkeneAtom2) {
 if (newParent.alkeneChild == null || newParent.alkeneChild.atom === thisAtom.atom) {
 newParent.isAlkeneAtom2 = false;
-thisAtom.alkeneParent = newParent;
+newParent.alkeneParent = null;
 thisAtom.setEne();
 }}}newParent = thisAtom;
 thisAtom = newSub;
@@ -983,4 +984,4 @@ return (this.isDuplicate ? "(" + this.atom.getAtomName() + "." + this.rootDistan
 };
 c$.ruleNames =  Clazz.newArray(-1, ["", "1a", "1b", "2", "3", "4a", "4b", "4c", "5", "6"]);
 });
-;//5.0.1-v7 Mon Jun 02 10:11:19 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

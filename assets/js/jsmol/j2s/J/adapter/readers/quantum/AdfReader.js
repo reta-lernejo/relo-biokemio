@@ -74,7 +74,6 @@ if (frqOldFmt.equals(frqPrev)) {
 var frqNewFmt = JU.PT.formatStringF("%.3f", "f", frqNew);
 cname += " (now " + frqNewFmt + " cm^-1)";
 this.asc.setAtomSetModelPropertyForSet("name", cname, i);
-this.asc.setAtomSetModelPropertyForSet("modelName", cname, i);
 break;
 }}
 });
@@ -306,4 +305,4 @@ this.sym = sym;
 /*eoif4*/})();
 };
 });
-;//5.0.1-v7 Tue Jun 10 01:13:43 CEST 2025
+;//5.0.1-v7 Mon Oct 26 19:45:17 CDT 2026

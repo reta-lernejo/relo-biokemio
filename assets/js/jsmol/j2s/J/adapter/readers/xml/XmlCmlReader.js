@@ -603,4 +603,4 @@ bs.andNot(this.deleteAtoms);
 }});
 c$.unitCellParamTags =  Clazz.newArray(-1, ["a", "b", "c", "alpha", "beta", "gamma"]);
 });
-;//5.0.1-v7 Tue Jun 10 01:13:43 CEST 2025
+;//5.0.1-v7 Mon Oct 26 19:45:17 CDT 2026

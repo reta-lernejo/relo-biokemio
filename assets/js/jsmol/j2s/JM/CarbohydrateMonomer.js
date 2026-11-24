@@ -6,13 +6,13 @@ function(){
 });
 c$.validateAndAllocate = Clazz.defineMethod(c$, "validateAndAllocate", 
 function(chain, group3, seqcode, firstIndex, lastIndex){
-return  new JM.CarbohydrateMonomer().set2(chain, group3, seqcode, firstIndex, lastIndex, JM.CarbohydrateMonomer.alphaOffsets);
+return  new JM.CarbohydrateMonomer().set2(chain, group3, seqcode, firstIndex, lastIndex,  Clazz.newByteArray (1, 0));
 }, "JM.Chain,~S,~N,~N,~N");
 Clazz.overrideMethod(c$, "isCarbohydrate", 
 function(){
 return true;
 });
-Clazz.overrideMethod(c$, "getProteinStructureType", 
+Clazz.overrideMethod(c$, "getBioStructureType", 
 function(){
 return J.c.STR.CARBOHYDRATE;
 });
@@ -45,6 +45,9 @@ for (var i = this.firstAtomIndex; i <= this.lastAtomIndex; i++) if (this.getCros
 
 return false;
 });
-c$.alphaOffsets =  Clazz.newByteArray(-1, [0]);
+Clazz.overrideMethod(c$, "getGroupMenuKey", 
+function(){
+return "c>";
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+});
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

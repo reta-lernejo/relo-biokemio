@@ -4,7 +4,8 @@ var c$ = Clazz.decorateAsClass(function(){
 this.cmds = null;
 this.nList = null;
 this.cList = null;
-this.meshWidth = 0;
+this.doCache = false;
+this.cmdsAllNumbers = false;
 Clazz.instantialize(this, arguments);}, J.shapecgo, "CGOMesh", J.shapespecial.DrawMesh);
 Clazz.prepareFields (c$, function(){
 this.nList =  new JU.Lst();
@@ -64,14 +65,19 @@ var slen = ai[1];
 var tok = st[i].tok;
 i = (tok == 268437504 ? i + 1 : i + 2);
 if (i >= slen) return false;
-var s = st[i].value.toString().toUpperCase();
-var type = ";PS;BEGIN;SCREEN;UVMAP;".indexOf(";" + s + ";");
+var type;
+if (tok == 134221834) {
+J.shapecgo.CGOMesh.decodeCommands(st[i].value.toString(), data);
+i += 2;
+} else {
+if (st[i].tok == 3) type = -1;
+ else type = ";PS;BEGIN;SCREEN;UVMAP;".indexOf(";" + st[i].value.toString().toUpperCase() + ";");
 i = J.shapecgo.CGOMesh.addItems(i, st, slen, data, vwr);
 if (type == 0) {
 if (i + 5 >= slen || st[i + 1].tok != 134221834) return false;
 if (!J.shapecgo.CGOMesh.parseEPSData(st[i + 3].value.toString(), data)) return false;
 i += 5;
-}ai[0] = i;
+}}ai[0] = i;
 return true;
 }, "~A");
 c$.parseEPSData = Clazz.defineMethod(c$, "parseEPSData", 
@@ -150,7 +156,7 @@ this.useColix = false;
 }, "~S");
 Clazz.defineMethod(c$, "set", 
 function(list){
-this.width = 200;
+if (this.width == 0) this.width = 200;
 this.diameter = 0;
 this.useColix = true;
 this.bsTemp =  new JU.BS();
@@ -163,6 +169,13 @@ if (this.cmds == null) this.cmds = list.get(0);
 this.cmds = this.cmds.get(1);
 }var n = this.cmds.size();
 var is2D = false;
+this.cmdsAllNumbers = true;
+for (var i = this.cmds.size(); --i >= 0; ) {
+var o = this.cmds.get(i);
+if (!(Clazz.instanceOf(o, Number))) {
+this.cmdsAllNumbers = false;
+break;
+}}
 for (var i = 0; i < n; i++) {
 var type = (this.cmds.get(i)).intValue();
 var len = J.shapecgo.CGOMesh.getSize(type, is2D);
@@ -287,8 +300,27 @@ Clazz.defineMethod(c$, "getFloat",
 function(i){
 return (this.cmds.get(i)).floatValue();
 }, "~N");
+Clazz.defineMethod(c$, "encodeCommands", 
+function(sb){
+sb.append(" data \"cgo\"");
+for (var i = 0, n = this.cmds.size(); i < n; i++) {
+var idec = Clazz.doubleToInt((this.cmds.get(i)).doubleValue() * 10000);
+sb.appendI(idec);
+sb.appendC(' ');
+}
+sb.append("end \"cgo\";\n");
+}, "JU.SB");
+c$.decodeCommands = Clazz.defineMethod(c$, "decodeCommands", 
+function(s, data){
+var v;
+var next =  Clazz.newIntArray (1, 0);
+while ((v = JU.PT.parseIntNext(s, next)) != -2147483648) {
+data.addLast(Double.$valueOf(v / 10000));
+next[0]++;
+}
+}, "~S,JU.Lst");
+c$.keyMap = null;
 c$.sizes =  Clazz.newIntArray(-1, [0, 8, 1, 0, 3, 3, 3, 4, 27, 13, 1, 1, 1, 1, 13, 15, 1, 35, 13, 3, 2, 3, 9, 1, 2, 1, 14, 16, 0, 0, 1, 2]);
 c$.sizes2D =  Clazz.newIntArray(-1, [0, 6, 1, 0, 2, 3, 3, 4, 24, 13, 1, 1, 1, 1, 11, 15, 1, 35, 13, 3, 2, 3, 9, 1, 2, 1, 14, 16, 0, 0, 1, 2]);
-c$.keyMap = null;
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

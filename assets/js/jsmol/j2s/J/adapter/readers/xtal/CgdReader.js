@@ -160,4 +160,4 @@ return null;
 }, "JU.P3");
 c$.vecs =  Clazz.newArray(-1, [JU.V3.new3(0, 0, -1), JU.V3.new3(1, 0, -1), null, JU.V3.new3(0, 1, -1), JU.V3.new3(0, -1, 0), JU.V3.new3(1, -1, 0), JU.V3.new3(-1, 0, 0), null, JU.V3.new3(1, 0, 0), JU.V3.new3(-1, 1, 0), JU.V3.new3(0, 1, 0), JU.V3.new3(0, -1, 1), null, JU.V3.new3(-1, 0, 1), JU.V3.new3(0, 0, 1)]);
 });
-;//5.0.1-v7 Tue Jun 10 01:13:43 CEST 2025
+;//5.0.1-v7 Mon Oct 26 19:45:17 CDT 2026

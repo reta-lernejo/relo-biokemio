@@ -1,10 +1,12 @@
 Clazz.declarePackage("JM");
-Clazz.load(null, "JM.BioModelSet", ["java.util.Hashtable", "JU.AU", "$.BS", "$.Lst", "$.PT", "$.SB", "J.api.Interface", "J.c.STR", "JM.Group", "JM.BioResolver", "JS.T", "JU.BSUtil", "$.Escape", "$.Logger"], function(){
+Clazz.load(null, "JM.BioModelSet", ["java.util.Hashtable", "JU.AU", "$.BS", "$.Lst", "$.PT", "$.SB", "J.api.Interface", "J.c.STR", "JM.Group", "$.ModelSet", "JM.BioResolver", "JS.T", "JU.BSUtil", "$.Escape", "$.Logger"], function(){
 var c$ = Clazz.decorateAsClass(function(){
+this.haveDSSR = false;
 this.vwr = null;
 this.ms = null;
 this.ext = null;
 this.unitIdSets = null;
+this.dssrDataMap = null;
 Clazz.instantialize(this, arguments);}, JM, "BioModelSet", null);
 Clazz.defineMethod(c$, "getBioExt", 
 function(){
@@ -14,6 +16,7 @@ Clazz.defineMethod(c$, "set",
 function(vwr, ms){
 this.vwr = vwr;
 this.ms = ms;
+System.err.println("BioModelset need to delete the DataList map");
 this.unitIdSets = null;
 if (this.ext != null) this.ext.set(vwr, ms);
 return this;
@@ -63,7 +66,7 @@ for (var pt = 0, j = baseGroupIndex; j < groupCount; ++j, pt++) {
 var g = groups[j];
 var model = g.getModel();
 if (!model.isBioModel || !(Clazz.instanceOf(g,"JM.Monomer")) || g.getLeadAtom() == null) continue;
-var doCheck = checkConnections && !this.ms.isJmolDataFrameForModel(this.ms.at[g.getLeadAtom().i].mi);
+var doCheck = checkConnections && !this.ms.isJmolDataFrame(this.ms.at[g.getLeadAtom().i].mi);
 var bp = ((g).bioPolymer == null ? JM.BioResolver.allocateBioPolymer(groups, j, doCheck, pt) : null);
 if (bp == null || bp.monomerCount == 0) continue;
 var n = (model).addBioPolymer(bp);
@@ -249,17 +252,17 @@ switch (tokType) {
 default:
 return  new JU.BS();
 case 1073741925:
-return this.getAnnotationBits("domains", 1073741925, specInfo);
+return this.getAnnotationBits("domains", 1073741925, specInfo, null);
 case 1073742189:
-return this.getAnnotationBits("validation", 1073742189, specInfo);
+return this.getAnnotationBits("validation", 1073742189, specInfo, null);
 case 1073742128:
-return this.getAnnotationBits("rna3d", 1073742128, specInfo);
+return this.getAnnotationBits("rna3d", 1073742128, specInfo, null);
 case 1073741863:
 var s = specInfo;
 bs =  new JU.BS();
 return (s.length % 2 != 0 ? bs : this.ms.getAtomBitsMDa(1086324742, this.getAllBasePairBits(s), bs));
 case 1111490587:
-return this.getAnnotationBits("dssr", 1111490587, specInfo);
+return this.getAnnotationBits("dssr", 1111490587, specInfo, null);
 case 1086324744:
 return this.getAllSequenceBits(specInfo, null, bs);
 }
@@ -542,14 +545,24 @@ map.put(key, bs = this.ms.getAtomBitsMDa(tok, o, (bs == null ?  new JU.BS() : bs
 return (bsTemp.nextSetBit(0) >= 0);
 }, "~N,~S,JU.BS,java.util.Map");
 Clazz.defineMethod(c$, "getAnnotationBits", 
-function(name, tok, specInfo){
+function(key, tok, specInfo, type){
 var bs =  new JU.BS();
-var pa = this.vwr.getAnnotationParser(name.equals("dssr"));
+if (tok == 1111490587 && !this.haveDSSR) return bs;
+var pa = this.vwr.getAnnotationParser(tok);
 var ann;
-for (var i = this.ms.mc; --i >= 0; ) if ((ann = this.ms.getInfo(i, name)) != null) bs.or(pa.getAtomBits(this.vwr, specInfo, (this.ms.am[i]).getCachedAnnotationMap(name + " V ", ann), this.ms.am[i].dssrCache, tok, i, this.ms.am[i].bsAtoms));
-
-return bs;
-}, "~S,~N,~S");
+var keyV = key + " V ";
+for (var i = this.ms.mc; --i >= 0; ) {
+if ((ann = this.ms.getInfo(i, key)) != null) {
+var b = pa.getAtomBits(this.vwr, specInfo, (this.ms.am[i]).getCachedAnnotationMap(keyV, ann), this.ms.am[i].annotationCache, tok, i, this.ms.am[i].bsAtoms);
+bs.or(b);
+}}
+if (tok == 1111490587 && type != null) {
+var groups = this.ms.getGroupsForAtoms(bs);
+for (var i = groups.size(); --i >= 0; ) {
+groups.get(i).setDSSRStructureSubType(type);
+}
+}return bs;
+}, "~S,~N,~S,J.c.STR");
 Clazz.defineMethod(c$, "getStructureLines", 
 function(bsAtoms, cmd, lstStr, type, scriptMode, mode){
 var showMode = (mode == 134222350);
@@ -639,7 +652,7 @@ var i0 = (isAll ? this.ms.ac - 1 : bsAtoms.nextSetBit(0));
 for (var i = i0; i >= 0; i = (isAll ? i - 1 : bsAtoms.nextSetBit(i + 1))) {
 if (this.ms.at[i] == null) continue;
 var modelIndex = this.ms.am[this.ms.at[i].mi].trajectoryBaseIndex;
-if (this.ms.isJmolDataFrameForModel(modelIndex)) continue;
+if (this.ms.isJmolDataFrame(modelIndex)) continue;
 bsModels.set(modelIndex);
 bsAtomsRet.set(i);
 }
@@ -656,5 +669,49 @@ Clazz.defineMethod(c$, "getAminoAcidValenceAndCharge",
 function(s, atomName, aaRet){
 return this.getBioExt().getAminoAcidValenceAndCharge(s, atomName, aaRet);
 }, "~S,~S,~A");
+Clazz.defineMethod(c$, "getStructureDSSRAssignments", 
+function(){
+if (!this.haveDSSR) return;
+this.getAnnotationBits("dssr", 1111490587, "iloops", J.c.STR.DSSRINTERNALLOOP);
+this.getAnnotationBits("dssr", 1111490587, "hairpins", J.c.STR.DSSRHAIRPINLOOP);
+this.getAnnotationBits("dssr", 1111490587, "bulges", J.c.STR.DSSRBULGELOOP);
+this.getAnnotationBits("dssr", 1111490587, "junctions", J.c.STR.DSSRJUNCTIONLOOP);
+this.getAnnotationBits("dssr", 1111490587, "stems", J.c.STR.DSSRSTEM);
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+Clazz.defineMethod(c$, "setHaveDSSR", 
+function(b){
+this.haveDSSR = b;
+}, "~B");
+Clazz.defineMethod(c$, "getDSSRProperties", 
+function(dataType){
+if (!this.haveDSSR || dataType == null) return null;
+var dataPath = (dataType.indexOf('.') < 0 ? "dssr" + "." + dataType : dataType);
+if (this.dssrDataMap == null) {
+this.dssrDataMap =  new java.util.Hashtable();
+}var dataList = this.dssrDataMap.get(dataType);
+if (dataList == null) {
+this.dssrDataMap.put(dataType, dataList =  new JM.ModelSet.DataList(dataPath));
+}for (var i = this.ms.mc; --i >= 0; ) if (this.ms.am[i].isBioModel && (this.ms.am[i]).haveDSSR) this.vwr.getAnnotationParser(1111490587).getAtomicDSSRData(this.ms, i, dataList);
+
+return dataList;
+}, "~S");
+Clazz.defineMethod(c$, "getAtomicDSSRDataFloat", 
+function(dataType, atomIndex){
+var dl = (this.dssrDataMap == null ? null : this.dssrDataMap.get(dataType));
+return (dl != null && dl.floatData != null && dl.floatData.length > atomIndex ? dl.floatData[atomIndex] : NaN);
+}, "~S,~N");
+Clazz.defineMethod(c$, "getAtomicDSSRDataString", 
+function(dataType, atomIndex){
+var dl = (this.dssrDataMap == null ? null : this.dssrDataMap.get(dataType));
+return (dl != null && dl.stringData != null && dl.stringData.length > atomIndex ? dl.stringData[atomIndex] : null);
+}, "~S,~N");
+Clazz.defineMethod(c$, "releaseModelSet", 
+function(){
+System.err.println("can't remove ms here??");
+});
+Clazz.defineMethod(c$, "clearDSSR", 
+function(){
+this.dssrDataMap = null;
+});
+});
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

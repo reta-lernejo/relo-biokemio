@@ -20,97 +20,133 @@ function(){
 this.dataValues.clear();
 });
 Clazz.overrideMethod(c$, "setData", 
-function(type, data, arrayCount, actualAtomCount, matchField, matchFieldColumnCount, field, fieldColumnCount){
+function(type, data, atomCount, actualAtomCount, matchField, matchFieldColumnCount, field, fieldColumnCount){
+try {
 if (type == null) {
 this.clear();
 return;
 }type = type.toLowerCase();
 if (type.equals("element_vdw")) {
-var stringData = (data[1]).trim();
-if (stringData.length == 0) {
-this.vwr.userVdwMars = null;
-this.vwr.userVdws = null;
-this.vwr.bsUserVdws = null;
+this.setVDW(data);
 return;
-}if (this.vwr.bsUserVdws == null) this.vwr.setUserVdw(this.vwr.defaultVdw);
-JU.Parser.parseFloatArrayFromMatchAndField(stringData, this.vwr.bsUserVdws, 1, 0, data[2], 2, 0, this.vwr.userVdws, 1);
-for (var i = this.vwr.userVdws.length; --i >= 0; ) this.vwr.userVdwMars[i] = Clazz.doubleToInt(Math.floor(this.vwr.userVdws[i] * 1000));
-
+}var newType = this.getType(data);
+data[3] = Integer.$valueOf(newType);
+var newVal = data[1];
+if (newType == -1) {
+data[3] = Integer.$valueOf(newType = this.getTypeFor(newVal));
+}if (data[2] == null || atomCount <= 0) {
+this.dataValues.put(type, data);
 return;
-}var depth = this.getType(data);
-var val = data[1];
-if (depth == -1) data[3] = Integer.$valueOf(depth = ((typeof(val)=='string') ? 0 : JU.AU.isAF(val) ? 1 : JU.AU.isAFF(val) ? 2 : JU.AU.isAFFF(val) ? 3 : -1));
-if (data[2] != null && arrayCount > 0) {
+}if (newType == -1) {
+JU.Logger.error("Cannot determine data type for " + newVal);
+return;
+}var bs;
+var stringData = null;
+var tokens = null;
+var d = null;
+var dd = null;
+var dData = null;
+var ddData = null;
 var createNew = (matchField != 0 || field != -2147483648 && field != 2147483647);
 var oldData = this.dataValues.get(type);
-var bs;
 var oldValue = (oldData == null ? null : oldData[1]);
-var f = (oldData == null || createNew ?  Clazz.newFloatArray (actualAtomCount, 0) : JU.AU.ensureLengthA(oldValue, actualAtomCount));
-if (data.length > 5 && f !== oldValue) {
-var e = data[5];
-if (e != null) e.setValue(f);
-}var ff = null;
-if (depth == -1) {
-JU.Logger.error("Cannot determine data type for " + val);
-return;
-}var stringData = (depth == 0 ? val : null);
-var floatData = (depth == 1 ? val : null);
-var strData = null;
-var ffData = (depth == 2 ? val : null);
-if (field == -2147483648 && (strData = JU.PT.getTokens(stringData)).length > 1) field = 0;
-if (field == -2147483648) {
+if (newType != 2) {
+d = (oldData == null || createNew ?  Clazz.newFloatArray (actualAtomCount, 0) : JU.AU.ensureLengthA(oldValue, actualAtomCount));
+}switch (newType) {
+case 0:
+stringData = newVal;
+break;
+case 1:
+dData = newVal;
+break;
+case 2:
+ddData = newVal;
+break;
+}
+if (field == -2147483648 && (tokens = JU.PT.getTokens(stringData)).length > 1) {
+field = 0;
+}if (field == -2147483648) {
 bs = data[2];
-JV.DataManager.setSelectedFloats(JU.PT.parseFloat(stringData), bs, f);
+JV.DataManager.setSelected(JU.PT.parseFloat(stringData), bs, d);
 } else if (field == 0 || field == 2147483647) {
 bs = data[2];
-if (floatData != null) {
-var n = floatData.length;
+if (dData != null) {
+var n = dData.length;
 if (n == bs.cardinality()) {
-this.fillSparseArray(floatData, bs, f);
+this.fillSparseArray(dData, bs, d);
 } else {
-for (var i = bs.nextSetBit(0); i >= 0 && i < n; i = bs.nextSetBit(i + 1)) f[i] = floatData[i];
+for (var i = bs.nextSetBit(0); i >= 0 && i < n; i = bs.nextSetBit(i + 1)) d[i] = dData[i];
 
 }} else if (stringData != null) {
-JU.Parser.parseFloatArrayBsData(strData == null ? JU.PT.getTokens(stringData) : strData, bs, f);
-} else if (ffData != null) {
-var n = ffData.length;
-ff = (oldData == null || createNew ? JU.AU.newFloat2(actualAtomCount) : JU.AU.ensureLength(oldData[1], actualAtomCount));
+JU.Parser.parseFloatArrayBsData(tokens == null ? JU.PT.getTokens(stringData) : tokens, bs, d);
+} else if (ddData != null) {
+var n = ddData.length;
+dd = (oldData == null || createNew ? JU.AU.newFloat2(actualAtomCount) : JU.AU.ensureLength(oldValue, actualAtomCount));
 if (n == bs.cardinality()) {
-for (var i = bs.nextSetBit(0), pt = 0; i >= 0; i = bs.nextSetBit(i + 1), pt++) this.fillSparseArray(ffData[pt], bs, ff[i] =  Clazz.newFloatArray (actualAtomCount, 0));
+for (var i = bs.nextSetBit(0), pt = 0; i >= 0; i = bs.nextSetBit(i + 1), pt++) this.fillSparseArray(ddData[pt], bs, dd[i] =  Clazz.newFloatArray (actualAtomCount, 0));
 
 } else {
-for (var i = bs.nextSetBit(0); i >= 0 && i < n; i = bs.nextSetBit(i + 1)) ff[i] = ffData[i];
+for (var i = bs.nextSetBit(0); i >= 0 && i < n; i = bs.nextSetBit(i + 1)) dd[i] = ddData[i];
 
 }}} else if (matchField <= 0) {
 bs = data[2];
-JU.Parser.parseFloatArrayFromMatchAndField(stringData, bs, 0, 0, null, field, fieldColumnCount, f, 1);
+JU.Parser.parseFloatArrayFromMatchAndField(stringData, bs, 0, 0, null, field, fieldColumnCount, d, 1);
 } else {
 var iData = data[2];
-JU.Parser.parseFloatArrayFromMatchAndField(stringData, null, matchField, matchFieldColumnCount, iData, field, fieldColumnCount, f, 1);
+JU.Parser.parseFloatArrayFromMatchAndField(stringData, null, matchField, matchFieldColumnCount, iData, field, fieldColumnCount, d, 1);
 bs =  new JU.BS();
 for (var i = iData.length; --i >= 0; ) if (iData[i] >= 0) bs.set(iData[i]);
 
 }if (oldData != null && Clazz.instanceOf(oldData[2],"JU.BS") && !createNew) bs.or((oldData[2]));
 data[2] = bs;
-if (ff == null) {
+if (dd == null) {
 data[3] = Integer.$valueOf(1);
-data[1] = f;
+data[1] = d;
 } else {
 data[3] = Integer.$valueOf(2);
-data[1] = ff;
+data[1] = dd;
 }if (type.indexOf("property_atom.") == 0) {
+this.setAtomProperty(type, bs, d);
+return;
+}this.dataValues.put(type, data);
+} catch (e) {
+if (Clazz.exceptionOf(e, Exception)){
+JU.Logger.error("DataManager failed :" + e);
+e.printStackTrace();
+} else {
+throw e;
+}
+}
+}, "~S,~A,~N,~N,~N,~N,~N,~N");
+Clazz.defineMethod(c$, "setAtomProperty", 
+function(type, bs, d){
 var tok = JS.T.getSettableTokFromString(type = type.substring(14));
 if (tok == 0) {
 JU.Logger.error("Unknown atom property: " + type);
 return;
 }var nValues = bs.cardinality();
 var fValues =  Clazz.newFloatArray (nValues, 0);
-for (var n = 0, i = bs.nextSetBit(0); n < nValues; i = bs.nextSetBit(i + 1)) fValues[n++] = f[i];
+for (var n = 0, i = bs.nextSetBit(0); n < nValues; i = bs.nextSetBit(i + 1)) fValues[n++] = d[i];
 
 this.vwr.setAtomProperty(bs, tok, 0, 0, null, fValues, null);
-return;
-}}this.dataValues.put(type, data);
-}, "~S,~A,~N,~N,~N,~N,~N,~N");
+}, "~S,JU.BS,~A");
+Clazz.defineMethod(c$, "setVDW", 
+function(data){
+var stringData = (data[1]).trim();
+if (stringData.length == 0) {
+this.vwr.userVdwMars = null;
+this.vwr.userVdws = null;
+this.vwr.bsUserVdws = null;
+} else {
+if (this.vwr.bsUserVdws == null) this.vwr.setUserVdw(this.vwr.defaultVdw);
+JU.Parser.parseFloatArrayFromMatchAndField(stringData, this.vwr.bsUserVdws, 1, 0, data[2], 2, 0, this.vwr.userVdws, 1);
+for (var i = this.vwr.userVdws.length; --i >= 0; ) this.vwr.userVdwMars[i] = Clazz.doubleToInt(Math.floor(this.vwr.userVdws[i] * 1000));
+
+}}, "~A");
+Clazz.defineMethod(c$, "getTypeFor", 
+function(newVal){
+return ((typeof(newVal)=='string') ? 0 : JU.AU.isAF(newVal) ? 1 : JU.AU.isAFF(newVal) ? 2 : JU.AU.isAFFF(newVal) ? 3 : -1);
+}, "~O");
 Clazz.defineMethod(c$, "fillSparseArray", 
 function(floatData, bs, f){
 for (var i = bs.nextSetBit(0), pt = 0; i >= 0; i = bs.nextSetBit(i + 1), pt++) f[i] = floatData[pt];
@@ -120,7 +156,7 @@ Clazz.defineMethod(c$, "getType",
 function(data){
 return (data[3]).intValue();
 }, "~A");
-c$.setSelectedFloats = Clazz.defineMethod(c$, "setSelectedFloats", 
+c$.setSelected = Clazz.defineMethod(c$, "setSelected", 
 function(f, bs, data){
 var isAll = (bs == null);
 var i0 = (isAll ? 0 : bs.nextSetBit(0));
@@ -232,4 +268,4 @@ o[3] = Integer.$valueOf(0);
 return o;
 }, "~S");
 });
-;//5.0.1-v7 Mon Jun 09 19:40:05 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

@@ -552,4 +552,4 @@ c$.gyroMap =  new java.util.Hashtable();
 for (var i = 0, n = JSV.source.JDXDataObject.gyroData.length - 1; i < n; i += 2) JSV.source.JDXDataObject.gyroMap.put("" + Clazz.doubleToInt(JSV.source.JDXDataObject.gyroData[i]), Double.$valueOf(JSV.source.JDXDataObject.gyroData[i + 1]));
 
 }});
-;//5.0.1-v7 Wed Jun 25 12:22:21 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

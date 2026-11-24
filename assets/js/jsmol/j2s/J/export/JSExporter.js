@@ -124,4 +124,4 @@ return colors;
 {
 Jmol && Jmol.GLmol && Jmol.GLmol.extendJSExporter(J.export.JSExporter.prototype);
 }}});
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

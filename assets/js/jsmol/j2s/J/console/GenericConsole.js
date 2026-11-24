@@ -210,6 +210,7 @@ case J.c.CBK.ANIMFRAME:
 case J.c.CBK.APPLETREADY:
 case J.c.CBK.ATOMMOVED:
 case J.c.CBK.AUDIO:
+case J.c.CBK.CALCULATION:
 case J.c.CBK.CLICK:
 case J.c.CBK.DRAGDROP:
 case J.c.CBK.ERROR:
@@ -406,4 +407,4 @@ return sout;
 }, "~S");
 c$.labels = null;
 });
-;//5.0.1-v7 Mon Jun 09 19:40:05 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

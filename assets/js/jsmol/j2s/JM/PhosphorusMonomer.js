@@ -1,8 +1,16 @@
 Clazz.declarePackage("JM");
-Clazz.load(["JM.Monomer"], "JM.PhosphorusMonomer", ["JU.Quat", "$.V3", "J.c.STR"], function(){
-var c$ = Clazz.declareType(JM, "PhosphorusMonomer", JM.Monomer);
-Clazz.overrideConstructor(c$, 
+Clazz.load(["JM.Monomer", "J.c.STR"], "JM.PhosphorusMonomer", ["JU.Quat", "$.V3"], function(){
+var c$ = Clazz.decorateAsClass(function(){
+this.dssrSubType = null;
+this.basepairSubType = null;
+Clazz.instantialize(this, arguments);}, JM, "PhosphorusMonomer", JM.Monomer);
+Clazz.prepareFields (c$, function(){
+this.dssrSubType = J.c.STR.NONE;
+this.basepairSubType = J.c.STR.NONE;
+});
+Clazz.makeConstructor(c$, 
 function(){
+Clazz.superConstructor (this, JM.PhosphorusMonomer, []);
 });
 Clazz.overrideMethod(c$, "isNucleic", 
 function(){
@@ -10,7 +18,7 @@ return true;
 });
 c$.validateAndAllocateP = Clazz.defineMethod(c$, "validateAndAllocateP", 
 function(chain, group3, seqcode, firstIndex, lastIndex, specialAtomIndexes){
-return (firstIndex != lastIndex || specialAtomIndexes[13] != firstIndex ? null :  new JM.PhosphorusMonomer().set2(chain, group3, seqcode, firstIndex, lastIndex, JM.PhosphorusMonomer.phosphorusOffsets));
+return (firstIndex != lastIndex || specialAtomIndexes[13] != firstIndex ? null :  new JM.PhosphorusMonomer().set2(chain, group3, seqcode, firstIndex, lastIndex,  Clazz.newByteArray (1, 0)));
 }, "JM.Chain,~S,~N,~N,~N,~A");
 Clazz.overrideMethod(c$, "isDna", 
 function(){
@@ -32,7 +40,7 @@ Clazz.overrideMethod(c$, "getStructure",
 function(){
 return this.chain;
 });
-Clazz.overrideMethod(c$, "getProteinStructureType", 
+Clazz.overrideMethod(c$, "getBioStructureType", 
 function(){
 return J.c.STR.NONE;
 });
@@ -74,7 +82,24 @@ Clazz.overrideMethod(c$, "getHelixData",
 function(tokType, qType, mStep){
 return this.getHelixData2(tokType, qType, mStep);
 }, "~N,~S,~N");
-c$.phosphorusOffsets =  Clazz.newByteArray(-1, [0]);
+Clazz.overrideMethod(c$, "getBioStructureSubType", 
+function(dssx){
+switch (dssx) {
+case 1111490651:
+return this.dssrSubType;
+case 1073741863:
+return this.basepairSubType;
+}
+return J.c.STR.NONE;
+}, "~N");
+Clazz.overrideMethod(c$, "setDSSRStructureSubType", 
+function(type){
+this.dssrSubType = type;
+}, "J.c.STR");
+Clazz.overrideMethod(c$, "getGroupMenuKey", 
+function(){
+return "n>";
+});
 c$.MAX_ADJACENT_PHOSPHORUS_DISTANCE = 8.0;
 });
-;//5.0.1-v7 Sat Jun 07 00:08:51 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

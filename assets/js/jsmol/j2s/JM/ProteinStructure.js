@@ -61,7 +61,7 @@ var n = this.monomerIndexLast - index;
 this.monomerIndexLast = index - 1;
 this.nRes = index - this.monomerIndexFirst;
 var monomers = this.apolymer.monomers;
-var type = monomers[++index].getProteinStructureType();
+var type = monomers[++index].getBioStructureType();
 var mLast = -1;
 for (var i = 0, pt = index; i < n; i++, pt++) {
 (monomers[pt]).setStructure(null);
@@ -154,4 +154,4 @@ return "[" + this.id + " " + this.type + (this.subtype == null ? "" : " " + this
 c$.ids = 0;
 c$.globalStrucNo = 1000;
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

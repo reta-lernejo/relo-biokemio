@@ -1,5 +1,5 @@
 Clazz.declarePackage("J.render");
-Clazz.load(null, "J.render.TextRenderer", ["JM.Text"], function(){
+Clazz.load(null, "J.render.TextRenderer", ["JM.Text", "JU.C"], function(){
 var c$ = Clazz.declareType(J.render, "TextRenderer", null);
 c$.render = Clazz.defineMethod(c$, "render", 
 function(vwr, text, g3d, scalePixelsPerMicron, imageFontScaling, boxXY, temp, pTemp, pointerColix, pointerWidth, mode){
@@ -8,6 +8,7 @@ var isAbsolute = ((mode & 64) != 0);
 var doPointer = ((mode & 1) != 0);
 var isAntialiased = ((mode & 4) != 0);
 var colix = text.colix;
+if (text.isEcho && JU.C.getArgb(colix) == -74566) colix = vwr.cm.colixBackgroundContrast;
 var showText = g3d.setC(colix);
 if (!showText && (text.image == null && (text.bgcolix == 0 || !g3d.setC(text.bgcolix)))) return false;
 if (text.isEcho && text.valign == 4) J.render.TextRenderer.calcBarPixelsXYZ(vwr, text, pTemp, false);
@@ -107,4 +108,4 @@ g3d.drawRect(x + 3, y + 3, z - 1, zSlab, boxWidth - 6, boxHeight - 6);
 g3d.drawRect(x + 1, y + 1, z - 1, zSlab, boxWidth - 2, boxHeight - 2);
 }}, "J.api.JmolRendererInterface,~N,~N,~N,~N,~N,~N,~N,~N,~B");
 });
-;//5.0.1-v7 Mon Jun 02 10:11:19 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

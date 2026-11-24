@@ -1,5 +1,5 @@
 Clazz.declarePackage("JU");
-Clazz.load(["JU.P3"], "JU.BZone", ["java.util.Hashtable", "JU.Lst", "$.Measure", "$.P4", "$.V3", "J.bspt.PointIterator", "JU.TempArray"], function(){
+Clazz.load(["JU.P3"], "JU.BZone", ["java.util.Hashtable", "JU.Lst", "$.Measure", "$.P4", "$.V3", "J.bspt.PointIterator", "JU.GData"], function(){
 var c$ = Clazz.decorateAsClass(function(){
 this.ret = null;
 this.bz = null;
@@ -288,7 +288,7 @@ for (var n = this.wedgePlanes.length, w = 0; w < n; w++) {
 if (!this.slab(pid, this.wedgePlanes[w])) return false;
 }
 }return true;
-}this.vwr.shm.setShapePropertyBs(29, "slab", JU.TempArray.getSlabObjectType(134217750, plane, false, null), null);
+}this.vwr.shm.setShapePropertyBs(29, "slab", JU.GData.getSlabObjectType(134217750, plane, false, null), null);
 var a = this.getProperty(pid, "area");
 return (a != null && a[0] != 0);
 }, "~S,JU.P4");
@@ -507,4 +507,4 @@ System.out.println("draw id d" + i + " intersection unitcell hkl " + bp.hkl() + 
 c$.ptInner = JU.P3.new3(NaN, 0, 0);
 c$.bzColors =  Clazz.newArray(-1, ["red", "green", "skyblue", "orange", "yellow", "blue", "violet"]);
 });
-;//5.0.1-v7 Sun Jun 29 22:48:16 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

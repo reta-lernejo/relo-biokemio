@@ -9,6 +9,7 @@ this.pt1 = null;
 this.pt2 = null;
 this.vTemp = null;
 this.vTemp2 = null;
+this.headFactor = 0;
 this.pt0f = null;
 this.pt0i = null;
 this.s0f = null;
@@ -32,10 +33,9 @@ function(){
 this.needTranslucent = false;
 this.imageFontScaling = this.vwr.imageFontScaling;
 var draw = this.shape;
-for (var i = draw.meshCount; --i >= 0; ) {
+for (var i = 0, n = draw.meshCount; i < n; i++) {
 var mesh = this.dmesh = draw.meshes[i];
-if (mesh == null) {
-System.out.println("DrawRenderer mesh is null?");
+if (mesh == null || this.dmesh.drawType == null) {
 return false;
 }if (this.dmesh.thisModelOnly && this.vwr.am.cmi < 0) continue;
 if (mesh.connectedAtoms != null) {
@@ -62,13 +62,15 @@ function(isExport){
 this.drawType = this.dmesh.drawType;
 this.diameter = this.dmesh.diameter;
 this.width = this.dmesh.width;
+this.headFactor = (this.diameter != 0 && this.width != 0 ? this.diameter : 0);
 if (this.mesh.connectedAtoms != null) this.getConnectionPoints();
 if (this.mesh.lineData != null) {
 this.drawLineData(this.mesh.lineData);
 return;
 }var nPoints = this.vertexCount;
-var isCurved = ((this.drawType === J.shapespecial.Draw.EnumDrawType.CURVE || this.drawType === J.shapespecial.Draw.EnumDrawType.ARROW || this.drawType === J.shapespecial.Draw.EnumDrawType.ARC) && this.vertexCount > 2);
-if (this.width > 0 && isCurved || this.drawType === J.shapespecial.Draw.EnumDrawType.ARROW) {
+var isArrow = this.drawType === J.shapespecial.Draw.EnumDrawType.ARROW;
+var isCurved = ((isArrow || this.drawType === J.shapespecial.Draw.EnumDrawType.CURVE || this.drawType === J.shapespecial.Draw.EnumDrawType.ARC) && this.vertexCount > 2);
+if (this.width > 0 && isCurved || isArrow) {
 this.pt1f.set(0, 0, 0);
 var n = (this.drawType === J.shapespecial.Draw.EnumDrawType.ARC ? 2 : this.vertexCount);
 for (var i = 0; i < n; i++) this.pt1f.add(this.vertices[i]);
@@ -295,10 +297,13 @@ this.pt0f.setT(pt1);
 this.pt2f.setT(pt2);
 var d = this.pt0f.distance(this.pt2f);
 if (d == 0) return;
-var headWidth = (this.width > 0 && !this.dmesh.noHead ? this.width * 3 : 0);
+var isNegScale = (fScale < 0);
+var headScale = (this.headFactor == 0 && fScale < 0 ? -fScale : 1);
+if (fScale < 0) fScale = -fScale;
+var headWidth = (this.width > 0 && !this.dmesh.noHead ? this.width * headScale * 3 : 0);
 this.vTemp.sub2(this.pt2f, this.pt0f);
 this.vTemp.normalize();
-this.vTemp.scale(Math.min(headWidth == 0 ? fScale : headWidth * 1.5, fScale) / 5);
+this.vTemp.scale((this.headFactor > 0 ? this.headFactor * this.width : Math.min(headWidth == 0 ? fScale : headWidth * 1.5, fScale)) / 5);
 if (!withShaft) this.pt2f.add(this.vTemp);
 this.vTemp.scale(5);
 var len = this.vTemp.length();
@@ -314,7 +319,7 @@ this.tm.transformPtScrT3(this.pt0f, this.s0f);
 }if (this.s2f.z == 1 || this.s1f.z == 1) return;
 var headDiameter;
 if (this.diameter > 0) {
-headDiameter = this.diameter * 3;
+headDiameter = Clazz.floatToInt(this.diameter * headScale * 3);
 } else {
 this.vTemp.set(this.s2f.x - this.s1f.x, this.s2f.y - this.s1f.y, this.s2f.z - this.s1f.z);
 headDiameter = Math.round(this.vTemp.length() * .5);
@@ -327,7 +332,6 @@ Clazz.defineMethod(c$, "getArrowScale",
 function(){
 var fScale = (this.dmesh.isScaleSet ? this.dmesh.scale : 0);
 if (fScale == 0) fScale = this.vwr.getFloat(570425352) * (this.dmesh.connectedAtoms == null ? 1 : 0.5);
-if (fScale <= 0) fScale = 0.5;
 return fScale;
 });
 Clazz.defineMethod(c$, "renderHandles", 
@@ -388,4 +392,4 @@ break;
 }
 });
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

@@ -8,4 +8,4 @@ if (this.wireframeOnly) this.renderStrands();
  else this.render2Strand(true, this.isNucleic ? 1 : 0.5, this.isNucleic ? 0 : 0.5);
 }, "J.shapebio.BioShape");
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

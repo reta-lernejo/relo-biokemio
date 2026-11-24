@@ -14,19 +14,22 @@ this.bsAtropisomeric = null;
 this.bsHelixM = null;
 this.bsHelixP = null;
 this.lstSmallRings = null;
+this.bsAmide = null;
 this.bsKekuleAmbiguous = null;
 this.bsEnes = null;
 this.vNorm = null;
 this.vTemp = null;
+this.vTemp2 = null;
 Clazz.instantialize(this, arguments);}, JS, "CIPData", null);
 Clazz.prepareFields (c$, function(){
 this.bsXAromatic =  new JU.BS();
 this.bsNegativeAromatic =  new JU.BS();
-this.bsAtropisomeric =  new JU.BS();
+this.bsAmide =  new JU.BS();
 this.bsKekuleAmbiguous =  new JU.BS();
 this.bsEnes =  new JU.BS();
 this.vNorm =  new JU.V3();
 this.vTemp =  new JU.V3();
+this.vTemp2 =  new JU.V3();
 });
 Clazz.makeConstructor(c$, 
 function(){
@@ -58,8 +61,10 @@ this.lstSmallRings =  new Array(0);
 this.lstSmallRings = this.getList("*1**1||*1***1||*1****1||*1*****1||*1******1");
 }this.bsAromatic = this.match("a");
 if (!this.bsAromatic.isEmpty()) {
-this.bsAtropisomeric = this.match("[!H](.t1:-20,20)a{a(.t2:-20,20)-a}a[!H]");
-this.bsHelixM = this.match("A{a}(.t:-10,-40)a(.t:-10,-40)aaa");
+var bs = this.match("[!H](.t1:-20,20)a{a(.t2:-20,20)-a}a[!H]");
+if (!bs.isEmpty()) {
+this.bsAtropisomeric = bs;
+}this.bsHelixM = this.match("A{a}(.t:-10,-40)a(.t:-10,-40)aaa");
 this.bsHelixP = this.match("A{a}(.t:10,40)a(.t:10,40)aaa");
 this.bsXAromatic = this.match("[r5v3n+0,r5v2o+0]");
 this.bsNegativeAromatic = this.match("[a-]");
@@ -129,9 +134,10 @@ this.bsEnes.clear(iAtom);
 }, "JU.BS,JU.BS,~N,~N,~N,JU.BS");
 Clazz.defineMethod(c$, "getAzacyclic", 
 function(){
+this.bsAmide.or(this.match("{N}C=O"));
 out : for (var i = this.bsAtoms.nextSetBit(0); i >= 0; i = this.bsAtoms.nextSetBit(i + 1)) {
 var atom = this.atoms[i];
-if (atom.getElementNumber() != 7 || atom.getCovalentBondCount() != 3 || this.bsKekuleAmbiguous.get(i)) continue;
+if (atom.getElementNumber() != 7 || atom.getCovalentBondCount() != 3 || this.bsKekuleAmbiguous.get(i) || this.bsAmide.get(i)) continue;
 var edges = atom.getEdges();
 for (var k = edges.length; --k >= 0; ) if (edges[k].getOtherNode(atom).getElementNumber() == 1) continue out;
 
@@ -171,15 +177,17 @@ continue out;
 });
 Clazz.defineMethod(c$, "addAzacyclicN", 
 function(i){
+if (this.isApproxPlanar(this.atoms[i])) return;
 if (this.bsAzacyclic == null) this.bsAzacyclic =  new JU.BS();
 this.bsAzacyclic.set(i);
 }, "~N");
 Clazz.defineMethod(c$, "couldBeChiralAtom", 
 function(a){
 var mustBePlanar = false;
-switch (a.getCovalentBondCount()) {
+var n = a.getCovalentBondCount();
+switch (n) {
 default:
-System.out.println("?? too many bonds! " + a);
+System.out.println("CIPData: too many bonds! " + n + " for " + a);
 return false;
 case 0:
 return false;
@@ -190,8 +198,7 @@ return a.getElementNumber() == 7;
 case 3:
 switch (a.getElementNumber()) {
 case 7:
-if (this.bsAzacyclic != null && this.bsAzacyclic.get(a.getIndex())) break;
-return false;
+return this.isAzacyclic(a);
 case 6:
 mustBePlanar = true;
 break;
@@ -213,14 +220,17 @@ break;
 case 4:
 break;
 }
+var isSmiles = false;
 var edges = a.getEdges();
-var nH = 0;
-var haveDouble = false;
-for (var j = edges.length; --j >= 0; ) {
-if (mustBePlanar && edges[j].getCovalentOrder() == 2) haveDouble = true;
-if (edges[j].getOtherNode(a).getIsotopeNumber() == 1) nH++;
+for (var nH = 0, j = edges.length; --j >= 0; ) {
+if (edges[j].getOtherNode(a).getIsotopeNumber() == 1 && ++nH > 1) return false;
+if (mustBePlanar && !isSmiles && edges[j].getCovalentOrder() == 2) return this.isApproxPlanar(a);
 }
-return (nH < 2 && (haveDouble || this.isSmiles() || mustBePlanar == Math.abs(this.getTrigonality(a, this.vNorm)) < 0.2));
+return isSmiles || (mustBePlanar == this.isApproxPlanar(a));
+}, "JU.SimpleNode");
+Clazz.defineMethod(c$, "isApproxPlanar", 
+function(a){
+return (Math.abs(this.getTrigonality(a, this.vNorm)) < 0.2);
 }, "JU.SimpleNode");
 Clazz.defineMethod(c$, "couldBeChiralAlkene", 
 function(a, edge){
@@ -299,5 +309,19 @@ Clazz.defineMethod(c$, "setRule6Full",
 function(rrrr){
 this.testRule6Full = rrrr;
 }, "~B");
+Clazz.defineMethod(c$, "isAzacyclic", 
+function(atom){
+return (this.bsAzacyclic != null && this.bsAzacyclic.get(atom.getIndex()));
+}, "JU.SimpleNode");
+Clazz.defineMethod(c$, "isAtropisomeric", 
+function(atom){
+return (this.bsAtropisomeric != null && this.bsAtropisomeric.get(atom.getIndex()));
+}, "JU.SimpleNode");
+Clazz.defineMethod(c$, "clearAtropisomericRings", 
+function(){
+if (this.bsAtropisomeric == null) return;
+for (var j = this.lstSmallRings.length; --j >= 0; ) this.lstSmallRings[j].andNot(this.bsAtropisomeric);
+
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+});
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

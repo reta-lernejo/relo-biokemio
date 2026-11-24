@@ -533,4 +533,4 @@ if (atom2.getElementNumber() == 1) bsAtoms.set(atom2.i);
 }
 }, "JM.Atom,JU.BS");
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

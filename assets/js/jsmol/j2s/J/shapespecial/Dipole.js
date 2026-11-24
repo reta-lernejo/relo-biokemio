@@ -26,6 +26,7 @@ this.coords = null;
 this.bond = null;
 this.bsMolecule = null;
 this.lstDipoles = null;
+this.error = null;
 Clazz.instantialize(this, arguments);}, J.shapespecial, "Dipole", null);
 Clazz.prepareFields (c$, function(){
 this.atoms =  new Array(2);
@@ -165,4 +166,4 @@ this.offsetPt = pt;
 this.origin.add(pt);
 }, "JU.P3");
 });
-;//5.0.1-v7 Sat Jun 07 00:08:51 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

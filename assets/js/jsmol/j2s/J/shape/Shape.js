@@ -65,6 +65,21 @@ return;
 return;
 }JU.Logger.warn("unassigned " + JV.JC.shapeClassBases[this.shapeID] + " + shape setProperty:" + propertyName + ":" + value);
 }, "~S,~O,JU.BS");
+Clazz.defineMethod(c$, "setProperties", 
+function(value){
+var bsSelected = this.vwr.bsA();
+if (Clazz.instanceOf(value,"JU.Lst")) {
+var propertyList = value;
+while (propertyList.size() > 0) {
+var data = propertyList.removeItemAt(0);
+this.setProperty((data[0]).intern(), data[1], bsSelected);
+}
+} else {
+var data = (value);
+for (var i = 0, n = data.length; i < n; i++) {
+this.setProperty((data[i][0]).intern(), data[i][1], bsSelected);
+}
+}}, "~O");
 Clazz.defineMethod(c$, "getPropertyData", 
 function(property, data){
 return this.getPropShape(property, data);
@@ -112,7 +127,7 @@ return false;
 }, "~N,~N,~N,~N,~N,JU.BS");
 Clazz.defineMethod(c$, "coordinateInRange", 
 function(x, y, vertex, dmin2, ptXY){
-this.vwr.tm.transformPtScr(vertex, ptXY);
+this.vwr.tm.transformPtScrSafe(vertex, ptXY);
 var d2 = (x - ptXY.x) * (x - ptXY.x) + (y - ptXY.y) * (y - ptXY.y);
 return (d2 <= dmin2 ? d2 : -1);
 }, "~N,~N,JU.T3,~N,JU.P3i");
@@ -164,20 +179,5 @@ function(s, cmd){
 if (cmd.length == 0) return;
 s.append("  ").append(cmd).append(";\n");
 }, "JU.SB,~S");
-Clazz.defineMethod(c$, "setProperties", 
-function(value){
-var bsSelected = this.vwr.bsA();
-if (Clazz.instanceOf(value,"JU.Lst")) {
-var propertyList = value;
-while (propertyList.size() > 0) {
-var data = propertyList.removeItemAt(0);
-this.setProperty((data[0]).intern(), data[1], bsSelected);
-}
-} else {
-var data = (value);
-for (var i = 0, n = data.length; i < n; i++) {
-this.setProperty((data[i][0]).intern(), data[i][1], bsSelected);
-}
-}}, "~O");
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

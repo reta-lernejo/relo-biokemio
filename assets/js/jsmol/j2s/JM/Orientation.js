@@ -58,6 +58,10 @@ this.cameraDepth = vwr.tm.getCameraDepth();
 this.cameraX = vwr.tm.camera.x;
 this.cameraY = vwr.tm.camera.y;
 }}, "JV.Viewer,~B,~A");
+Clazz.overrideMethod(c$, "toString", 
+function(){
+return "[Orientation " + this.saveName + " " + this.rotationRadius + "]";
+});
 Clazz.defineMethod(c$, "getMoveToText", 
 function(asCommand){
 return (asCommand ? "   " + this.moveToText + "\n  save orientation " + JU.PT.esc(this.saveName.substring(12)) + ";\n" : this.moveToText);
@@ -67,11 +71,11 @@ function(timeSeconds, isAll){
 if (isAll) {
 this.vwr.setBooleanProperty("windowCentered", this.windowCenteredFlag);
 this.vwr.setBooleanProperty("navigationMode", this.navigationMode);
-if (this.pymolView == null) this.vwr.moveTo(this.vwr.eval, timeSeconds, this.center, null, NaN, this.rotationMatrix, this.zoom, this.xTrans, this.yTrans, this.rotationRadius, this.navCenter, this.xNav, this.yNav, this.navDepth, this.cameraDepth, this.cameraX, this.cameraY);
+if (this.pymolView == null) this.vwr.moveTo(null, timeSeconds, this.center, null, NaN, this.rotationMatrix, this.zoom, this.xTrans, this.yTrans, this.rotationRadius, this.navCenter, this.xNav, this.yNav, this.navDepth, this.cameraDepth, this.cameraX, this.cameraY);
  else this.vwr.tm.moveToPyMOL(this.vwr.eval, timeSeconds, this.pymolView);
 } else {
 this.vwr.tm.setRotation(this.rotationMatrix);
 }return true;
 }, "~N,~B");
 });
-;//5.0.1-v7 Mon Jun 09 21:25:18 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

@@ -28,8 +28,9 @@ return;
 }if (Clazz.instanceOf(t.pointerPt,"JM.Atom")) {
 if (!(t.pointerPt).checkVisible()) return;
 }if (t.valign == 4) J.render.TextRenderer.calcBarPixelsXYZ(this.vwr, t, this.pt0i, true);
-if (t.pymolOffset != null) t.getPymolScreenOffset(t.xyz, this.pt0i, this.zSlab, this.pTemp, this.sppa);
- else if (t.movableZPercent != 2147483647) {
+if (t.getPymolOffset() != null) {
+t.getPymolScreenOffset(t.xyz, this.pt0i, this.zSlab, this.pTemp, this.sppa);
+} else if (t.movableZPercent != 2147483647) {
 var z = this.vwr.tm.zValueFromPercent(t.movableZPercent % 1000);
 if (t.valign == 4 && Math.abs(t.movableZPercent) >= 1000) z = this.pt0i.z - this.vwr.tm.zValueFromPercent(0) + z;
 t.setZs(z, z);
@@ -42,7 +43,7 @@ t.atomX = this.pt0i.x;
 t.atomY = this.pt0i.y;
 t.atomZ = this.pt0i.z;
 if (t.zSlab == -2147483648) t.zSlab = 1;
-}if (J.render.TextRenderer.render(this.vwr, t, this.g3d, this.sppa, this.imageFontScaling, null, this.xy, this.pt2i, 0, 0, alias) && t.valign == 1 && t.align == 12) this.vwr.noFrankEcho = false;
+}if (this.renderText(t, this.pt2i, 0, alias) && t.valign == 1 && t.align == 12) this.vwr.noFrankEcho = false;
 if (JU.C.renderPass2(t.bgcolix) || JU.C.renderPass2(t.colix)) this.haveTranslucent = true;
 }, "JM.Text,~N");
 Clazz.defineMethod(c$, "renderFrameTitle", 
@@ -53,4 +54,4 @@ var x = Clazz.doubleToInt(Math.floor(5 * this.imageFontScaling));
 this.g3d.drawStringNoSlab(frameTitle, null, x, y, 0, 0);
 }, "~S");
 });
-;//5.0.1-v7 Sat Jun 07 00:08:51 CEST 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

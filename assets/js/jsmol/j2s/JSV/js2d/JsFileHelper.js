@@ -25,7 +25,7 @@ function(pdf){
 }, "JSV.common.ExportType");
 Clazz.overrideMethod(c$, "showFileOpenDialog", 
 function(panelOrFrame, userData){
-JSV.common.JSViewer.jmolObject.loadFileAsynchronously(this, this.vwr.html5Applet, "?", userData);
+JSV.common.JSViewer.jsmolObject.loadFileAsynchronously(this, this.vwr.html5Applet, "?", userData);
 return null;
 }, "~O,~A");
 Clazz.defineMethod(c$, "setData", 
@@ -48,4 +48,4 @@ function(info, msg){
 return prompt(info, msg);
 }}, "~S,~S");
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

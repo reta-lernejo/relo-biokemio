@@ -37,11 +37,11 @@ return;
 this.fm.setFileInfo( Clazz.newArray(-1, [this.dataReaders == null ? this.fullPathNamesIn[0] : "String[]"]));
 });
 Clazz.overrideMethod(c$, "getBufferedReaderOrBinaryDocument", 
-function(i, forceBinary){
-if (this.dataReaders != null) return (forceBinary ? null : this.dataReaders[i].getBufferedReader());
+function(i, forceInputStream){
+if (this.dataReaders != null) return (forceInputStream ? null : this.dataReaders[i].getBufferedReader());
 var name = this.fullPathNamesIn[i];
 if (name.contains("#_DOCACHE_")) return J.io.FileReader.getChangeableReader(this.vwr, this.namesAsGivenIn[i], name);
-var t = this.fm.getUnzippedReaderOrStreamFromName(name, null, false, forceBinary, false, true, this.htParams);
+var t = this.fm.getUnzippedReaderOrStreamFromName(name, null, false, forceInputStream, false, true, this.htParams);
 if (Clazz.instanceOf(t,"java.io.BufferedInputStream") && JU.Rdr.isZipS(t)) {
 var zipDirectory = this.fm.getZipDirectory(name, true, true);
 t = this.fm.getBufferedInputStreamOrErrorMessageFromName(name, this.fullPathNamesIn[i], false, false, null, false, true);
@@ -53,4 +53,4 @@ function(){
 return this.atomSetCollection;
 });
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

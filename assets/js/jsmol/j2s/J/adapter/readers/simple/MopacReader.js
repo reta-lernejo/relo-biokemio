@@ -15,6 +15,7 @@ if (this.line.indexOf("2009") >= 0) this.mopacVersion = 2009;
  else if (this.line.indexOf("93") >= 0) this.mopacVersion = 93;
  else if (this.line.indexOf("2002") >= 0) this.mopacVersion = 2002;
  else if (this.line.indexOf("MOPAC2") >= 0) this.mopacVersion = JU.PT.parseInt(this.line.substring(this.line.indexOf("MOPAC2") + 5));
+ else if (this.line.indexOf("MOPAC v") >= 0) this.mopacVersion = JU.PT.parseInt(this.line.substring(this.line.indexOf("MOPAC v") + 7));
 }
 JU.Logger.info("MOPAC version " + this.mopacVersion);
 });
@@ -136,4 +137,4 @@ this.asc.setAtomSetFrequency(this.vibrationNumber, null, info[i][2], info[i][0],
 }
 });
 });
-;//5.0.1-v7 Tue Jun 10 01:13:43 CEST 2025
+;//5.0.1-v7 Mon Oct 26 19:45:17 CDT 2026

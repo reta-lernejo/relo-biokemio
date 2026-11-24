@@ -178,4 +178,4 @@ return "[Modulation " + this.type + " " + JU.PT.toJSON(null, this.params) + "]";
 });
 c$.legendre =  Clazz.newArray(-1, [ Clazz.newDoubleArray(-1, [1]),  Clazz.newDoubleArray(-1, [0, 1])]);
 });
-;//5.0.1-v7 Wed Jun 11 15:08:00 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026

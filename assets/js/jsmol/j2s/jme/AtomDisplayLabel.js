@@ -103,4 +103,4 @@ var box = this.atomLabelBoundingBox;
 g.fillRect(Clazz.doubleToInt(box.x), Clazz.doubleToInt(box.y), Clazz.doubleToInt(box.width), Clazz.doubleToInt(box.height));
 }, "java.awt.Graphics");
 });
-;//5.0.1-v7 Tue May 20 13:40:34 CDT 2025
+;//5.0.1-v7 Mon Oct 26 17:21:26 CDT 2026
